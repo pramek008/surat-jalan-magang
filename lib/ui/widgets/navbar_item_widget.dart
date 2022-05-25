@@ -22,7 +22,7 @@ class NavBarItemWidget extends StatelessWidget {
         context.read<PageCubit>().setPage(index);
       },
       child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.13,
+        height: MediaQuery.of(context).size.height * 0.10,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
