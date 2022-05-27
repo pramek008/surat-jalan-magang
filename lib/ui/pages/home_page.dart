@@ -76,9 +76,9 @@ class HomePage extends StatelessWidget {
       var colors = [
         const Color(0xff006EE9),
         const Color(0xff18DC4F),
-        const Color(0xffE97E00),
         const Color(0xffE9A800),
         const Color(0xffDA4505),
+        const Color(0xff9E20D9),
       ];
 
       return Column(
@@ -106,6 +106,9 @@ class HomePage extends StatelessWidget {
               ),
               scrollDirection: Axis.horizontal,
               children: [
+                CardLetterWidget(
+                  color: (colors..shuffle()).first,
+                ),
                 CardLetterWidget(
                   color: (colors..shuffle()).first,
                 ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/main_page.dart';
-import 'package:surat_jalan/ui/pages/home_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);

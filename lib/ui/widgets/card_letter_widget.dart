@@ -17,7 +17,7 @@ class CardLetterWidget extends StatelessWidget {
         double width,
         double height,
         double padding,
-        Color color,
+        Color colorCircle,
       ) {
         return Container(
           padding: EdgeInsets.all(padding),
@@ -30,7 +30,7 @@ class CardLetterWidget extends StatelessWidget {
             height: height,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(100),
-              color: color,
+              color: colorCircle,
             ),
           ),
         );
@@ -85,16 +85,7 @@ class CardLetterWidget extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              '001.SPPD/Kec.8.8/SD/2021',
-              style: txRegular.copyWith(
-                fontSize: 14,
-                color: whiteColor,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+            const SizedBox(height: 4),
             const SizedBox(height: 8),
             Text(
               'Pelatihan IOT dengan basis Satelit',
@@ -104,6 +95,21 @@ class CardLetterWidget extends StatelessWidget {
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                const Spacer(),
+                Text(
+                  '20 Mei 2022',
+                  style: txRegular.copyWith(
+                    fontSize: 14,
+                    color: whiteColor,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
             const Spacer(),
             Text(
@@ -136,7 +142,7 @@ class CardLetterWidget extends StatelessWidget {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 1,
               blurRadius: 5,
-              offset: Offset(0, 3),
+              offset: const Offset(0, 3),
             ),
           ],
         ),
