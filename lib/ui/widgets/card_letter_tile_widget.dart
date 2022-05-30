@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/ui/pages/letter_page.dart';
 
 class CardLetterTileWidget extends StatelessWidget {
   final Color color;
@@ -171,28 +172,38 @@ class CardLetterTileWidget extends StatelessWidget {
       );
     }
 
-    return Container(
-      margin: const EdgeInsets.only(
-        bottom: 16,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: color,
-        boxShadow: [
-          BoxShadow(
-            color: blackColor.withOpacity(0.3),
-            blurRadius: 10,
-            spreadRadius: 2,
-            offset: const Offset(2, 3),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LetterPage(),
           ),
-        ],
-      ),
-      height: 140,
-      child: Stack(
-        children: [
-          backgroudCard(color),
-          content(),
-        ],
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(
+          bottom: 16,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: color,
+          boxShadow: [
+            BoxShadow(
+              color: blackColor.withOpacity(0.3),
+              blurRadius: 10,
+              spreadRadius: 2,
+              offset: const Offset(2, 3),
+            ),
+          ],
+        ),
+        height: 140,
+        child: Stack(
+          children: [
+            backgroudCard(color),
+            content(),
+          ],
+        ),
       ),
     );
   }

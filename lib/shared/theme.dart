@@ -9,8 +9,11 @@ Color blackColor = const Color(0xff000000);
 Color greyDeepColor = const Color(0xff4A4646);
 Color greyThinColor = const Color(0xffF2F2F2);
 Color greyIconColor = const Color(0xffA1A1A1);
-
 Color greySubHeaderColor = const Color(0xff474747);
+
+//*Status color
+Color greenStatusColor = const Color(0xff60EA86);
+Color redStatusColor = const Color(0xffEA6060);
 
 Color backgrounColor = const Color(0xffFAFAFA);
 

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/widgets/card_letter_tile_widget.dart';
 
-class LetterTab extends StatelessWidget {
-  const LetterTab({Key? key}) : super(key: key);
+class LetterListTab extends StatelessWidget {
+  const LetterListTab({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

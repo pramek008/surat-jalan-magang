@@ -20,8 +20,11 @@ class HomePage extends StatelessWidget {
           children: [
             Text(
               DateFormat(
-                'dd MMMM yyyy  kk:mm',
-              ).format(DateTime.now()),
+                'EEEE, dd MMMM yyyy  kk:mm ',
+                "id_ID",
+              ).format(
+                DateTime.now(),
+              ),
               style: txRegular.copyWith(
                 color: greyDeepColor,
               ),

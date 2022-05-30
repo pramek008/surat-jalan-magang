@@ -1,9 +1,11 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surat_jalan/cubit/page_cubit.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/home_page.dart';
-import 'package:surat_jalan/ui/pages/letter_page.dart';
+import 'package:surat_jalan/ui/pages/letter_list_page.dart';
 import 'package:surat_jalan/ui/widgets/navbar_item_widget.dart';
 
 class MainPage extends StatelessWidget {
@@ -16,7 +18,7 @@ class MainPage extends StatelessWidget {
         case 0:
           return const HomePage();
         case 1:
-          return const LetterPage();
+          return const LetterListPage();
         default:
           return const HomePage();
       }

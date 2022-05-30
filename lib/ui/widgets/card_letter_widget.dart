@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/ui/pages/letter_list_page.dart';
+import 'package:surat_jalan/ui/pages/letter_page.dart';
 
 class CardLetterWidget extends StatelessWidget {
   final Color color;
@@ -23,7 +25,7 @@ class CardLetterWidget extends StatelessWidget {
           padding: EdgeInsets.all(padding),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
-            color: whiteColor.withOpacity(0.15),
+            color: blackColor.withOpacity(0.15),
           ),
           child: Container(
             width: width,
@@ -49,8 +51,8 @@ class CardLetterWidget extends StatelessWidget {
             child: circleBg(30, 30, 4, color),
           ),
           Positioned(
-            bottom: -50,
-            right: 95,
+            bottom: -70,
+            left: -50,
             child: circleBg(100, 100, 20, Colors.transparent),
           ),
         ],
@@ -128,7 +130,14 @@ class CardLetterWidget extends StatelessWidget {
 
     //*Master Class
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LetterPage(),
+          ),
+        );
+      },
       child: Container(
         width: 140,
         margin: const EdgeInsets.only(
@@ -136,7 +145,11 @@ class CardLetterWidget extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+            bottomRight: Radius.circular(20),
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.5),
