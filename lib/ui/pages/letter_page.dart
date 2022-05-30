@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/ui/pages/laporan_kegiatan_page.dart';
 import 'package:surat_jalan/ui/widgets/card_laporan_widget.dart';
 import 'package:surat_jalan/ui/widgets/letter_status_widget.dart';
 
@@ -393,7 +394,7 @@ class LetterPage extends StatelessWidget {
               children: const [
                 CardLaporanWidget(),
                 CardLaporanWidget(),
-                CardLaporanWidget(),
+                // CardLaporanWidget(),
               ],
             ),
             const SizedBox(height: 16),
@@ -401,7 +402,14 @@ class LetterPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const LaporanKegiatanPage(),
+                      ),
+                    );
+                  },
                   child: Icon(
                     Icons.add_box_rounded,
                     size: 60,
@@ -416,7 +424,6 @@ class LetterPage extends StatelessWidget {
 
       //! MASTER Widget Content (untuk menampung semua widget component)
       return Wrap(
-        // crossAxisAlignment: CrossAxisAlignment.start,
         runSpacing: 16,
         children: [
           nomorSurat(),
