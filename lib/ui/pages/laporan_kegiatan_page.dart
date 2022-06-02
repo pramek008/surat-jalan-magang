@@ -354,8 +354,8 @@ class LaporanKegiatanPage extends StatelessWidget {
             ),
             onPressed: () {},
             child: Text(
-              'Submit',
-              style: txBold.copyWith(
+              'Buat Laporan',
+              style: txSemiBold.copyWith(
                 color: whiteColor,
                 fontSize: 18,
               ),

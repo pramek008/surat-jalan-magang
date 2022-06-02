@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:surat_jalan/models/surat_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/letter_page.dart';
 
 class CardLetterTileWidget extends StatelessWidget {
   final Color color;
+  final SuratModel surat;
 
-  const CardLetterTileWidget({Key? key, required this.color}) : super(key: key);
+  const CardLetterTileWidget({
+    Key? key,
+    required this.color,
+    required this.surat,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +183,7 @@ class CardLetterTileWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => LetterPage(),
+            builder: (context) => LetterPage(surat: surat),
           ),
         );
       },

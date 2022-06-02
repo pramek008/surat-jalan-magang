@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:surat_jalan/dummy_data.dart';
+
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/widgets/card_letter_tile_widget.dart';
 
 class LetterListTab extends StatelessWidget {
-  const LetterListTab({Key? key}) : super(key: key);
+  const LetterListTab({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +30,12 @@ class LetterListTab extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CardLetterTileWidget(color: (colors..shuffle()).first),
-              CardLetterTileWidget(color: (colors..shuffle()).first),
-              CardLetterTileWidget(color: (colors..shuffle()).first),
+              CardLetterTileWidget(
+                  color: (colors..shuffle()).first, surat: dummySurat[0]),
+              CardLetterTileWidget(
+                  color: (colors..shuffle()).first, surat: dummySurat[1]),
+              CardLetterTileWidget(
+                  color: (colors..shuffle()).first, surat: dummySurat[0]),
             ],
           ),
         ),

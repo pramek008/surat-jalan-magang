@@ -1,11 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:surat_jalan/models/surat_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/laporan_kegiatan_page.dart';
 import 'package:surat_jalan/ui/widgets/card_laporan_widget.dart';
 import 'package:surat_jalan/ui/widgets/letter_status_widget.dart';
 
 class LetterPage extends StatelessWidget {
-  const LetterPage({Key? key}) : super(key: key);
+  final SuratModel surat;
+
+  const LetterPage({
+    Key? key,
+    required this.surat,
+  }) : super(key: key);
+
+  //* Untuk memeriksa status surat apakah masih berjalan atau sudah selesai
+  bool isExpired(DateTime tglAkhir) {
+    DateTime now = DateTime.now();
+    if (now.isAfter(tglAkhir)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  //* Untuk memeriksa apakah ada anggota lain yang mengikuti penugasan
+  bool tanpaPengikut(List pengikut) {
+    if (pengikut.length == 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  //* Untuk menghitung jumlah hari sebelum tanggal selesai
+  int daysLengt(DateTime to) {
+    DateTime nowDate = DateTime.now();
+    to =
+        DateTime(surat.tglAkhir.year, surat.tglAkhir.month, surat.tglAkhir.day);
+    return to.difference(nowDate).inDays;
+  }
+
+  //* Untuk menghitung jumlah jam sebelum tanggal selesai
+  int hoursLeft(DateTime to) {
+    DateTime nowDate = DateTime.now();
+    to =
+        DateTime(surat.tglAkhir.year, surat.tglAkhir.month, surat.tglAkhir.day);
+    int manyHour = to.difference(nowDate).inHours;
+    int hourLastDay = manyHour % 24;
+    return hourLastDay;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,22 +61,29 @@ class LetterPage extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Text(
-              'Pelatihan SOT',
-              style: txBold.copyWith(
-                color: primaryColor,
-                fontSize: 32,
+            Expanded(
+              flex: 4,
+              child: Text(
+                surat.maksudPerjalanan,
+                style: txBold.copyWith(
+                  color: primaryColor,
+                  fontSize: 32,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
-            const Spacer(),
-            InkWell(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Icon(
-                Icons.disabled_by_default_rounded,
-                color: primaryColor,
-                size: 40,
+            Expanded(
+              flex: 1,
+              child: InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.disabled_by_default_rounded,
+                  color: primaryColor,
+                  size: 40,
+                ),
               ),
             )
           ],
@@ -49,7 +100,7 @@ class LetterPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Nomor Surat Penugasan',
+                  'Nomor Surat',
                   style: txMedium.copyWith(
                     fontSize: 16,
                     color: blackColor,
@@ -57,7 +108,7 @@ class LetterPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  '001.SPPD/Kec.8.8/SD/2021',
+                  surat.nomorSurat,
                   style: txRegular.copyWith(
                     color: blackColor,
                     fontSize: 14,
@@ -68,7 +119,7 @@ class LetterPage extends StatelessWidget {
             const Spacer(),
 
             //!! Status Condition
-            const LetterStatusWidget(true),
+            LetterStatusWidget(isExpired(surat.tglAkhir)),
             // Container(
             //   padding: const EdgeInsets.symmetric(
             //     horizontal: 10,
@@ -106,7 +157,7 @@ class LetterPage extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              'Maslur S.Pd, S.E, M.Si',
+              surat.pemberiPerintah,
               style: txRegular.copyWith(
                 color: blackColor,
                 fontSize: 14,
@@ -130,7 +181,7 @@ class LetterPage extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              'Stefan Rodrigues S.Pd',
+              surat.menerimaPerintah,
               style: txRegular.copyWith(
                 color: blackColor,
                 fontSize: 14,
@@ -176,12 +227,19 @@ class LetterPage extends StatelessWidget {
             const SizedBox(height: 10),
             Wrap(
               runSpacing: 5,
-              children: [
-                anggotaItem('Ekaaaaa'),
-                anggotaItem('Ekaaaaa'),
-                anggotaItem('Ekaaaaa'),
-                anggotaItem('Ekaaaaa'),
-              ],
+              children: tanpaPengikut(surat.anggotaMengikuti) == true
+                  ? surat.anggotaMengikuti.map((e) {
+                      return anggotaItem(e);
+                    }).toList()
+                  : [
+                      anggotaItem('Tidak Ada Anggota Mengikuti'),
+                    ],
+              // [
+              //   anggotaItem('Ekaaaaa'),
+              //   anggotaItem('Ekaaaaa'),
+              //   anggotaItem('Ekaaaaa'),
+              //   anggotaItem('Ekaaaaa'),
+              // ],
             )
           ],
         );
@@ -201,7 +259,7 @@ class LetterPage extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              'Provinsi Lampung, Kabupaten Lampung Utara, Kecamatan Kotabumi, Desa Kotabumi',
+              surat.lokasiTujuan,
               style: txRegular.copyWith(
                 color: blackColor,
                 fontSize: 14,
@@ -227,7 +285,10 @@ class LetterPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  '22 Mei 2022',
+                  DateFormat(
+                    'dd MMMM yyyy',
+                    "id_ID",
+                  ).format(surat.tglAwal),
                   style: txRegular.copyWith(
                     color: blackColor,
                     fontSize: 14,
@@ -248,7 +309,10 @@ class LetterPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  '28 Mei 2022',
+                  DateFormat(
+                    'dd MMMM yyyy',
+                    "id_ID",
+                  ).format(surat.tglAkhir),
                   style: txRegular.copyWith(
                     color: blackColor,
                     fontSize: 14,
@@ -265,13 +329,13 @@ class LetterPage extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Text(
-            //   'Sisa Hari : ',
-            //   style: txMedium.copyWith(
-            //     fontSize: 16,
-            //     color: blackColor,
-            //   ),
-            // ),
+            Text(
+              'Sisa Hari : ',
+              style: txMedium.copyWith(
+                fontSize: 16,
+                color: blackColor,
+              ),
+            ),
             const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -289,7 +353,10 @@ class LetterPage extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          '5',
+                          // daysLengt(surat.tglAkhir).toString(),
+                          isExpired(surat.tglAkhir)
+                              ? daysLengt(surat.tglAkhir).toString()
+                              : '0',
                           style: txBold.copyWith(
                             color: whiteColor,
                             fontSize: 40,
@@ -328,7 +395,10 @@ class LetterPage extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          '21',
+                          // hoursLeft(surat.tglAkhir).toString(),
+                          isExpired(surat.tglAkhir)
+                              ? hoursLeft(surat.tglAkhir).toString()
+                              : '0',
                           style: txBold.copyWith(
                             color: whiteColor,
                             fontSize: 40,
@@ -365,7 +435,7 @@ class LetterPage extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              'Perjalanan dinas dalam rangka Pelatihan SOTK Pemerintahan Desa Bagi Perangkat Desa diawal masa jabatan Angkatan II di balai Pmerintahan Desa di Lampung di Provinsi Lampung',
+              surat.keterangan,
               style: txRegular.copyWith(
                 color: blackColor,
                 fontSize: 14,

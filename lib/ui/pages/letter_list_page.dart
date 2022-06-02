@@ -45,7 +45,7 @@ class LetterListPage extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
             LetterListTab(),
             LetterListTab(),

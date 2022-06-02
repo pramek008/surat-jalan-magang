@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:surat_jalan/models/surat_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
-import 'package:surat_jalan/ui/pages/letter_list_page.dart';
 import 'package:surat_jalan/ui/pages/letter_page.dart';
 
 class CardLetterWidget extends StatelessWidget {
   final Color color;
+  final SuratModel surat;
 
-  const CardLetterWidget({Key? key, required this.color}) : super(key: key);
+  const CardLetterWidget({
+    Key? key,
+    required this.color,
+    required this.surat,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     //*--------------------------------------------------------------------
+
+    int daysLengt(DateTime from, DateTime to) {
+      from =
+          DateTime(surat.tglAwal.year, surat.tglAwal.month, surat.tglAwal.day);
+      to = DateTime(
+          surat.tglAkhir.year, surat.tglAkhir.month, surat.tglAkhir.day);
+      return to.difference(from).inDays;
+    }
 
     //* Background card with rounded corners decoration
     Widget backgroudCard(Color color) {
@@ -78,7 +92,7 @@ class CardLetterWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    '10 Hari',
+                    "${daysLengt(surat.tglAwal, surat.tglAkhir).toString()} Hari",
                     style: txRegular.copyWith(
                       color: blackColor,
                       fontSize: 12,
@@ -90,7 +104,7 @@ class CardLetterWidget extends StatelessWidget {
             const SizedBox(height: 4),
             const SizedBox(height: 8),
             Text(
-              'Pelatihan IOT dengan basis Satelit',
+              surat.maksudPerjalanan,
               style: txSemiBold.copyWith(
                 fontSize: 18,
                 color: whiteColor,
@@ -103,7 +117,7 @@ class CardLetterWidget extends StatelessWidget {
               children: [
                 const Spacer(),
                 Text(
-                  '20 Mei 2022',
+                  DateFormat('dd MMM yyyy', 'id_ID').format(surat.tglAwal),
                   style: txRegular.copyWith(
                     fontSize: 14,
                     color: whiteColor,
@@ -115,7 +129,7 @@ class CardLetterWidget extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              'Provinsi Lampung Kabupaten Lampung Selatan',
+              surat.lokasiTujuan,
               style: txRegular.copyWith(
                 fontSize: 14,
                 color: whiteColor,
@@ -134,7 +148,7 @@ class CardLetterWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => LetterPage(),
+            builder: (context) => LetterPage(surat: surat),
           ),
         );
       },

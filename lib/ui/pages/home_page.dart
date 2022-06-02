@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:surat_jalan/dummy_data.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/widgets/card_letter_widget.dart';
 import 'package:surat_jalan/ui/widgets/card_news_widget.dart';
@@ -108,20 +109,13 @@ class HomePage extends StatelessWidget {
                 left: defaultMargin,
               ),
               scrollDirection: Axis.horizontal,
-              children: [
-                CardLetterWidget(
-                  color: (colors..shuffle()).first,
-                ),
-                CardLetterWidget(
-                  color: (colors..shuffle()).first,
-                ),
-                CardLetterWidget(
-                  color: (colors..shuffle()).first,
-                ),
-                CardLetterWidget(
-                  color: (colors..shuffle()).first,
-                ),
-              ],
+              children: dummySurat
+                  .map((e) => CardLetterWidget(
+                        surat: e,
+                        // color: colors[e.id % 2],
+                        color: (colors..shuffle()).first,
+                      ))
+                  .toList(),
             ),
           )
         ],
