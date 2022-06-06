@@ -9,11 +9,8 @@ import 'package:surat_jalan/ui/pages/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('id_ID', null).then(
-    (_) => runApp(
-      const MyApp(),
-    ),
-  );
+  await initializeDateFormatting('id_ID', null)
+      .then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

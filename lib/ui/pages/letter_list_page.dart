@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:surat_jalan/dummy_data.dart';
 import 'package:surat_jalan/shared/theme.dart';
-import 'package:surat_jalan/ui/pages/letter_tab.dart';
+import 'package:surat_jalan/ui/pages/letter_tabs/letter_done_tab.dart';
+import 'package:surat_jalan/ui/pages/letter_tabs/letter_onprogress_tab.dart';
 
 class LetterListPage extends StatelessWidget {
   const LetterListPage({Key? key}) : super(key: key);
@@ -32,23 +34,23 @@ class LetterListPage extends StatelessWidget {
             tabs: [
               Tab(
                 child: Text(
-                  'Terbaru ( 4 )',
+                  'Terbaru ( ${dummySurat.where((element) => element.tglAkhir.isAfter(DateTime.now())).length} )',
                   style: txSemiBold.copyWith(fontSize: 16),
                 ),
               ),
               Tab(
                 child: Text(
-                  'Selesai ( 2 )',
+                  'Selesai ( ${dummySurat.where((element) => element.tglAkhir.isBefore(DateTime.now())).length} )',
                   style: txSemiBold.copyWith(fontSize: 16),
                 ),
               ),
             ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            LetterListTab(),
-            LetterListTab(),
+            LetterOnProgressListTab(),
+            LetterDoneListTab(),
           ],
         ),
       ),

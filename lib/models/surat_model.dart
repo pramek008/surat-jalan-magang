@@ -7,7 +7,7 @@ class SuratModel extends Equatable {
   final String maksudPerjalanan;
   final String nomorSurat;
   final String pemberiPerintah;
-  final String menerimaPerintah;
+  final String penerimaPerintah;
   final List<String> anggotaMengikuti;
   final String lokasiTujuan;
   final DateTime tglAwal;
@@ -22,7 +22,7 @@ class SuratModel extends Equatable {
     required this.maksudPerjalanan,
     required this.nomorSurat,
     required this.pemberiPerintah,
-    required this.menerimaPerintah,
+    required this.penerimaPerintah,
     this.anggotaMengikuti = const [],
     required this.lokasiTujuan,
     required this.tglAwal,
@@ -43,7 +43,7 @@ class SuratModel extends Equatable {
         maksudPerjalanan: json["maksudPerjalanan"],
         nomorSurat: json["nomor_surat"],
         pemberiPerintah: json["pemberi_perintah"],
-        menerimaPerintah: json["menerima_perintah"],
+        penerimaPerintah: json["menerima_perintah"],
         anggotaMengikuti:
             List<String>.from(json["anggota_mengikuti"].map((x) => x)),
         lokasiTujuan: json["lokasi_tujuan"],
@@ -60,7 +60,7 @@ class SuratModel extends Equatable {
         "maksudPerjalanan": maksudPerjalanan,
         "nomor_surat": nomorSurat,
         "pemberi_perintah": pemberiPerintah,
-        "menerima_perintah": menerimaPerintah,
+        "menerima_perintah": penerimaPerintah,
         "anggota_mengikuti": List<dynamic>.from(anggotaMengikuti.map((x) => x)),
         "lokasi_tujuan": lokasiTujuan,
         "tgl_awal":
@@ -79,7 +79,7 @@ class SuratModel extends Equatable {
         maksudPerjalanan,
         nomorSurat,
         pemberiPerintah,
-        menerimaPerintah,
+        penerimaPerintah,
         anggotaMengikuti,
         lokasiTujuan,
         tglAwal,

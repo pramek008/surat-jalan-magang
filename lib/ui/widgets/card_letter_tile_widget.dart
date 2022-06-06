@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:surat_jalan/models/surat_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/letter_page.dart';
@@ -76,12 +77,12 @@ class CardLetterTileWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-              flex: 3,
+              flex: 4,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '001.SPPD/Kec.8.8/SD/2021',
+                    surat.nomorSurat,
                     style: txRegular.copyWith(
                       fontSize: 14,
                       color: whiteColor,
@@ -91,7 +92,7 @@ class CardLetterTileWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Pelatihan SOT Dalam Rangka Motor',
+                    surat.maksudPerjalanan,
                     style: txSemiBold.copyWith(
                       fontSize: 20,
                       color: whiteColor,
@@ -112,7 +113,7 @@ class CardLetterTileWidget extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    'Provinsi Lampung Utara Barat',
+                    surat.lokasiTujuan,
                     style: txRegular.copyWith(
                       fontSize: 14,
                       color: whiteColor,
@@ -124,7 +125,7 @@ class CardLetterTileWidget extends StatelessWidget {
               ),
             ),
             Flexible(
-              flex: 1,
+              flex: 2,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -142,6 +143,7 @@ class CardLetterTileWidget extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
+                        //! hitung banyak kegiatan di dalam surat
                         '4',
                         style: txBold.copyWith(
                           fontSize: 16,
@@ -162,11 +164,14 @@ class CardLetterTileWidget extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '22 Mei 2022',
+                        DateFormat('dd MMMM yyyy', 'id_ID')
+                            .format(surat.tglAkhir),
                         style: txMedium.copyWith(
                           fontSize: 14,
                           color: whiteColor,
                         ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -188,18 +193,16 @@ class CardLetterTileWidget extends StatelessWidget {
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(
-          bottom: 16,
-        ),
+        margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: color,
           boxShadow: [
             BoxShadow(
-              color: blackColor.withOpacity(0.3),
-              blurRadius: 10,
+              color: blackColor.withOpacity(0.2),
+              blurRadius: 5,
               spreadRadius: 2,
-              offset: const Offset(2, 3),
+              offset: const Offset(3, 2),
             ),
           ],
         ),

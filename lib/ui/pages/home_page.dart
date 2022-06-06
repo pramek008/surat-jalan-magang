@@ -68,7 +68,7 @@ class HomePage extends StatelessWidget {
               'Stefan Rodrigues',
               style: txRegular.copyWith(
                 color: blackColor,
-                fontSize: 16,
+                fontSize: 18,
               ),
             ),
           ],

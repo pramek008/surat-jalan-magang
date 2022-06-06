@@ -67,9 +67,9 @@ class LetterPage extends StatelessWidget {
                 surat.maksudPerjalanan,
                 style: txBold.copyWith(
                   color: primaryColor,
-                  fontSize: 32,
+                  fontSize: 28,
                 ),
-                maxLines: 2,
+                maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -181,7 +181,7 @@ class LetterPage extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              surat.menerimaPerintah,
+              surat.penerimaPerintah,
               style: txRegular.copyWith(
                 color: blackColor,
                 fontSize: 14,
