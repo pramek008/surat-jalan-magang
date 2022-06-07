@@ -2,6 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:surat_jalan/cubit/location_cubit.dart';
 import 'package:surat_jalan/shared/theme.dart';
 
@@ -98,8 +99,6 @@ class LaporanKegiatanAddPage extends StatelessWidget {
       }
 
       Widget namaKegiatan() {
-        // TextEditingController namaKegiatanController = TextEditingController();
-
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -224,7 +223,90 @@ class LaporanKegiatanAddPage extends StatelessWidget {
       }
 
       Widget fotoKegiatan() {
-        Widget addImage() => DottedBorder(
+        Widget buildSheet(context, state) => Material(
+              child: Column(
+                children: [
+                  Container(
+                    height: 8,
+                    width: 50,
+                    margin: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: greySubHeaderColor,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.camera_alt,
+                        size: 40,
+                        color: greyDeepColor,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'From Camera',
+                        style: txMedium.copyWith(
+                          fontSize: 18,
+                          color: blackColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.photo_library_outlined,
+                        size: 40,
+                        color: greyDeepColor,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'From Galery',
+                        style: txMedium.copyWith(
+                          fontSize: 18,
+                          color: blackColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+
+        Future showSheet() {
+          return showSlidingBottomSheet(
+            context,
+            builder: (context) => SlidingSheetDialog(
+              snapSpec: const SnapSpec(
+                snappings: [0.7, 0.7],
+              ),
+              builder: buildSheet,
+              padding: const EdgeInsets.only(
+                // top: 24,
+                left: 20,
+                right: 20,
+                bottom: 28,
+              ),
+              elevation: 12,
+              cornerRadius: 16,
+            ),
+          );
+        }
+
+        Widget addImage() {
+          return InkWell(
+            onTap: showSheet,
+            child: DottedBorder(
               color: greyIconColor,
               radius: const Radius.circular(20),
               dashPattern: const [10, 10],
@@ -254,7 +336,9 @@ class LaporanKegiatanAddPage extends StatelessWidget {
                   ),
                 ),
               ),
-            );
+            ),
+          );
+        }
 
         Widget imageData() => Container(
               width: 100,

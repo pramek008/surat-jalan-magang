@@ -8,7 +8,7 @@ final dummySurat = [
     judul: 'Pelatihan SOTK',
     pemberiPerintah: 'Cawisadi Bakti Pranowo',
     penerimaPerintah: 'Stefan Rodrigues S.Kom',
-    anggotaMengikuti: [
+    anggotaMengikuti: const [
       "Stefan Rodrigues S.Kom",
       "Cawisadi Bakti Pranowo",
       "Sri Wahyuni"
@@ -103,3 +103,5 @@ final dummySurat = [
     updatedAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
   )
 ];
+
+final dummyLaporan = [];
