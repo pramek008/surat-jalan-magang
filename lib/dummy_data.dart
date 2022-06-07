@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:surat_jalan/models/surat_model.dart';
 
 final dummySurat = [
-  SuratModel(
+  LetterModel(
     id: 1,
     userId: 2,
     nomorSurat: '001.SPPD/Kec.8.8/SD/2021',
-    maksudPerjalanan: 'Pelatihan SOTK',
+    judul: 'Pelatihan SOTK',
     pemberiPerintah: 'Cawisadi Bakti Pranowo',
     penerimaPerintah: 'Stefan Rodrigues S.Kom',
     anggotaMengikuti: [
@@ -24,11 +22,11 @@ final dummySurat = [
     createdAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
     updatedAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
   ),
-  SuratModel(
+  LetterModel(
     id: 1,
     userId: 2,
     nomorSurat: '001.SPPD/Kec.8.8/SD/2021',
-    maksudPerjalanan: 'Kontes Hotimportnight',
+    judul: 'Kontes Hotimportnight',
     pemberiPerintah: 'Cawisadi Bakti Pranowo',
     penerimaPerintah: 'Stefan Rodrigues S.Kom',
     anggotaMengikuti: [],
@@ -40,11 +38,11 @@ final dummySurat = [
     createdAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
     updatedAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
   ),
-  SuratModel(
+  LetterModel(
     id: 1,
     userId: 2,
     nomorSurat: '001.SPPD/Kec.8.8/SD/2021',
-    maksudPerjalanan: 'Pelatihan Pengelolaan Keuangan Desa Tahun Anggaran 2020',
+    judul: 'Pelatihan Pengelolaan Keuangan Desa Tahun Anggaran 2020',
     pemberiPerintah: 'KEPALA DESA JULI TAMBO TANJONG',
     penerimaPerintah: 'FADLI',
     anggotaMengikuti: [],
@@ -56,11 +54,11 @@ final dummySurat = [
     createdAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
     updatedAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
   ),
-  SuratModel(
+  LetterModel(
     id: 1,
     userId: 2,
     nomorSurat: '60/77/SMA2W/2016',
-    maksudPerjalanan: 'mengadakan kontrak kerjasama dan perluasan usaha',
+    judul: 'mengadakan kontrak kerjasama dan perluasan usaha',
     pemberiPerintah: 'Sutardi, S.pd,.M.Si',
     penerimaPerintah: 'Sinta, S.E',
     anggotaMengikuti: [],
@@ -72,11 +70,11 @@ final dummySurat = [
     createdAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
     updatedAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
   ),
-  SuratModel(
+  LetterModel(
     id: 1,
     userId: 2,
     nomorSurat: '123/SMK.10/2016',
-    maksudPerjalanan: 'Mengikuti PLPG Gelombang I Rayon 114 UNESA 2016',
+    judul: 'Mengikuti PLPG Gelombang I Rayon 114 UNESA 2016',
     pemberiPerintah: 'Kepala SMK Negeri 10',
     penerimaPerintah: ': Andi Wijaya, M.Pd',
     anggotaMengikuti: [],
@@ -88,11 +86,11 @@ final dummySurat = [
     createdAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
     updatedAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
   ),
-  SuratModel(
+  LetterModel(
     id: 1,
     userId: 2,
     nomorSurat: '50/57/SMA3Y/2017',
-    maksudPerjalanan: 'mengadakan kontrak kerjasama',
+    judul: 'mengadakan kontrak kerjasama',
     pemberiPerintah: 'Nanang, S.pd,.M.Si',
     penerimaPerintah: 'Jatmiko, S.E',
     anggotaMengikuti: [],

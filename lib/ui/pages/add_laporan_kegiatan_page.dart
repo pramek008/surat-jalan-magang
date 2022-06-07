@@ -1,16 +1,31 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:surat_jalan/cubit/location_cubit.dart';
 import 'package:surat_jalan/shared/theme.dart';
 
-class LaporanKegiatanPage extends StatelessWidget {
-  const LaporanKegiatanPage({Key? key}) : super(key: key);
+class LaporanKegiatanAddPage extends StatelessWidget {
+  const LaporanKegiatanAddPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     //* Text field controller
     TextEditingController notulenController = TextEditingController();
     TextEditingController namaKegiatanController = TextEditingController();
+
+    String? street;
+    String? subLocality;
+    String? locality;
+    String? subAdministrativeArea;
+    String? administrativeArea;
+    String? country;
+
+    String oneLineAdd =
+        '$street, $subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country';
+
+    double latitude;
+    double longitude;
 
     Widget heading() {
       return Padding(
@@ -327,20 +342,141 @@ class LaporanKegiatanPage extends StatelessWidget {
       }
 
       Widget lokasi() {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Lokasi Kegiatan',
-              style: txMedium.copyWith(
-                color: primaryColor,
-                fontSize: 18,
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
+        return BlocConsumer<LocationCubit, LocationState>(
+          listener: (context, state) {
+            if (state is LocationError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.message.toString(),
+                    style: txRegular.copyWith(
+                      color: whiteColor,
+                    ),
+                  ),
+                  backgroundColor: redStatusColor,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state is LocationLoading) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Lokasi Kegiatan',
+                        style: txMedium.copyWith(
+                          color: primaryColor,
+                          fontSize: 18,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          context.read<LocationCubit>().getCurrentLocation();
+                        },
+                        style: TextButton.styleFrom(
+                          shadowColor: primaryColor.withOpacity(0.8),
+                          backgroundColor: primaryColor,
+                        ),
+                        child: Text(
+                          'Set Lokasi',
+                          style: txMedium.copyWith(
+                            color: whiteColor,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ],
+              );
+            } else if (state is LocationLoaded) {
+              //* menangkap data alamat menurut lokasi
+              street = state.address.street.toString();
+              subLocality = state.address.subLocality.toString();
+              locality = state.address.locality.toString();
+              subAdministrativeArea =
+                  state.address.subAdministrativeArea.toString();
+              administrativeArea = state.address.administrativeArea.toString();
+              country = state.address.country.toString();
+
+              oneLineAdd =
+                  '$street, $subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country';
+
+              //* menangkap data lokasi (long dan lat)
+              longitude = state.position.longitude;
+              latitude = state.position.latitude;
+
+              print(state.address.toString());
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Lokasi Kegiatan',
+                      style: txMedium.copyWith(
+                        color: primaryColor,
+                        fontSize: 18,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        context.read<LocationCubit>().getCurrentLocation();
+                      },
+                      style: TextButton.styleFrom(
+                        shadowColor: primaryColor.withOpacity(0.8),
+                        backgroundColor: primaryColor,
+                      ),
+                      child: Text(
+                        'Set Lokasi',
+                        style: txMedium.copyWith(
+                          color: whiteColor,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Alamat',
+                      style: txMedium.copyWith(
+                        fontSize: 16,
+                        color: blackColor,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15),
+                      child: Text(
+                        oneLineAdd,
+                        style: txRegular.copyWith(
+                          fontSize: 16,
+                          color: blackColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
         );
       }
 

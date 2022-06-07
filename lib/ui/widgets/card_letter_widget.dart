@@ -6,7 +6,7 @@ import 'package:surat_jalan/ui/pages/letter_page.dart';
 
 class CardLetterWidget extends StatelessWidget {
   final Color color;
-  final SuratModel surat;
+  final LetterModel surat;
 
   const CardLetterWidget({
     Key? key,
@@ -104,7 +104,7 @@ class CardLetterWidget extends StatelessWidget {
             const SizedBox(height: 4),
             const SizedBox(height: 8),
             Text(
-              surat.maksudPerjalanan,
+              surat.judul,
               style: txSemiBold.copyWith(
                 fontSize: 18,
                 color: whiteColor,

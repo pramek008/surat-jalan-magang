@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:surat_jalan/cubit/location_cubit.dart';
 import 'package:surat_jalan/cubit/page_cubit.dart';
 import 'package:surat_jalan/ui/main_page.dart';
 import 'package:surat_jalan/ui/pages/login_page.dart';
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<PageCubit>(
           create: (context) => PageCubit(),
+        ),
+        BlocProvider<LocationCubit>(
+          create: (context) => LocationCubit(),
         ),
       ],
       child: MaterialApp(

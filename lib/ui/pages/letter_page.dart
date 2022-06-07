@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:surat_jalan/models/surat_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
-import 'package:surat_jalan/ui/pages/laporan_kegiatan_page.dart';
+import 'package:surat_jalan/ui/pages/add_laporan_kegiatan_page.dart';
 import 'package:surat_jalan/ui/widgets/card_laporan_widget.dart';
 import 'package:surat_jalan/ui/widgets/letter_status_widget.dart';
 
 class LetterPage extends StatelessWidget {
-  final SuratModel surat;
+  final LetterModel surat;
 
   const LetterPage({
     Key? key,
@@ -64,7 +64,7 @@ class LetterPage extends StatelessWidget {
             Expanded(
               flex: 4,
               child: Text(
-                surat.maksudPerjalanan,
+                surat.judul,
                 style: txBold.copyWith(
                   color: primaryColor,
                   fontSize: 28,
@@ -476,7 +476,7 @@ class LetterPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const LaporanKegiatanPage(),
+                        builder: (context) => const LaporanKegiatanAddPage(),
                       ),
                     );
                   },
