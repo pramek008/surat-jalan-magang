@@ -1,19 +1,30 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:surat_jalan/cubit/location_cubit.dart';
 import 'package:surat_jalan/shared/theme.dart';
 
-class LaporanKegiatanAddPage extends StatelessWidget {
+class LaporanKegiatanAddPage extends StatefulWidget {
   const LaporanKegiatanAddPage({Key? key}) : super(key: key);
 
+  @override
+  State<LaporanKegiatanAddPage> createState() => _LaporanKegiatanAddPageState();
+}
+
+class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
   @override
   Widget build(BuildContext context) {
     //* Text field controller
     TextEditingController notulenController = TextEditingController();
     TextEditingController namaKegiatanController = TextEditingController();
+
+    final ImagePicker _picker = ImagePicker();
+    List<XFile> _imagesList = [];
 
     String? street;
     String? subLocality;
@@ -23,11 +34,23 @@ class LaporanKegiatanAddPage extends StatelessWidget {
     String? country;
 
     String oneLineAdd =
-        '$street, $subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country';
+        '${street ?? ''} ${subLocality ?? ''} ${locality ?? ''} ${subAdministrativeArea ?? ''} ${administrativeArea ?? ''} ${country ?? ''}';
 
     double latitude;
     double longitude;
 
+    Future<void> fromGallery() async {
+      final XFile? selectedImage =
+          await _picker.pickImage(source: ImageSource.gallery);
+      if (selectedImage != null) {
+        _imagesList.add(selectedImage);
+      }
+      setState(() {});
+      print(selectedImage!.path);
+      print(_imagesList);
+    }
+
+    //*========================== UI ============================
     Widget heading() {
       return Padding(
         padding: EdgeInsets.symmetric(
@@ -223,66 +246,84 @@ class LaporanKegiatanAddPage extends StatelessWidget {
       }
 
       Widget fotoKegiatan() {
+        bool isImage = _imagesList.isNotEmpty;
+        print(isImage);
+
         Widget buildSheet(context, state) => Material(
-              child: Column(
-                children: [
-                  Container(
-                    height: 8,
-                    width: 50,
-                    margin: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: greySubHeaderColor,
-                      borderRadius: BorderRadius.circular(16),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: whiteColor,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 8,
+                      width: 50,
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: greySubHeaderColor,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.camera_alt,
-                        size: 40,
-                        color: greyDeepColor,
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.camera_alt,
+                            size: 40,
+                            color: greyDeepColor,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'From Camera',
+                            style: txMedium.copyWith(
+                              fontSize: 18,
+                              color: blackColor,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(
-                        width: 10,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        fromGallery();
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.photo_library_outlined,
+                            size: 40,
+                            color: greyDeepColor,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            'From Galery',
+                            style: txMedium.copyWith(
+                              fontSize: 18,
+                              color: blackColor,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        'From Camera',
-                        style: txMedium.copyWith(
-                          fontSize: 18,
-                          color: blackColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.photo_library_outlined,
-                        size: 40,
-                        color: greyDeepColor,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'From Galery',
-                        style: txMedium.copyWith(
-                          fontSize: 18,
-                          color: blackColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             );
 
+        //*Buttom Sheet builder
         Future showSheet() {
           return showSlidingBottomSheet(
             context,
@@ -299,6 +340,7 @@ class LaporanKegiatanAddPage extends StatelessWidget {
               ),
               elevation: 12,
               cornerRadius: 16,
+              dismissOnBackdropTap: true,
             ),
           );
         }
@@ -340,14 +382,13 @@ class LaporanKegiatanAddPage extends StatelessWidget {
           );
         }
 
-        Widget imageData() => Container(
+        Widget imageData(File image) => Container(
               width: 100,
               height: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                image: const DecorationImage(
-                  image: NetworkImage(
-                      'https://ecs7.tokopedia.net/blog-tokopedia-com/uploads/2021/08/5-Contoh-Notulen-Rapat-Efektif-dan-Benar.jpg'),
+                image: DecorationImage(
+                  image: Image.file(image) as ImageProvider,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -366,26 +407,24 @@ class LaporanKegiatanAddPage extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Wrap(
-              alignment: WrapAlignment.spaceAround,
-              spacing: 20,
-              runSpacing: 20,
-              children: [
-                imageData(),
-                imageData(),
-                imageData(),
-                imageData(),
-                imageData(),
-                imageData(),
-                addImage(),
-              ],
+            SizedBox(
+              height: isImage ? 300 : 0,
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3),
+                itemCount: _imagesList.length,
+                itemBuilder: (context, index) => Image.file(
+                  File(_imagesList[index].path),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
+            addImage(),
           ],
         );
       }
 
       Widget notulen() {
-        // TextEditingController notulenController = TextEditingController();
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

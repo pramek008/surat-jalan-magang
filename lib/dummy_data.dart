@@ -15,8 +15,8 @@ final dummySurat = [
     ],
     lokasiTujuan:
         'Kpg. Tambun No. 907, Prabumulih 48553, DIY (Kota Prabumulih) - Jawa Timur (Indonesia)',
-    tglAwal: DateTime.parse("2022-06-01"),
-    tglAkhir: DateTime.parse('2022-06-06'),
+    tglAwal: DateTime.parse("2022-06-07"),
+    tglAkhir: DateTime.parse('2022-06-09'),
     keterangan:
         "Perjalanan dinas dalam rangka Pelatihan SOTK Pemerintahan Desa Bagi Perangkat Desa diawal masa jabatan Angkatan II di balai Pmerintahan Desa di Lampung di Provinsi Lampung",
     createdAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
