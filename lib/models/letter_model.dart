@@ -2,17 +2,16 @@
 //
 //     final letterModel = letterModelFromJson(jsonString);
 
-import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
-class LetterModel extends Equatable {
-  const LetterModel({
+class LetterModel {
+  LetterModel({
     required this.id,
     required this.userId,
     required this.judul,
     required this.nomorSurat,
     required this.pemberiPerintah,
-    required this.penerimaPerintah,
     required this.anggotaMengikuti,
     required this.lokasiTujuan,
     required this.keterangan,
@@ -24,11 +23,10 @@ class LetterModel extends Equatable {
   });
 
   final int id;
-  final int userId;
+  final UserId userId;
   final String judul;
   final String nomorSurat;
   final String pemberiPerintah;
-  final String penerimaPerintah;
   final List<String> anggotaMengikuti;
   final String lokasiTujuan;
   final String keterangan;
@@ -45,11 +43,10 @@ class LetterModel extends Equatable {
 
   factory LetterModel.fromJson(Map<String, dynamic> json) => LetterModel(
         id: json["id"],
-        userId: json["user_id"],
+        userId: UserId.fromJson(json["user_id"]),
         judul: json["judul"],
         nomorSurat: json["nomor_surat"],
         pemberiPerintah: json["pemberi_perintah"],
-        penerimaPerintah: json["penerima_perintah"],
         anggotaMengikuti:
             List<String>.from(json["anggota_mengikuti"].map((x) => x)),
         lokasiTujuan: json["lokasi_tujuan"],
@@ -63,11 +60,10 @@ class LetterModel extends Equatable {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "user_id": userId,
+        "user_id": userId.toJson(),
         "judul": judul,
         "nomor_surat": nomorSurat,
         "pemberi_perintah": pemberiPerintah,
-        "penerima_perintah": penerimaPerintah,
         "anggota_mengikuti": List<dynamic>.from(anggotaMengikuti.map((x) => x)),
         "lokasi_tujuan": lokasiTujuan,
         "keterangan": keterangan,
@@ -79,22 +75,28 @@ class LetterModel extends Equatable {
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
       };
+}
 
-  @override
-  List<Object?> get props => [
-        id,
-        userId,
-        judul,
-        nomorSurat,
-        pemberiPerintah,
-        penerimaPerintah,
-        anggotaMengikuti,
-        lokasiTujuan,
-        keterangan,
-        tglAwal,
-        tglAkhir,
-        status,
-        createdAt,
-        updatedAt,
-      ];
+class UserId {
+  UserId({
+    required this.id,
+    required this.name,
+  });
+
+  final int id;
+  final String name;
+
+  factory UserId.fromRawJson(String str) => UserId.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory UserId.fromJson(Map<String, dynamic> json) => UserId(
+        id: json["id"],
+        name: json["name"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+      };
 }

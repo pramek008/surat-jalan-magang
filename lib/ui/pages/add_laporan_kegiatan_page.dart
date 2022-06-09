@@ -26,8 +26,8 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
       _imagesList.addAll(selectedImage);
     }
     setState(() {});
-    print(selectedImage!.length);
-    print(_imagesList);
+    // print(selectedImage!.length);
+    // print(_imagesList);
   }
 
   void fromCamera() async {
@@ -37,8 +37,8 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
       _imagesList.add(selectedImage);
     }
     setState(() {});
-    print(selectedImage!.path);
-    print('list lengt ${_imagesList.length}');
+    // print(selectedImage!.path);
+    // print('list lengt ${_imagesList.length}');
   }
 
   @override
@@ -258,9 +258,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
       Widget fotoKegiatan() {
         bool isImage = _imagesList.isNotEmpty;
         int coutList = _imagesList.length;
-        int heightCanvas = (coutList / 3).ceil();
-
-        print(isImage);
+        int manyRow = (coutList / 3).ceil();
 
         Widget buildSheet(context, state) => Material(
               child: Container(
@@ -363,7 +361,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
         Widget imageData(File image) => Container(
               width: 100,
               height: 100,
-              margin: EdgeInsets.all(5),
+              margin: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 image: DecorationImage(
@@ -424,7 +422,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
               height: 10,
             ),
             SizedBox(
-              height: isImage ? (heightCanvas * 125) : 10,
+              height: isImage ? (manyRow * 125) : 10,
               child: GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

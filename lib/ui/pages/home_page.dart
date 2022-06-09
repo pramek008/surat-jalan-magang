@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:surat_jalan/cubit/letter_cubit.dart';
 import 'package:surat_jalan/dummy_data.dart';
+import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/widgets/card_letter_widget.dart';
 import 'package:surat_jalan/ui/widgets/card_news_widget.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    context.read<LetterCubit>().getAllLetter();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +90,7 @@ class HomePage extends StatelessWidget {
       );
     }
 
-    Widget suratPerjalanan() {
+    Widget suratPerjalanan(List<LetterModel> letter) {
       var colors = [
         const Color(0xff006EE9),
         const Color(0xff18DC4F),
@@ -109,7 +123,7 @@ class HomePage extends StatelessWidget {
                 left: defaultMargin,
               ),
               scrollDirection: Axis.horizontal,
-              children: dummySurat
+              children: letter
                   .map((e) => CardLetterWidget(
                         surat: e,
                         // color: colors[e.id % 2],
@@ -154,25 +168,65 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: backgrounColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Wrap(
-                runSpacing: 10,
+      body: BlocConsumer<LetterCubit, LetterState>(
+        listener: (context, state) {
+          if (state is LetterError) {
+            print(state.message);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                duration: const Duration(seconds: 3),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is LetterLoaded) {
+            print(state.letters);
+            return SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Wrap(
+                      runSpacing: 10,
+                      children: [
+                        timeHeading(),
+                        greetingText(),
+                        suratPerjalanan(state.letters),
+                        berita(),
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.12,
+                    )
+                  ],
+                ),
+              ),
+            );
+          }
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  timeHeading(),
-                  greetingText(),
-                  suratPerjalanan(),
-                  berita(),
+                  Wrap(
+                    runSpacing: 10,
+                    children: [
+                      timeHeading(),
+                      greetingText(),
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      berita(),
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.12,
+                  )
                 ],
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.12,
-              )
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

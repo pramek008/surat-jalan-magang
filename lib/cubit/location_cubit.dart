@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:meta/meta.dart';
-import 'package:surat_jalan/services/location_services.dart';
+import 'package:surat_jalan/services/location_service.dart';
 
 part 'location_state.dart';
 

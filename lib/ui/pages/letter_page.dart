@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:surat_jalan/models/surat_model.dart';
+import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/add_laporan_kegiatan_page.dart';
 import 'package:surat_jalan/ui/widgets/card_laporan_widget.dart';
@@ -181,7 +181,7 @@ class LetterPage extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             Text(
-              surat.penerimaPerintah,
+              surat.userId.name,
               style: txRegular.copyWith(
                 color: blackColor,
                 fontSize: 14,

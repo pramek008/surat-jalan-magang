@@ -1,11 +1,11 @@
 // To parse this JSON data, do
 //
-//     final letterModel = letterModelFromJson(jsonString);
+//     final LaporanModel = LaporanModelFromJson(jsonString);
 
 import 'dart:convert';
 
-class LetterModel {
-  LetterModel({
+class LaporanModel {
+  LaporanModel({
     required this.id,
     required this.userId,
     required this.perintahJalanId,
@@ -27,12 +27,12 @@ class LetterModel {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  factory LetterModel.fromRawJson(String str) =>
-      LetterModel.fromJson(json.decode(str));
+  factory LaporanModel.fromRawJson(String str) =>
+      LaporanModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory LetterModel.fromJson(Map<String, dynamic> json) => LetterModel(
+  factory LaporanModel.fromJson(Map<String, dynamic> json) => LaporanModel(
         id: json["id"],
         userId: json["user_id"],
         perintahJalanId: json["perintah_jalan_id"],
