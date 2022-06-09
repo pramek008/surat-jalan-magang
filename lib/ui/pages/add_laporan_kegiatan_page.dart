@@ -17,14 +17,36 @@ class LaporanKegiatanAddPage extends StatefulWidget {
 }
 
 class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
+  final ImagePicker _picker = ImagePicker();
+  List<XFile> _imagesList = [];
+
+  Future<void> fromGallery() async {
+    final XFile? selectedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (selectedImage != null) {
+      _imagesList.add(selectedImage);
+    }
+    setState(() {});
+    print(selectedImage!.path);
+    print(_imagesList);
+  }
+
+  void fromCamera() async {
+    final XFile? selectedImage =
+        await _picker.pickImage(source: ImageSource.camera);
+    if (selectedImage != null) {
+      _imagesList.add(selectedImage);
+    }
+    setState(() {});
+    print(selectedImage!.path);
+    print('list lengt ${_imagesList.length}');
+  }
+
   @override
   Widget build(BuildContext context) {
     //* Text field controller
     TextEditingController notulenController = TextEditingController();
     TextEditingController namaKegiatanController = TextEditingController();
-
-    final ImagePicker _picker = ImagePicker();
-    List<XFile> _imagesList = [];
 
     String? street;
     String? subLocality;
@@ -38,17 +60,6 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
 
     double latitude;
     double longitude;
-
-    Future<void> fromGallery() async {
-      final XFile? selectedImage =
-          await _picker.pickImage(source: ImageSource.gallery);
-      if (selectedImage != null) {
-        _imagesList.add(selectedImage);
-      }
-      setState(() {});
-      print(selectedImage!.path);
-      print(_imagesList);
-    }
 
     //*========================== UI ============================
     Widget heading() {
@@ -247,6 +258,9 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
 
       Widget fotoKegiatan() {
         bool isImage = _imagesList.isNotEmpty;
+        int coutList = _imagesList.length;
+        int heightCanvas = (coutList / 3).ceil();
+
         print(isImage);
 
         Widget buildSheet(context, state) => Material(
@@ -270,7 +284,9 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                       height: 10,
                     ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        fromCamera();
+                      },
                       child: Row(
                         children: [
                           Icon(
@@ -345,6 +361,19 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
           );
         }
 
+        Widget imageData(File image) => Container(
+              width: 100,
+              height: 100,
+              margin: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: FileImage(image),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            );
+
         Widget addImage() {
           return InkWell(
             onTap: showSheet,
@@ -382,18 +411,6 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
           );
         }
 
-        Widget imageData(File image) => Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: DecorationImage(
-                  image: Image.file(image) as ImageProvider,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            );
-
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -408,16 +425,14 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
               height: 10,
             ),
             SizedBox(
-              height: isImage ? 300 : 0,
+              height: isImage ? (heightCanvas * 125) : 10,
               child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3),
-                itemCount: _imagesList.length,
-                itemBuilder: (context, index) => Image.file(
-                  File(_imagesList[index].path),
-                  fit: BoxFit.cover,
-                ),
-              ),
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3),
+                  itemCount: _imagesList.length,
+                  itemBuilder: (context, index) =>
+                      imageData(File(_imagesList[index].path))),
             ),
             addImage(),
           ],
