@@ -18,16 +18,15 @@ class LaporanKegiatanAddPage extends StatefulWidget {
 
 class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
   final ImagePicker _picker = ImagePicker();
-  List<XFile> _imagesList = [];
+  final List<XFile> _imagesList = [];
 
   Future<void> fromGallery() async {
-    final XFile? selectedImage =
-        await _picker.pickImage(source: ImageSource.gallery);
+    final List<XFile>? selectedImage = await _picker.pickMultiImage();
     if (selectedImage != null) {
-      _imagesList.add(selectedImage);
+      _imagesList.addAll(selectedImage);
     }
     setState(() {});
-    print(selectedImage!.path);
+    print(selectedImage!.length);
     print(_imagesList);
   }
 
