@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
       body: BlocConsumer<LetterCubit, LetterState>(
         listener: (context, state) {
           if (state is LetterError) {
-            print(state.message);
+            // print(state.message);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),

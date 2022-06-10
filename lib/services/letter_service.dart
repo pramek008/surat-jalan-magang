@@ -7,30 +7,22 @@ class LetterService {
     String url = 'https://sppd-api.herokuapp.com/api/perintah-jalan';
 
     final response = await http.get(Uri.parse(url));
-    print(response.statusCode);
+    // print(response.statusCode);
     // print(jsonDecode(response.body));
-
-    // if (response.statusCode == 200) {
-    //   List<LetterModel> letters = [];
-    //   List<dynamic> json = jsonDecode(response.body);
-    //   json.forEach((letter) {
-    //     letters.add(LetterModel.fromJson(letter));
-    //   });
-    //   return letters;
-    // } else {
-    //   throw Exception('Failed to load letter');
-    // }
 
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
         List<LetterModel> allLeter = [];
         Map<String, dynamic> json = jsonDecode(response.body);
+        // print(json);
 
         json.forEach((key, value) {
-          print(value);
+          for (var i = 0; i < value.length; i++) {
+            allLeter.add(LetterModel.fromJson(value[i]));
+          }
 
-          allLeter.add(LetterModel.fromJson(value));
-          // allLeter.add(jsonDecode(jsonDecode(value)));
+          // allLeter.add(LetterModel.fromJson(value[0]));
+          // print(allLeter);
         });
 
         return allLeter;
