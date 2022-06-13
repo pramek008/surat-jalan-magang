@@ -51,4 +51,10 @@ class LocationService {
 
     return placemark[0];
   }
+
+  Future<Placemark> getAddressFromDb(double lat, double long) async {
+    List<Placemark> placemark = await placemarkFromCoordinates(lat, long);
+
+    return placemark[0];
+  }
 }

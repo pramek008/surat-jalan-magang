@@ -20,4 +20,14 @@ class LocationCubit extends Cubit<LocationState> {
       emit(LocationError(message: e.toString()));
     }
   }
+
+  void getLocationFromDb(double lat, double long) async {
+    try {
+      emit(LocationLoading());
+      Placemark address = await LocationService().getAddressFromDb(lat, long);
+      emit(LocationFromDb(address: address));
+    } catch (e) {
+      emit(LocationError(message: e.toString()));
+    }
+  }
 }

@@ -3,20 +3,25 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
-import 'package:surat_jalan/cubit/location_cubit.dart';
-import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/dummy_laporan.dart';
 
-class LaporanKegiatanAddPage extends StatefulWidget {
-  const LaporanKegiatanAddPage({Key? key}) : super(key: key);
+import '../../cubit/location_cubit.dart';
+import '../../models/report_model.dart';
+import '../../shared/theme.dart';
+
+class LaporanKegiatanView extends StatefulWidget {
+  final ReportModel report;
+  const LaporanKegiatanView({Key? key, required this.report}) : super(key: key);
 
   @override
-  State<LaporanKegiatanAddPage> createState() => _LaporanKegiatanAddPageState();
+  State<LaporanKegiatanView> createState() => _LaporanKegiatanViewState();
 }
 
-class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
+class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
   final ImagePicker _picker = ImagePicker();
   final List<XFile> _imagesList = [];
 
@@ -26,8 +31,6 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
       _imagesList.addAll(selectedImage);
     }
     setState(() {});
-    // print(selectedImage!.length);
-    // print(_imagesList);
   }
 
   void fromCamera() async {
@@ -37,15 +40,28 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
       _imagesList.add(selectedImage);
     }
     setState(() {});
-    // print(selectedImage!.path);
-    // print('list lengt ${_imagesList.length}');
+  }
+
+  void positionfromDb() {
+    double? lat = double.tryParse(dummyReport[0].lokasi[0].toString());
+    double? lng = double.tryParse(dummyReport[0].lokasi[1].toString());
+    BlocProvider.of<LocationCubit>(context).getLocationFromDb(lat!, lng!);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    positionfromDb();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     //* Text field controller
-    TextEditingController notulenController = TextEditingController();
-    TextEditingController namaKegiatanController = TextEditingController();
+    TextEditingController namaKegiatanController =
+        TextEditingController(text: dummyReport[0].namaKegiatan);
+    TextEditingController notulenController =
+        TextEditingController(text: dummyReport[0].deskripsi);
 
     String? street;
     String? subLocality;
@@ -57,8 +73,8 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
     String oneLineAdd =
         '${street ?? ''} ${subLocality ?? ''} ${locality ?? ''} ${subAdministrativeArea ?? ''} ${administrativeArea ?? ''} ${country ?? ''}';
 
-    double latitude;
-    double longitude;
+    // double? latitude = double.tryParse(dummyReport[0].lokasi[0].toString());
+    // double? longitude = double.tryParse(dummyReport[0].lokasi[1].toString());
 
     //*========================== UI ============================
     Widget heading() {
@@ -88,7 +104,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
             ),
             const Spacer(),
             Text(
-              'Laporan Kegiatan',
+              'Laporan Kegiatan View',
               style: txSemiBold.copyWith(
                 color: whiteColor,
                 fontSize: 20,
@@ -115,12 +131,8 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
             Row(
               children: [
                 Text(
-                  DateFormat(
-                    'EEEE, dd MMMM yyyy  kk:mm ',
-                    "id_ID",
-                  ).format(
-                    DateTime.now(),
-                  ),
+                  DateFormat('dd MMMM yyyy mm:ss', "id_ID")
+                      .format(dummyReport[0].createdAt),
                   style: txRegular.copyWith(
                     color: greyDeepColor,
                   ),
@@ -174,82 +186,83 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Tanggal Mulai',
-                  style: txMedium.copyWith(
-                    color: primaryColor,
-                    fontSize: 18,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Tanggal Mulai',
+                    style: txMedium.copyWith(
+                      color: primaryColor,
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  DateFormat(
-                    'EEEE, dd MMMM yyyy ',
-                    "id_ID",
-                  ).format(
-                    DateTime.now(),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  style: txRegular.copyWith(
-                    color: greyDeepColor,
+                  Text(
+                    DateFormat(
+                      'EEEE, dd MMMM yyyy - kk:mm',
+                      "id_ID",
+                    ).format(dummyReport[0].perintahJalanId.tglAwal),
+                    style: txRegular.copyWith(
+                      color: greyDeepColor,
+                    ),
                   ),
-                ),
-                Text(
-                  DateFormat(
-                    'kk:mm ',
-                    "id_ID",
-                  ).format(
-                    DateTime.now(),
-                  ),
-                  style: txRegular.copyWith(
-                    color: greyDeepColor,
-                  ),
-                ),
-              ],
+                  // Text(
+                  //   DateFormat(
+                  //     'kk:mm ',
+                  //     "id_ID",
+                  //   ).format(
+                  //     DateTime.now(),
+                  //   ),
+                  //   style: txRegular.copyWith(
+                  //     color: greyDeepColor,
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
             const SizedBox(
               width: 12,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  'Tanggal Selesai',
-                  style: txMedium.copyWith(
-                    color: primaryColor,
-                    fontSize: 18,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Tanggal Selesai',
+                    style: txMedium.copyWith(
+                      color: primaryColor,
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  DateFormat(
-                    'EEEE, dd MMMM yyyy',
-                    "id_ID",
-                  ).format(
-                    DateTime.now(),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  style: txRegular.copyWith(
-                    color: greyDeepColor,
+                  Text(
+                    DateFormat(
+                      'EEEE, dd MMMM yyyy - kk:mm',
+                      "id_ID",
+                    ).format(dummyReport[0].perintahJalanId.tglAkhir),
+                    style: txRegular.copyWith(
+                      color: greyDeepColor,
+                    ),
+                    textAlign: TextAlign.end,
                   ),
-                ),
-                Text(
-                  DateFormat(
-                    'kk:mm ',
-                    "id_ID",
-                  ).format(
-                    DateTime.now(),
-                  ),
-                  style: txRegular.copyWith(
-                    color: greyDeepColor,
-                  ),
-                ),
-              ],
+                  // Text(
+                  //   DateFormat(
+                  //     'kk:mm ',
+                  //     "id_ID",
+                  //   ).format(
+                  //     DateTime.now(),
+                  //   ),
+                  //   style: txRegular.copyWith(
+                  //     color: greyDeepColor,
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
           ],
         );
@@ -507,65 +520,9 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
       }
 
       Widget lokasi() {
-        return BlocConsumer<LocationCubit, LocationState>(
-          listener: (context, state) {
-            if (state is LocationError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    state.message.toString(),
-                    style: txRegular.copyWith(
-                      color: whiteColor,
-                    ),
-                  ),
-                  backgroundColor: redStatusColor,
-                ),
-              );
-            }
-          },
+        return BlocBuilder<LocationCubit, LocationState>(
           builder: (context, state) {
-            if (state is LocationLoading) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Lokasi Kegiatan',
-                        style: txMedium.copyWith(
-                          color: primaryColor,
-                          fontSize: 18,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          context.read<LocationCubit>().getCurrentLocation();
-                        },
-                        style: TextButton.styleFrom(
-                          shadowColor: primaryColor.withOpacity(0.8),
-                          backgroundColor: primaryColor,
-                        ),
-                        child: Text(
-                          'Set Lokasi',
-                          style: txMedium.copyWith(
-                            color: whiteColor,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ],
-              );
-            } else if (state is LocationLoaded) {
-              //* menangkap data alamat menurut lokasi
+            if (state is LocationFromDb) {
               street = state.address.street.toString();
               subLocality = state.address.subLocality.toString();
               locality = state.address.locality.toString();
@@ -576,12 +533,6 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
 
               oneLineAdd =
                   '$street, $subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country';
-
-              //* menangkap data lokasi (long dan lat)
-              longitude = state.position.longitude;
-              latitude = state.position.latitude;
-              print(state.position);
-              print(state.address.toString());
             }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -596,22 +547,22 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                         fontSize: 18,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        context.read<LocationCubit>().getCurrentLocation();
-                      },
-                      style: TextButton.styleFrom(
-                        shadowColor: primaryColor.withOpacity(0.8),
-                        backgroundColor: primaryColor,
-                      ),
-                      child: Text(
-                        'Set Lokasi',
-                        style: txMedium.copyWith(
-                          color: whiteColor,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
+                    // TextButton(
+                    //   onPressed: () {
+                    //     context.read<LocationCubit>().getCurrentLocation();
+                    //   },
+                    //   style: TextButton.styleFrom(
+                    //     shadowColor: primaryColor.withOpacity(0.8),
+                    //     backgroundColor: primaryColor,
+                    //   ),
+                    //   child: Text(
+                    //     'Set Lokasi',
+                    //     style: txMedium.copyWith(
+                    //       color: whiteColor,
+                    //       fontSize: 14,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
                 const SizedBox(

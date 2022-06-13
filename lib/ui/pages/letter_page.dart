@@ -26,7 +26,7 @@ class LetterPage extends StatelessWidget {
 
   //* Untuk memeriksa apakah ada anggota lain yang mengikuti penugasan
   bool tanpaPengikut(List pengikut) {
-    if (pengikut.length == 0) {
+    if (pengikut.isEmpty) {
       return false;
     } else {
       return true;

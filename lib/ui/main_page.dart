@@ -18,7 +18,7 @@ class MainPage extends StatelessWidget {
         case 0:
           return const HomePage();
         case 1:
-          return const LetterListPage();
+          return LetterListPage();
         default:
           return const HomePage();
       }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:surat_jalan/dummy_laporan.dart';
+import 'package:surat_jalan/dummy_surat.dart';
 import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/ui/pages/laporan_kegiatan_view.dart';
 
 class CardLaporanWidget extends StatelessWidget {
   const CardLaporanWidget({Key? key}) : super(key: key);
@@ -7,7 +10,14 @@ class CardLaporanWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LaporanKegiatanView(
+                      report: dummyReport[0],
+                    )));
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(10),

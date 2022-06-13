@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:surat_jalan/cubit/letter_cubit.dart';
-import 'package:surat_jalan/dummy_data.dart';
+import 'package:surat_jalan/dummy_surat.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/widgets/card_letter_widget.dart';
@@ -98,7 +98,35 @@ class _HomePageState extends State<HomePage> {
         const Color(0xffDA4505),
         const Color(0xff9E20D9),
       ];
-
+      if (letter.isEmpty) {
+        return Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: defaultMargin,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Surat Perjalanan',
+                style: txSemiBold.copyWith(
+                  color: blackColor,
+                  fontSize: 24,
+                ),
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Text(
+                'Tidak ada surat perjalanan',
+                style: txMedium.copyWith(
+                  color: redStatusColor,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
+        );
+      }
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -126,7 +154,6 @@ class _HomePageState extends State<HomePage> {
               children: letter
                   .map((e) => CardLetterWidget(
                         surat: e,
-                        // color: colors[e.id % 2],
                         color: (colors..shuffle()).first,
                       ))
                   .toList(),
@@ -171,7 +198,6 @@ class _HomePageState extends State<HomePage> {
       body: BlocConsumer<LetterCubit, LetterState>(
         listener: (context, state) {
           if (state is LetterError) {
-            // print(state.message);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),
@@ -182,7 +208,6 @@ class _HomePageState extends State<HomePage> {
         },
         builder: (context, state) {
           if (state is LetterLoaded) {
-            print(state.letters);
             return SafeArea(
               child: SingleChildScrollView(
                 child: Column(

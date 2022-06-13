@@ -19,6 +19,16 @@ class LocationLoaded extends LocationState {
   List<Object?> get props => [position, address];
 }
 
+class LocationFromDb extends LocationState {
+  final Placemark address;
+
+  LocationFromDb({
+    required this.address,
+  });
+
+  List<Object?> get props => [address];
+}
+
 class LocationError extends LocationState {
   final String message;
 

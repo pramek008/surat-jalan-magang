@@ -23,7 +23,7 @@ class CardLetterWidget extends StatelessWidget {
           DateTime(surat.tglAwal.year, surat.tglAwal.month, surat.tglAwal.day);
       to = DateTime(
           surat.tglAkhir.year, surat.tglAkhir.month, surat.tglAkhir.day);
-      return to.difference(from).inDays;
+      return to.difference(from).inDays + 1;
     }
 
     //* Background card with rounded corners decoration

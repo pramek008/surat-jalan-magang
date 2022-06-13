@@ -97,5 +97,3 @@ final dummySurat = [
     updatedAt: DateTime.parse('2022-05-27T01:58:09.000000Z'),
   )
 ];
-
-final dummyLaporan = [];
