@@ -9,6 +9,8 @@ import 'package:surat_jalan/ui/main_page.dart';
 import 'package:surat_jalan/ui/pages/login_page.dart';
 import 'package:surat_jalan/ui/pages/splash_screen.dart';
 
+import 'cubit/report_cubit.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id_ID', null)
@@ -30,6 +32,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => LetterCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ReportCubit(),
         ),
       ],
       child: MaterialApp(

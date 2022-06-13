@@ -43,8 +43,8 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
   }
 
   void positionfromDb() {
-    double? lat = double.tryParse(dummyReport[0].lokasi[0].toString());
-    double? lng = double.tryParse(dummyReport[0].lokasi[1].toString());
+    double? lat = double.tryParse(widget.report.lokasi[0]);
+    double? lng = double.tryParse(widget.report.lokasi[1]);
     BlocProvider.of<LocationCubit>(context).getLocationFromDb(lat!, lng!);
   }
 
@@ -59,9 +59,9 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
   Widget build(BuildContext context) {
     //* Text field controller
     TextEditingController namaKegiatanController =
-        TextEditingController(text: dummyReport[0].namaKegiatan);
+        TextEditingController(text: widget.report.namaKegiatan);
     TextEditingController notulenController =
-        TextEditingController(text: dummyReport[0].deskripsi);
+        TextEditingController(text: widget.report.deskripsi);
 
     String? street;
     String? subLocality;
@@ -131,8 +131,8 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
             Row(
               children: [
                 Text(
-                  DateFormat('dd MMMM yyyy mm:ss', "id_ID")
-                      .format(dummyReport[0].createdAt),
+                  DateFormat('EEEE, dd MMMM yyyy hh:mm', "id_ID")
+                      .format(widget.report.createdAt),
                   style: txRegular.copyWith(
                     color: greyDeepColor,
                   ),
@@ -202,9 +202,9 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
                   ),
                   Text(
                     DateFormat(
-                      'EEEE, dd MMMM yyyy - kk:mm',
+                      'EEEE,\ndd MMMM yyyy\nhh:mm',
                       "id_ID",
-                    ).format(dummyReport[0].perintahJalanId.tglAwal),
+                    ).format(widget.report.perintahJalanId.tglAwal),
                     style: txRegular.copyWith(
                       color: greyDeepColor,
                     ),
@@ -242,9 +242,9 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
                   ),
                   Text(
                     DateFormat(
-                      'EEEE, dd MMMM yyyy - kk:mm',
+                      'EEEE,\ndd MMMM yyyy\nhh:mm',
                       "id_ID",
-                    ).format(dummyReport[0].perintahJalanId.tglAkhir),
+                    ).format(widget.report.perintahJalanId.tglAkhir),
                     style: txRegular.copyWith(
                       color: greyDeepColor,
                     ),

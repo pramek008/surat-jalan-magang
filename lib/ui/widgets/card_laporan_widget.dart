@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:surat_jalan/dummy_laporan.dart';
-import 'package:surat_jalan/dummy_surat.dart';
+import 'package:intl/intl.dart';
+import 'package:surat_jalan/models/report_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/laporan_kegiatan_view.dart';
 
 class CardLaporanWidget extends StatelessWidget {
-  const CardLaporanWidget({Key? key}) : super(key: key);
+  final ReportModel report;
+  const CardLaporanWidget({Key? key, required this.report}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class CardLaporanWidget extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => LaporanKegiatanView(
-                      report: dummyReport[0],
+                      report: report,
                     )));
       },
       child: Container(
@@ -54,7 +55,7 @@ class CardLaporanWidget extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  '+4',
+                  report.foto.length.toString(),
                   style: txRegular.copyWith(
                     color: whiteColor,
                     fontSize: 25,
@@ -70,7 +71,8 @@ class CardLaporanWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '23 Mei 2022 - 09:00',
+                    DateFormat('dd MMMM yyyy - hh:mm', "id_ID")
+                        .format(report.createdAt),
                     style: txRegular.copyWith(
                       fontSize: 12,
                       color: greyIconColor,
@@ -80,7 +82,7 @@ class CardLaporanWidget extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    'Seminar dari Pemprov Lampung Selatan di Banda Aceh',
+                    report.namaKegiatan,
                     style: txMedium.copyWith(
                       fontSize: 20,
                       color: blackColor,
@@ -93,7 +95,7 @@ class CardLaporanWidget extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    'H7F9+HH9, Jl. H. Juanda No. 1, Kota Bandar Lampung, Lampung 35121',
+                    report.lokasi.toString(),
                     style: txRegular.copyWith(
                       fontSize: 12,
                       color: greyIconColor,
