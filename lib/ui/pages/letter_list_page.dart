@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surat_jalan/cubit/letter_cubit.dart';
-import 'package:surat_jalan/cubit/location_cubit.dart';
-import 'package:surat_jalan/dummy_surat.dart';
+import 'package:surat_jalan/cubit/report_cubit.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/letter_tabs/letter_done_tab.dart';
 import 'package:surat_jalan/ui/pages/letter_tabs/letter_onprogress_tab.dart';
@@ -18,6 +17,7 @@ class _LetterListPageState extends State<LetterListPage> {
   @override
   void initState() {
     context.read<LetterCubit>().getAllLetter();
+    context.read<ReportCubit>().getAllReport();
     super.initState();
   }
 

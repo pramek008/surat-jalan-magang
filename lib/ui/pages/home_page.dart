@@ -5,9 +5,12 @@ import 'package:surat_jalan/cubit/letter_cubit.dart';
 import 'package:surat_jalan/cubit/report_cubit.dart';
 import 'package:surat_jalan/dummy_surat.dart';
 import 'package:surat_jalan/models/letter_model.dart';
+import 'package:surat_jalan/models/news_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/widgets/card_letter_widget.dart';
 import 'package:surat_jalan/ui/widgets/card_news_widget.dart';
+
+import '../../cubit/news_cubit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -20,6 +23,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     context.read<LetterCubit>().getAllLetter();
+    // context.read<ReportCubit>().getAllReport();
+    context.read<NewsCubit>().getAllNews();
     super.initState();
   }
 
@@ -128,6 +133,7 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       }
+
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -164,7 +170,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    Widget berita() {
+    Widget berita(List<NewsModel> news) {
       return Padding(
         padding: EdgeInsets.symmetric(
           horizontal: defaultMargin,
@@ -183,11 +189,11 @@ class _HomePageState extends State<HomePage> {
               height: 8,
             ),
             Column(
-              children: const [
-                CardNewsWidget(),
-                CardNewsWidget(),
-                CardNewsWidget(),
-              ],
+              children: news
+                  .map((e) => CardNewsWidget(
+                        news: e,
+                      ))
+                  .toList(),
             )
           ],
         ),
@@ -196,63 +202,89 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: backgrounColor,
-      body: BlocConsumer<LetterCubit, LetterState>(
-        listener: (context, state) {
-          if (state is LetterError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                duration: const Duration(seconds: 3),
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is LetterLoaded) {
-            return SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Wrap(
-                      runSpacing: 10,
-                      children: [
-                        timeHeading(),
-                        greetingText(),
-                        suratPerjalanan(state.letters),
-                        berita(),
-                      ],
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.12,
-                    )
-                  ],
-                ),
-              ),
-            );
-          }
-          return SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Wrap(
+                runSpacing: 10,
+                // runAlignment: WrapAlignment.start,
+                // alignment: WrapAlignment.start,
                 children: [
-                  Wrap(
-                    runSpacing: 10,
-                    children: [
-                      timeHeading(),
-                      greetingText(),
-                      const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      berita(),
-                    ],
+                  timeHeading(),
+                  greetingText(),
+                  BlocBuilder<LetterCubit, LetterState>(
+                    builder: (context, state) {
+                      if (state is LetterLoaded) {
+                        return suratPerjalanan(state.letters);
+                      } else if (state is LetterError) {
+                        return const Center(
+                          child: Text('Error'),
+                        );
+                      }
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: defaultMargin,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Surat Perjalanan Dinas',
+                              style: txSemiBold.copyWith(
+                                color: blackColor,
+                                fontSize: 24,
+                              ),
+                            ),
+                            const SizedBox(
+                                height: 220,
+                                child:
+                                    Center(child: CircularProgressIndicator())),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.12,
-                  )
+                  BlocBuilder<NewsCubit, NewsState>(
+                    builder: (context, state) {
+                      if (state is NewsLoaded) {
+                        return berita(state.news);
+                      } else if (state is NewsError) {
+                        return const Center(
+                          child: Text('Error'),
+                        );
+                      }
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: defaultMargin,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Berita',
+                              style: txSemiBold.copyWith(
+                                color: blackColor,
+                                fontSize: 24,
+                              ),
+                            ),
+                            const SizedBox(
+                                height: 220,
+                                child:
+                                    Center(child: CircularProgressIndicator())),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
-            ),
-          );
-        },
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.12,
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

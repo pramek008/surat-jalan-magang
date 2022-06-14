@@ -66,21 +66,6 @@ class LetterDoneListTab extends StatelessWidget {
                                 color: (colors..shuffle()).first, surat: e),
                           ))
                       .toList(),
-                  // [
-                  // for (var i = 0; i < state.letters.length; i++)
-                  //   Container(
-                  //     padding: i == 0
-                  //         ? EdgeInsets.only(top: defaultMargin)
-                  //         : const EdgeInsets.only(top: 0),
-                  //     margin: i == state.letters.length - 1
-                  //         ? const EdgeInsets.only(bottom: 80)
-                  //         : const EdgeInsets.only(bottom: 0),
-                  //     child: CardLetterTileWidget(
-                  //       surat: state.letters[i],
-                  //       color: colors[i],
-                  //     ),
-                  //   ),
-                  // ],
                 ),
               );
             }

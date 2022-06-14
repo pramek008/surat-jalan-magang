@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:surat_jalan/cubit/location_cubit.dart';
 import 'package:surat_jalan/models/report_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/laporan_kegiatan_view.dart';
@@ -95,14 +97,14 @@ class CardLaporanWidget extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    report.lokasi.toString(),
+                    report.perintahJalanId.tujuan,
                     style: txRegular.copyWith(
                       fontSize: 12,
                       color: greyIconColor,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                  ),
+                  )
                 ],
               ),
             ),

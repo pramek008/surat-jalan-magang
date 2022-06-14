@@ -73,9 +73,6 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
     String oneLineAdd =
         '${street ?? ''} ${subLocality ?? ''} ${locality ?? ''} ${subAdministrativeArea ?? ''} ${administrativeArea ?? ''} ${country ?? ''}';
 
-    // double? latitude = double.tryParse(dummyReport[0].lokasi[0].toString());
-    // double? longitude = double.tryParse(dummyReport[0].lokasi[1].toString());
-
     //*========================== UI ============================
     Widget heading() {
       return Padding(
@@ -209,17 +206,6 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
                       color: greyDeepColor,
                     ),
                   ),
-                  // Text(
-                  //   DateFormat(
-                  //     'kk:mm ',
-                  //     "id_ID",
-                  //   ).format(
-                  //     DateTime.now(),
-                  //   ),
-                  //   style: txRegular.copyWith(
-                  //     color: greyDeepColor,
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -250,17 +236,6 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
                     ),
                     textAlign: TextAlign.end,
                   ),
-                  // Text(
-                  //   DateFormat(
-                  //     'kk:mm ',
-                  //     "id_ID",
-                  //   ).format(
-                  //     DateTime.now(),
-                  //   ),
-                  //   style: txRegular.copyWith(
-                  //     color: greyDeepColor,
-                  //   ),
-                  // ),
                 ],
               ),
             ),

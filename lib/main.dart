@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:surat_jalan/cubit/letter_cubit.dart';
 import 'package:surat_jalan/cubit/location_cubit.dart';
+import 'package:surat_jalan/cubit/news_cubit.dart';
 import 'package:surat_jalan/cubit/page_cubit.dart';
 import 'package:surat_jalan/ui/main_page.dart';
 import 'package:surat_jalan/ui/pages/login_page.dart';
@@ -35,6 +36,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ReportCubit(),
+        ),
+        BlocProvider(
+          create: (context) => NewsCubit(),
         ),
       ],
       child: MaterialApp(

@@ -53,7 +53,7 @@ class _LetterPageState extends State<LetterPage> {
   int daysLengt(DateTime to) {
     DateTime nowDate = DateTime.now();
     to = DateTime(widget.surat.tglAkhir.year, widget.surat.tglAkhir.month,
-        widget.surat.tglAkhir.day);
+        widget.surat.tglAkhir.day + 1);
     return to.difference(nowDate).inDays;
   }
 
@@ -455,15 +455,10 @@ class _LetterPageState extends State<LetterPage> {
                 if (state is ReportLoaded) {
                   return Column(
                     children: state.reports
-                        .map((e) => CardLaporanWidget(
-                              report: e,
-                            ))
+                        .where((element) =>
+                            element.perintahJalanId.id == widget.surat.id)
+                        .map((e) => CardLaporanWidget(report: e))
                         .toList(),
-                    // const [
-                    //   //! MASIH STATIS DENGAN DATA DUMMY
-                    //   CardLaporanWidget(),
-                    //   CardLaporanWidget(),
-                    // ],
                   );
                 }
                 return const Center(
