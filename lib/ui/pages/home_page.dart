@@ -215,7 +215,9 @@ class _HomePageState extends State<HomePage> {
                   greetingText(),
                   BlocBuilder<LetterCubit, LetterState>(
                     builder: (context, state) {
-                      if (state is LetterLoaded) {
+                      if (state is LetterInitial) {
+                        context.read<LetterCubit>().getAllLetter();
+                      } else if (state is LetterLoaded) {
                         return suratPerjalanan(state.letters);
                       } else if (state is LetterError) {
                         return const Center(
@@ -247,7 +249,9 @@ class _HomePageState extends State<HomePage> {
                   ),
                   BlocBuilder<NewsCubit, NewsState>(
                     builder: (context, state) {
-                      if (state is NewsLoaded) {
+                      if (state is NewsInitial) {
+                        context.read<NewsCubit>().getAllNews();
+                      } else if (state is NewsLoaded) {
                         return berita(state.news);
                       } else if (state is NewsError) {
                         return const Center(

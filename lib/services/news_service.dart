@@ -18,7 +18,7 @@ class NewsService {
           allNews.add(NewsModel.fromJson(value));
         }
 
-        print(allNews);
+        // print(allNews);
 
         return allNews;
       } else {
