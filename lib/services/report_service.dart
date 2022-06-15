@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class ReportService {
   Future<List<ReportModel>> getAllReport() async {
-    String url = 'https://sppd-api.herokuapp.com/api/laporan-jalan';
+    String url = 'http://103.100.27.29/sppd/public/api/laporan-jalan';
 
     final response = await http.get(Uri.parse(url));
 

@@ -145,6 +145,16 @@ class CardLetterWidget extends StatelessWidget {
     //*Master Class
     return InkWell(
       onTap: () {
+        // Future.delayed(Duration.zero, () {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => LetterPage(
+        //         surat: surat,
+        //       ),
+        //     ),
+        //   );
+        // });
         Navigator.push(
           context,
           MaterialPageRoute(

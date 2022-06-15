@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:surat_jalan/bloc/auth_bloc.dart';
+import 'package:surat_jalan/bloc/login_bloc.dart';
 import 'package:surat_jalan/cubit/letter_cubit.dart';
 import 'package:surat_jalan/cubit/location_cubit.dart';
 import 'package:surat_jalan/cubit/news_cubit.dart';
@@ -25,10 +27,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<PageCubit>(
+        BlocProvider(
           create: (context) => PageCubit(),
         ),
-        BlocProvider<LocationCubit>(
+        BlocProvider(
           create: (context) => LocationCubit(),
         ),
         BlocProvider(
@@ -39,6 +41,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => NewsCubit(),
+        ),
+        BlocProvider(
+          create: (context) => LoginBloc(),
+        ),
+        BlocProvider(
+          create: (context) => AuthBloc(),
         ),
       ],
       child: MaterialApp(

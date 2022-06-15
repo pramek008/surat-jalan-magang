@@ -4,7 +4,7 @@ import 'package:surat_jalan/models/letter_model.dart';
 
 class LetterService {
   Future<List<LetterModel>> getAllLetter() async {
-    String url = 'https://sppd-api.herokuapp.com/api/perintah-jalan';
+    String url = 'http://103.100.27.29/sppd/public/api/perintah-jalan';
 
     final response = await http.get(Uri.parse(url));
     // print(response.statusCode);

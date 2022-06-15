@@ -7,24 +7,24 @@ class LoginInitial extends LoginState {
   List<Object> get props => [];
 }
 
-class LoginLoading extends LoginState {
+class LoginLoadingState extends LoginState {
   @override
   List<Object> get props => [];
 }
 
-class LoginSuccess extends LoginState {
+class LoginSuccessState extends LoginState {
   final ResponseModel response;
 
-  LoginSuccess(this.response);
+  LoginSuccessState(this.response);
 
   @override
   List<Object?> get props => [response];
 }
 
-class LoginFailure extends LoginState {
+class LoginFailureState extends LoginState {
   final String message;
 
-  LoginFailure(this.message);
+  LoginFailureState(this.message);
 
   @override
   List<Object?> get props => [message];

@@ -2,7 +2,6 @@
 //
 //     final letterModel = letterModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 class LetterModel {

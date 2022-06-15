@@ -9,16 +9,16 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInitial()) {
-    on<LoginRequested>((event, emit) async {
-      emit(LoginLoading());
+    on<LoginRequestedEvent>((event, emit) async {
+      emit(LoginLoadingState());
       try {
         final response = await AuthService().login(
           email: event.email,
           password: event.password,
         );
-        emit(LoginSuccess(response));
+        emit(LoginSuccessState(response));
       } catch (e) {
-        emit(LoginFailure(e.toString()));
+        emit(LoginFailureState(e.toString()));
       }
     });
   }
