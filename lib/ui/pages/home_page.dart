@@ -5,6 +5,7 @@ import 'package:surat_jalan/cubit/letter_cubit.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/models/news_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/ui/pages/account_page.dart';
 import 'package:surat_jalan/ui/widgets/card_letter_widget.dart';
 import 'package:surat_jalan/ui/widgets/card_news_widget.dart';
 
@@ -46,21 +47,32 @@ class _HomePageState extends State<HomePage> {
               ),
               style: txRegular.copyWith(
                 color: greyDeepColor,
+                fontSize: 14,
               ),
             ),
             const Spacer(),
-            Icon(
-              Icons.notifications,
-              color: primaryColor,
-              size: 30,
-            ),
+            // Icon(
+            //   Icons.notifications,
+            //   color: primaryColor,
+            //   size: 30,
+            // ),
             const SizedBox(
               width: 12,
             ),
-            Icon(
-              Icons.account_circle,
-              color: primaryColor,
-              size: 30,
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AccountPage(),
+                  ),
+                );
+              },
+              child: Icon(
+                Icons.account_circle,
+                color: primaryColor,
+                size: 40,
+              ),
             ),
           ],
         ),

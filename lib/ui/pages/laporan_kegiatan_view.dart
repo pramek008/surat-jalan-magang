@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
-import 'package:surat_jalan/dummy_laporan.dart';
 
 import '../../cubit/location_cubit.dart';
 import '../../models/report_model.dart';
@@ -244,8 +240,8 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
       }
 
       Widget fotoKegiatan() {
-        bool isImage = _imagesList.isNotEmpty;
-        int coutList = _imagesList.length;
+        bool isImage = widget.report.foto.isNotEmpty;
+        int coutList = widget.report.foto.length;
         int manyRow = (coutList / 3).ceil();
 
         Widget buildSheet(context, state) => Material(
@@ -346,7 +342,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
           );
         }
 
-        Widget imageData(File image, int index) {
+        Widget imageData(String image, int? index) {
           return Stack(
             children: [
               Container(
@@ -355,32 +351,33 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    image: FileImage(image),
+                    image: NetworkImage(
+                        "http://103.100.27.29/sppd/public/storage/$image"),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-              Positioned(
-                  top: 0,
-                  right: 17,
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _imagesList.removeAt(index);
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: greyDeepColor,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Icon(
-                        Icons.close_rounded,
-                        color: whiteColor,
-                        size: 25,
-                      ),
-                    ),
-                  )),
+              // Positioned(
+              //     top: 0,
+              //     right: 17,
+              //     child: InkWell(
+              //       onTap: () {
+              //         // setState(() {
+              //         //   _imagesList.removeAt(index);
+              //         // });
+              //       },
+              //       child: Container(
+              //         decoration: BoxDecoration(
+              //           color: greyDeepColor,
+              //           borderRadius: BorderRadius.circular(5),
+              //         ),
+              //         child: Icon(
+              //           Icons.close_rounded,
+              //           color: whiteColor,
+              //           size: 25,
+              //         ),
+              //       ),
+              //     )),
             ],
           );
         }
@@ -436,8 +433,8 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
               height: 10,
             ),
             SizedBox(
-              height: isImage ? (manyRow * 125) : 10,
-              child: GridView.builder(
+                height: isImage ? (manyRow * 125) : 10,
+                child: GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
@@ -445,11 +442,15 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
                     crossAxisSpacing: 0,
                     mainAxisSpacing: 0,
                   ),
-                  itemCount: _imagesList.length,
-                  itemBuilder: (context, index) =>
-                      imageData(File(_imagesList[index].path), index)),
-            ),
-            addImage(),
+                  itemCount: widget.report.foto.length,
+                  itemBuilder: (context, index) {
+                    return imageData(
+                      widget.report.foto[index].toString(),
+                      index,
+                    );
+                  },
+                )),
+            // addImage(),
           ],
         );
       }
@@ -624,6 +625,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
       );
     }
 
+    //! Master Widget BUILD
     return Scaffold(
       backgroundColor: primaryColor,
       body: SafeArea(

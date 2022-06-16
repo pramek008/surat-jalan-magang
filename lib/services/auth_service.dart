@@ -4,11 +4,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:surat_jalan/models/response_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
+import 'package:surat_jalan/services/helper_service.dart';
 import 'package:surat_jalan/services/secure_storage_service.dart';
 
 class AuthService {
-  static String url = 'http://sppd-api.herokuapp.com/api/login';
-  static String urlUser = 'http://sppd-api.herokuapp.com/api/user';
+  static String url = 'http://103.100.27.29/sppd/public/api/login';
+  static String urlUser = 'http://103.100.27.29/sppd/public/api/user';
+  static String urlLogout = 'http://103.100.27.29/sppd/public/api/logout';
 
   Future<UserModel> loadUser() async {
     final storage = await SecureStorageService.storage
@@ -65,15 +67,13 @@ class AuthService {
         "password": password,
       },
     );
-
-    print(response.body);
+    // print(response.body);
 
     final statusType = (response.statusCode / 100).floor() * 100;
     switch (statusType) {
       case 200:
         final json = jsonDecode(response.body);
         final responseData = ResponseModel.fromJson(json);
-        print("catch login => ${responseData.data.toString()}");
         // save token to secure storage
         saveToken(responseData.data!.token);
         catchUser(responseData.data!.user.id).then((user) {
@@ -100,14 +100,48 @@ class AuthService {
   }
 
   Future logout() async {
-    await SecureStorageService.storage.delete(
-      key: SecureStorageService.tokenKey,
+    var token =
+        SecureStorageService.storage.read(key: SecureStorageService.tokenKey);
+
+    print("TOKEN => $token");
+    final response = await http.post(
+      Uri.parse(urlLogout),
+      headers: HelperService.buildHeaders(accessToken: token.toString()),
     );
+    SecureStorageService.storage.deleteAll();
+
+    print(response.body);
+
+    final statusType = (response.statusCode / 100).floor() * 100;
+    switch (statusType) {
+      case 200:
+        SecureStorageService.storage.deleteAll();
+        final json = jsonDecode(response.body);
+        final responseData = ResponseModel.fromJson(json);
+
+        return responseData;
+      case 400:
+        final json = jsonDecode(response.body);
+        String message = json['message'];
+        return ResponseModel(
+          status: '400',
+          message: message,
+        );
+      case 300:
+      case 500:
+      default:
+        return ResponseModel(
+          status: '500',
+          message: 'Something went wrong',
+        );
+    }
+
+    // await SecureStorageService.storage.deleteAll();
   }
 
-  Future deleteUser() async {
-    SecureStorageService.storage.delete(
-      key: SecureStorageService.userKey,
-    );
-  }
+  // Future deleteUser() async {
+  //   SecureStorageService.storage.delete(
+  //     key: SecureStorageService.userKey,
+  //   );
+  // }
 }

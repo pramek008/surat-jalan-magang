@@ -26,3 +26,11 @@ class AuthUnauthenticatedState extends AuthState {
   @override
   List<Object?> get props => [];
 }
+
+class AuthLogoutState extends AuthState {
+  final ResponseModel response;
+
+  AuthLogoutState(this.response);
+  @override
+  List<Object?> get props => [];
+}

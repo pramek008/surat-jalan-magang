@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surat_jalan/bloc/login_bloc.dart';
-import 'package:surat_jalan/services/secure_storage_service.dart';
 import 'package:surat_jalan/shared/theme.dart';
-import 'package:surat_jalan/ui/main_page.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  LoginPage({Key? key}) : super(key: key);
+
+  final TextEditingController _emailController =
+      TextEditingController(text: '');
+  final TextEditingController _passwordController =
+      TextEditingController(text: '');
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +31,37 @@ class LoginPage extends StatelessWidget {
     }
 
     Widget loginForm() {
-      TextEditingController _emailController = TextEditingController();
-      TextEditingController _passwordController = TextEditingController();
-
       return BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is LoginFailureState) {
-            print(state.message.toString());
+            print(state.response.message);
             _isLoading = false;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text(state.response.message),
                 backgroundColor: Colors.red,
               ),
             );
           } else if (state is LoginLoadingState) {
             _isLoading = true;
+          } else if (state is LoginSuccessState) {
+            _isLoading = false;
+            if (state.response.status.toString() == "success") {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Login berhasil'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+              Navigator.pushReplacementNamed(context, '/main');
+            } else if (state.response.status.toString() == "error") {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.response.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
           }
         },
         builder: (context, state) {
@@ -120,85 +137,72 @@ class LoginPage extends StatelessWidget {
               const SizedBox(
                 height: 40,
               ),
-              BlocBuilder<LoginBloc, LoginState>(
-                builder: (context, state) {
-                  return _isLoading
-                      ? Center(
-                          child: Container(
-                              color: whiteColor,
-                              width: double.infinity,
-                              child: const CircularProgressIndicator()),
-                        )
-                      : Container(
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          width: double.infinity,
-                          child: TextButton(
-                            onPressed: () {
-                              if (_emailController.text.isEmpty ||
-                                  _passwordController.text.isEmpty) {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: const Text('Error'),
-                                    content:
-                                        const Text('Mohon Isi Seluruh Kolom !'),
-                                    actions: [
-                                      TextButton(
-                                        child: const Text('OK'),
-                                        onPressed: () => Navigator.pop(context),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                context.read<LoginBloc>().add(
-                                      LoginRequestedEvent(
-                                        email: _emailController.text,
-                                        password: _passwordController.text,
-                                      ),
-                                    );
-                                if (state is LoginSuccessState) {
-                                  if (state.response.status.toString() ==
-                                      "success") {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => MainPage(),
-                                      ),
-                                    );
-                                  } else {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        title: const Text('Error'),
-                                        content: const Text(
-                                            'Email atau Password Salah !'),
-                                        actions: [
-                                          TextButton(
-                                            child: const Text('OK'),
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                }
-                              }
-                            },
-                            child: Text(
-                              'Login',
-                              style: txMedium.copyWith(
-                                color: whiteColor,
+              if (_isLoading == true)
+                Center(
+                  child: Container(
+                      color: whiteColor,
+                      width: double.infinity,
+                      child: const CircularProgressIndicator()),
+                )
+              else
+                Container(
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () {
+                      if (_emailController.text.isEmpty ||
+                          _passwordController.text.isEmpty) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Error'),
+                            content: const Text('Mohon Isi Seluruh Kolom !'),
+                            actions: [
+                              TextButton(
+                                child: const Text('OK'),
+                                onPressed: () => Navigator.pop(context),
                               ),
-                            ),
+                            ],
                           ),
                         );
-                },
-              ),
+                      } else {
+                        context.read<LoginBloc>().add(
+                              LoginRequestedEvent(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              ),
+                            );
+                        // if (state is LoginSuccessState) {
+                        //   if (state.response.status.toString() == "success") {
+                        //     Navigator.pushReplacement(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //         builder: (context) => const MainPage(),
+                        //       ),
+                        //     );
+                        //   } else if (state.response.status.toString() ==
+                        //       "error") {
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       SnackBar(
+                        //         content: Text(state.response.message),
+                        //         backgroundColor: Colors.red,
+                        //       ),
+                        //     );
+                        //   }
+                        // }
+                      }
+                    },
+                    child: Text(
+                      'Login',
+                      style: txMedium.copyWith(
+                        color: whiteColor,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           );
         },

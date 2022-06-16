@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:surat_jalan/models/response_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
 import 'package:surat_jalan/services/auth_service.dart';
 
@@ -11,7 +12,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<AuthLogoutEvent>((event, emit) {
       AuthService().logout();
-      AuthService().deleteUser();
+      // AuthService().deleteUser();
       emit(AuthUnauthenticatedState());
     });
 

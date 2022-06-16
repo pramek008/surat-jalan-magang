@@ -22,10 +22,10 @@ class LoginSuccessState extends LoginState {
 }
 
 class LoginFailureState extends LoginState {
-  final String message;
+  final ResponseModel response;
 
-  LoginFailureState(this.message);
+  LoginFailureState(this.response);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [response];
 }

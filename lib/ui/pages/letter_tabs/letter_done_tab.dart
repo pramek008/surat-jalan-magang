@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surat_jalan/cubit/letter_cubit.dart';
-import 'package:surat_jalan/dummy_surat.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/widgets/card_letter_tile_widget.dart';
 

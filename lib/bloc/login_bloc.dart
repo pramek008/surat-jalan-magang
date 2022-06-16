@@ -18,7 +18,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         );
         emit(LoginSuccessState(response));
       } catch (e) {
-        emit(LoginFailureState(e.toString()));
+        emit(LoginFailureState(
+            ResponseModel(message: e.toString(), status: '')));
       }
     });
   }

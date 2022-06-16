@@ -45,8 +45,8 @@ class CardLaporanWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 // color: blackColor.withOpacity(0.3),
                 image: DecorationImage(
-                  image: const NetworkImage(
-                      'https://asset.kompas.com/crops/FBV7gpKwzXO27w799K6Wwyd6S14=/0x0:1920x1280/750x500/data/photo/2020/03/14/5e6cbeeb23f01.jpg'),
+                  image: NetworkImage(
+                      "http://103.100.27.29/sppd/public/storage/${report.foto.first}"),
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.4),
