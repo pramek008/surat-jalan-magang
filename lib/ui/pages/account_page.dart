@@ -59,7 +59,8 @@ class _AccountPageState extends State<AccountPage> {
                 return InkWell(
                   onTap: () {
                     context.read<AuthBloc>().add(AuthLogoutEvent());
-                    Navigator.pushReplacementNamed(context, '/login');
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/login', (route) => false);
                   },
                   child: Column(
                     children: [

@@ -4,6 +4,7 @@ class HelperService {
       "Accept": "application/json",
       "Content-Type": "application/json",
     };
+
     if (accessToken != null) {
       headers['Authorization'] = 'Bearer $accessToken';
     }

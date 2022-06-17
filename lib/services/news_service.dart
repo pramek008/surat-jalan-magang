@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class NewsService {
   Future<List<NewsModel>> getAllNews() async {
-    String url = 'https://sppd-api.herokuapp.com/api/news';
+    String url = 'http://103.100.27.29/sppd/public/api/news';
 
     final response = await http.get(Uri.parse(url));
 

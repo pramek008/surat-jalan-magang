@@ -34,7 +34,6 @@ class LoginPage extends StatelessWidget {
       return BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is LoginFailureState) {
-            print(state.response.message);
             _isLoading = false;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -45,6 +44,7 @@ class LoginPage extends StatelessWidget {
           } else if (state is LoginLoadingState) {
             _isLoading = true;
           } else if (state is LoginSuccessState) {
+            // print(state.response.status);
             _isLoading = false;
             if (state.response.status.toString() == "success") {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -57,7 +57,7 @@ class LoginPage extends StatelessWidget {
             } else if (state.response.status.toString() == "error") {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.response.message),
+                  content: Text(state.response.message.toString()),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -112,6 +112,7 @@ class LoginPage extends StatelessWidget {
                 onEditingComplete: () {
                   FocusScope.of(context).unfocus();
                 },
+                obscureText: true,
                 decoration: InputDecoration(
                   icon: Icon(
                     Icons.lock,

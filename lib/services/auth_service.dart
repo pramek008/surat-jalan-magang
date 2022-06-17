@@ -36,12 +36,15 @@ class AuthService {
     );
   }
 
-  static void deleteToken() async {
-    Timer(const Duration(minutes: 120), () {
-      SecureStorageService.storage.delete(
-        key: SecureStorageService.tokenKey,
-      );
-    });
+  Future<void> deleteToken() async {
+    Duration duration = const Duration(minutes: 120);
+    print(duration);
+
+    Future.delayed(duration)
+        .then((value) => {SecureStorageService.storage.deleteAll()});
+    // Timer(const Duration(minutes: 120), () async {
+    //   SecureStorageService.storage.deleteAll();
+    // });
   }
 
   Future<UserModel> catchUser(int id) async {
@@ -50,7 +53,6 @@ class AuthService {
         final jsonResponse = json.decode(response.body);
         Map<String, dynamic> responseData = jsonResponse["data"];
 
-        print("catch USER => $responseData");
         return UserModel.fromJson(responseData);
       } else {
         throw Exception('Failed to load user');
@@ -67,7 +69,7 @@ class AuthService {
         "password": password,
       },
     );
-    // print(response.body);
+    print("response login => ${response.body}");
 
     final statusType = (response.statusCode / 100).floor() * 100;
     switch (statusType) {
@@ -79,38 +81,39 @@ class AuthService {
         catchUser(responseData.data!.user.id).then((user) {
           saveUser(user);
         });
+
+        //* delete token sesuai dengan masa berlaku token berakhir
         deleteToken();
 
         return responseData;
       case 400:
         final json = jsonDecode(response.body);
-        String message = json['message'];
         return ResponseModel(
-          status: '400',
-          message: message,
+          status: json['status'],
+          message: json['message'],
         );
       case 300:
       case 500:
       default:
+        final json = jsonDecode(response.body);
         return ResponseModel(
-          status: '500',
-          message: 'Something went wrong',
+          status: json['status'],
+          message: json['message'],
         );
     }
   }
 
   Future logout() async {
-    var token =
-        SecureStorageService.storage.read(key: SecureStorageService.tokenKey);
+    final token = await SecureStorageService.storage
+        .read(key: SecureStorageService.tokenKey);
 
-    print("TOKEN => $token");
     final response = await http.post(
       Uri.parse(urlLogout),
-      headers: HelperService.buildHeaders(accessToken: token.toString()),
+      headers: HelperService.buildHeaders(accessToken: token),
     );
     SecureStorageService.storage.deleteAll();
 
-    print(response.body);
+    print("response logout = > ${response.body}");
 
     final statusType = (response.statusCode / 100).floor() * 100;
     switch (statusType) {
@@ -122,26 +125,18 @@ class AuthService {
         return responseData;
       case 400:
         final json = jsonDecode(response.body);
-        String message = json['message'];
         return ResponseModel(
-          status: '400',
-          message: message,
+          status: json['status'],
+          message: json['message'],
         );
       case 300:
       case 500:
       default:
+        final json = jsonDecode(response.body);
         return ResponseModel(
-          status: '500',
-          message: 'Something went wrong',
+          status: json['status'],
+          message: json['message'],
         );
     }
-
-    // await SecureStorageService.storage.deleteAll();
   }
-
-  // Future deleteUser() async {
-  //   SecureStorageService.storage.delete(
-  //     key: SecureStorageService.userKey,
-  //   );
-  // }
 }

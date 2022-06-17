@@ -4,11 +4,13 @@ import 'package:intl/intl.dart';
 import 'package:surat_jalan/cubit/letter_cubit.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/models/news_model.dart';
+import 'package:surat_jalan/models/user_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/account_page.dart';
 import 'package:surat_jalan/ui/widgets/card_letter_widget.dart';
 import 'package:surat_jalan/ui/widgets/card_news_widget.dart';
 
+import '../../bloc/auth_bloc.dart';
 import '../../cubit/news_cubit.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,7 +24,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     context.read<LetterCubit>().getAllLetter();
-    // context.read<ReportCubit>().getAllReport();
+    context.read<AuthBloc>().add(AuthLoadUserEvent());
     context.read<NewsCubit>().getAllNews();
     super.initState();
   }
@@ -64,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AccountPage(),
+                    builder: (context) => const AccountPage(),
                   ),
                 );
               },
@@ -79,7 +81,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    Widget greetingText() {
+    Widget greetingText(UserModel user) {
       return Container(
         margin: EdgeInsets.symmetric(
           horizontal: defaultMargin,
@@ -95,7 +97,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Text(
-              'Stefan Rodrigues',
+              user.name,
               style: txRegular.copyWith(
                 color: blackColor,
                 fontSize: 18,
@@ -106,7 +108,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    Widget suratPerjalanan(List<LetterModel> letter) {
+    Widget suratPerjalanan(List<LetterModel> letter, UserModel user) {
       var colors = [
         const Color(0xff006EE9),
         const Color(0xff18DC4F),
@@ -143,7 +145,6 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       }
-
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -169,6 +170,7 @@ class _HomePageState extends State<HomePage> {
               ),
               scrollDirection: Axis.horizontal,
               children: letter
+                  .where((element) => element.userId.id == user.id)
                   .map((e) => CardLetterWidget(
                         surat: e,
                         color: (colors..shuffle()).first,
@@ -222,13 +224,29 @@ class _HomePageState extends State<HomePage> {
                 // alignment: WrapAlignment.start,
                 children: [
                   timeHeading(),
-                  greetingText(),
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      if (state is AuthAuthenticatedState) {
+                        return greetingText(state.user);
+                      }
+                      return const SizedBox();
+                    },
+                  ),
                   BlocBuilder<LetterCubit, LetterState>(
                     builder: (context, state) {
                       if (state is LetterInitial) {
                         context.read<LetterCubit>().getAllLetter();
                       } else if (state is LetterLoaded) {
-                        return suratPerjalanan(state.letters);
+                        context.read<AuthBloc>().add(AuthLoadUserEvent());
+                        return BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, authState) {
+                            if (authState is AuthAuthenticatedState) {
+                              return suratPerjalanan(
+                                  state.letters, authState.user);
+                            }
+                            return const SizedBox();
+                          },
+                        );
                       } else if (state is LetterError) {
                         return const Center(
                           child: Text('Error'),

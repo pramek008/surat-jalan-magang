@@ -28,8 +28,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     //! Harus hilang BUAT CEK AJA
     // SecureStorageService.storage.deleteAll();
-    print("User => $user");
     print("TOken => $storage");
+    print("User => $user");
 
     //!
 
