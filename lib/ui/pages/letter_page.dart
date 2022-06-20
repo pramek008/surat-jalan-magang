@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:surat_jalan/bloc/auth_bloc.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/add_laporan_kegiatan_page.dart';
@@ -28,6 +31,7 @@ class _LetterPageState extends State<LetterPage> {
   void initState() {
     super.initState();
     context.read<ReportCubit>().getAllReport();
+    context.read<AuthBloc>().add(AuthLoadUserEvent());
   }
 
   //* Untuk memeriksa status surat apakah masih berjalan atau sudah selesai
@@ -453,12 +457,128 @@ class _LetterPageState extends State<LetterPage> {
             BlocBuilder<ReportCubit, ReportState>(
               builder: (context, state) {
                 if (state is ReportLoaded) {
-                  return Column(
-                    children: state.reports
-                        .where((element) =>
-                            element.perintahJalanId.id == widget.surat.id)
-                        .map((e) => CardLaporanWidget(report: e))
-                        .toList(),
+                  double length = double.parse(state.reports
+                      .where((element) =>
+                          element.perintahJalanId.id == widget.surat.id)
+                      .length
+                      .toString());
+                  return SizedBox(
+                    height: 120 * length,
+                    child: ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(
+                        // disable scroll
+                        parent: AlwaysScrollableScrollPhysics(
+                            // enable scroll
+                            // parent: BouncingScrollPhysics(),
+                            ),
+                      ),
+                      itemCount: state.reports
+                          .where((element) =>
+                              element.perintahJalanId.id == widget.surat.id)
+                          .length,
+                      itemBuilder: (context, index) {
+                        return Dismissible(
+                          key: Key(state.reports
+                              .where((element) =>
+                                  element.perintahJalanId.id == widget.surat.id)
+                              .elementAt(index)
+                              .toString()),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            margin: const EdgeInsets.only(bottom: 12),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: redStatusColor),
+                            child: Icon(
+                              Icons.delete,
+                              color: whiteColor,
+                              size: 30,
+                            ),
+                          ),
+                          confirmDismiss: (direction) {
+                            return showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Text('Hapus Laporan',
+                                      style: txSemiBold.copyWith(fontSize: 22)),
+                                  content: const Text(
+                                    'Apakah anda yakin ingin menghapus laporan ini?',
+                                  ),
+                                  actionsAlignment: MainAxisAlignment.center,
+                                  actions: [
+                                    TextButton(
+                                      child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 10,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: greyThinColor,
+                                          ),
+                                          child: Text(
+                                            'Tidak',
+                                            style: txMedium.copyWith(
+                                                color: blackColor),
+                                          )),
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                          vertical: 10,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: redStatusColor,
+                                        ),
+                                        child: Text(
+                                          'Ya',
+                                          style: txMedium.copyWith(
+                                            color: whiteColor,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                        context
+                                            .read<ReportCubit>()
+                                            .deleteReport(state.reports
+                                                .where((element) =>
+                                                    element
+                                                        .perintahJalanId.id ==
+                                                    widget.surat.id)
+                                                .elementAt(index)
+                                                .id);
+                                        setState(() {
+                                          context
+                                              .read<ReportCubit>()
+                                              .getAllReport();
+                                          length = length - 1;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                              barrierDismissible: false,
+                            );
+                          },
+                          child: CardLaporanWidget(
+                              report: state.reports
+                                  .where((element) =>
+                                      element.perintahJalanId.id ==
+                                      widget.surat.id)
+                                  .elementAt(index)),
+                        );
+                      },
+                    ),
                   );
                 }
                 return const Center(
@@ -466,6 +586,7 @@ class _LetterPageState extends State<LetterPage> {
                 );
               },
             ),
+
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -479,10 +600,21 @@ class _LetterPageState extends State<LetterPage> {
                       ),
                     );
                   },
-                  child: Icon(
-                    Icons.add_box_rounded,
-                    size: 60,
-                    color: primaryColor,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.add_box_rounded,
+                        size: 60,
+                        color: primaryColor,
+                      ),
+                      // Text(
+                      //   'Tambah Laporan',
+                      //   style: txSemiBold.copyWith(
+                      //     fontSize: 16,
+                      //     color: primaryColor,
+                      //   ),
+                      // )
+                    ],
                   ),
                 ),
               ],

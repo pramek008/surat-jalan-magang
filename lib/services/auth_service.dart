@@ -78,7 +78,7 @@ class AuthService {
         final responseData = ResponseModel.fromJson(json);
         // save token to secure storage
         saveToken(responseData.data!.token);
-        catchUser(responseData.data!.user.id).then((user) {
+        catchUser(responseData.data!.user!.id).then((user) {
           saveUser(user);
         });
 

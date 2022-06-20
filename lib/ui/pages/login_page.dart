@@ -3,13 +3,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surat_jalan/bloc/login_bloc.dart';
 import 'package:surat_jalan/shared/theme.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController =
       TextEditingController(text: '');
+
   final TextEditingController _passwordController =
       TextEditingController(text: '');
+
+  bool _isObsecure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -112,13 +120,24 @@ class LoginPage extends StatelessWidget {
                 onEditingComplete: () {
                   FocusScope.of(context).unfocus();
                 },
-                obscureText: true,
+                obscureText: _isObsecure,
                 decoration: InputDecoration(
                   icon: Icon(
                     Icons.lock,
                     size: 30,
                     color: primaryColor,
                   ),
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isObsecure = !_isObsecure;
+                        });
+                      },
+                      icon: Icon(
+                        _isObsecure ? Icons.visibility_off : Icons.visibility,
+                        size: 30,
+                        color: primaryColor,
+                      )),
                   labelText: 'Password',
                   labelStyle: txRegular.copyWith(
                     color: greySubHeaderColor,

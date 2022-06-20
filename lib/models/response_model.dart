@@ -22,7 +22,7 @@ class ResponseModel {
   factory ResponseModel.fromJson(Map<String, dynamic> json) => ResponseModel(
         status: json["status"],
         message: json["message"],
-        data: Data.fromJson(json["data"]),
+        data: Data.fromJson(json["data"] ?? {}),
       );
 
   Map<String, dynamic> toJson() => {
@@ -34,14 +34,14 @@ class ResponseModel {
 
 class Data {
   Data({
-    required this.token,
-    required this.tokenType,
-    required this.user,
+    this.token,
+    this.tokenType,
+    this.user,
   });
 
-  final String token;
-  final String tokenType;
-  final User user;
+  String? token;
+  String? tokenType;
+  User? user;
 
   factory Data.fromRawJson(String str) => Data.fromJson(json.decode(str));
 
@@ -56,7 +56,7 @@ class Data {
   Map<String, dynamic> toJson() => {
         "token": token,
         "token_type": tokenType,
-        "user": user.toJson(),
+        "user": user?.toJson(),
       };
 }
 

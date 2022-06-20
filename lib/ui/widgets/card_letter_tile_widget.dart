@@ -206,7 +206,7 @@ class CardLetterTileWidget extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => LetterPage(surat: surat),
           ),
-        );
+        ).then((value) => BlocProvider.of<ReportCubit>(context).getAllReport());
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),

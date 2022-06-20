@@ -17,6 +17,16 @@ class ReportLoaded extends ReportState {
   List<Object> get props => [reports];
 }
 
+class ReportResponse extends ReportState {
+  final ResponseModel response;
+
+  ReportResponse({
+    required this.response,
+  });
+
+  List<Object> get props => [response];
+}
+
 class ReportError extends ReportState {
   final String message;
 

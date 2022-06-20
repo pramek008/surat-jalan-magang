@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:surat_jalan/cubit/location_cubit.dart';
+import 'package:surat_jalan/cubit/report_cubit.dart';
 import 'package:surat_jalan/models/report_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/laporan_kegiatan_view.dart';
@@ -19,10 +19,14 @@ class CardLaporanWidget extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => LaporanKegiatanView(
                       report: report,
-                    )));
+                    ))).then(
+            (value) => BlocProvider.of<ReportCubit>(context).getAllReport());
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
+        margin: const EdgeInsets.only(
+          bottom: 12,
+          right: 2,
+        ),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: whiteColor,
@@ -30,7 +34,7 @@ class CardLaporanWidget extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
-              blurRadius: 1,
+              blurRadius: 5,
               spreadRadius: 0.5,
               offset: const Offset(0, 5),
             ),
