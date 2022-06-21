@@ -567,7 +567,6 @@ class _LetterPageState extends State<LetterPage> {
                                   ],
                                 );
                               },
-                              barrierDismissible: false,
                             );
                           },
                           child: CardLaporanWidget(
@@ -596,7 +595,10 @@ class _LetterPageState extends State<LetterPage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const LaporanKegiatanAddPage(),
+                        builder: (context) => LaporanKegiatanAddPage(
+                          userId: widget.surat.userId.id,
+                          suratJalanId: widget.surat.id,
+                        ),
                       ),
                     );
                   },

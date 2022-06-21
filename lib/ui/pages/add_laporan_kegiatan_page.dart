@@ -6,11 +6,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
+import 'package:surat_jalan/bloc/postreport_bloc.dart';
 import 'package:surat_jalan/cubit/location_cubit.dart';
+import 'package:surat_jalan/cubit/report_cubit.dart';
 import 'package:surat_jalan/shared/theme.dart';
 
 class LaporanKegiatanAddPage extends StatefulWidget {
-  const LaporanKegiatanAddPage({Key? key}) : super(key: key);
+  final int userId;
+  final int suratJalanId;
+  const LaporanKegiatanAddPage(
+      {Key? key, required this.userId, required this.suratJalanId})
+      : super(key: key);
 
   @override
   State<LaporanKegiatanAddPage> createState() => _LaporanKegiatanAddPageState();
@@ -19,6 +25,10 @@ class LaporanKegiatanAddPage extends StatefulWidget {
 class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
   final ImagePicker _picker = ImagePicker();
   final List<XFile> _imagesList = [];
+  final List<String> _lokasi = [];
+
+  final TextEditingController notulenController = TextEditingController();
+  final TextEditingController namaKegiatanController = TextEditingController();
 
   Future<void> fromGallery() async {
     final List<XFile>? selectedImage = await _picker.pickMultiImage();
@@ -44,8 +54,6 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
   @override
   Widget build(BuildContext context) {
     //* Text field controller
-    TextEditingController notulenController = TextEditingController();
-    TextEditingController namaKegiatanController = TextEditingController();
 
     String? street;
     String? subLocality;
@@ -57,8 +65,8 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
     String oneLineAdd =
         '${street ?? ''} ${subLocality ?? ''} ${locality ?? ''} ${subAdministrativeArea ?? ''} ${administrativeArea ?? ''} ${country ?? ''}';
 
-    double latitude;
-    double longitude;
+    double? latitude;
+    double? longitude;
 
     //*========================== UI ============================
     Widget heading() {
@@ -578,10 +586,14 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                   '$street, $subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country';
 
               //* menangkap data lokasi (long dan lat)
-              longitude = state.position.longitude;
-              latitude = state.position.latitude;
-              print(state.position);
-              print(state.address.toString());
+              longitude = double.tryParse(state.position.longitude.toString());
+              latitude = double.tryParse(state.position.latitude.toString());
+              _lokasi.clear();
+
+              while (_lokasi.length <= 1) {
+                _lokasi.add(longitude.toString());
+                _lokasi.add(latitude.toString());
+              }
             }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -653,7 +665,83 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
             style: ElevatedButton.styleFrom(
               primary: primaryColor,
             ),
-            onPressed: () {},
+            onPressed: () {
+              if (namaKegiatanController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Nama Kegiatan tidak boleh kosong',
+                      style: txRegular.copyWith(
+                        color: whiteColor,
+                      ),
+                    ),
+                    backgroundColor: redStatusColor,
+                  ),
+                );
+              } else if (notulenController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Notulen tidak boleh kosong',
+                      style: txRegular.copyWith(
+                        color: whiteColor,
+                      ),
+                    ),
+                    backgroundColor: redStatusColor,
+                  ),
+                );
+              } else if (longitude == null || latitude == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Lokasi tidak boleh kosong',
+                      style: txRegular.copyWith(
+                        color: whiteColor,
+                      ),
+                    ),
+                    backgroundColor: redStatusColor,
+                  ),
+                );
+              } else if (_imagesList.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Foto tidak boleh kosong',
+                      style: txRegular.copyWith(
+                        color: whiteColor,
+                      ),
+                    ),
+                    backgroundColor: redStatusColor,
+                  ),
+                );
+              } else {
+                context.read<PostreportBloc>().add(PostreportRequestedEvent(
+                    userId: widget.userId,
+                    perintahJalanId: widget.suratJalanId,
+                    namaKegiatan: namaKegiatanController.text,
+                    images: _imagesList,
+                    lokasi: _lokasi,
+                    deskripsi: notulenController.text));
+                // context.read<ReportCubit>().postReport(
+                //     userId: widget.userId,
+                //     perintahJalanId: widget.suratJalanId,
+                //     namaKegiatan: namaKegiatanController.text,
+                //     images: _imagesList,
+                //     lokasi: _lokasi,
+                //     deskripsi: notulenController.text);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Kegiatan berhasil ditambahkan',
+                      style: txRegular.copyWith(
+                        color: whiteColor,
+                      ),
+                    ),
+                    backgroundColor: greenStatusColor,
+                  ),
+                );
+              }
+            },
             child: Text(
               'Buat Laporan',
               style: txSemiBold.copyWith(
