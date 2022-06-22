@@ -1,7 +1,5 @@
 import "dart:async";
 import "dart:convert";
-import "dart:io";
-
 import "package:dio/dio.dart" as Dio;
 import "package:dio/dio.dart";
 import "package:surat_jalan/models/report_model.dart";
@@ -18,16 +16,17 @@ class ReportService {
     final response = await http.get(Uri.parse(_url));
 
     try {
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.statusCode == 200) {
         List<ReportModel> allReport = [];
         Map<String, dynamic> json = jsonDecode(response.body);
+        List data = json["data"];
+        print(data);
 
-        json.forEach((key, value) {
-          for (var i = 0; i < value.length; i++) {
-            allReport.add(ReportModel.fromJson(value[i]));
-          }
-        });
-        // print(allReport);
+        for (var i = 0; i < data.length; i++) {
+          allReport.add(ReportModel.fromJson(data[i]));
+        }
+
+        print("allReport: ${allReport.length}");
         return allReport;
       } else {
         throw Exception("Failed to load report");
@@ -38,7 +37,7 @@ class ReportService {
   }
 
   //! POST Request
-  Future<String> postReport(
+  Future<ResponseModel> postReport(
       {required int userId,
       required int perintahJalanId,
       required String namaKegiatan,
@@ -46,12 +45,12 @@ class ReportService {
       required List lokasi,
       required String deskripsi}) async {
     //*CEK data
-    print(userId);
-    print(perintahJalanId);
-    print(namaKegiatan);
-    print(images);
-    print(lokasi);
-    print(deskripsi);
+    // print(userId);
+    // print(perintahJalanId);
+    // print(namaKegiatan);
+    // print(images);
+    // print(lokasi);
+    // print(deskripsi);
 
     final token = await SecureStorageService.storage
         .read(key: SecureStorageService.tokenKey);
@@ -67,16 +66,16 @@ class ReportService {
     //   var stream = http.ByteStream(StreamView(image.openRead()));
     //   var length = await image.length();
     //   var filename = image.path.split("/").last;
+    //   print(filename);
 
-    //   // var multipartFile =
-    //   //     http.MultipartFile("foto", stream, length, filename: filename);
-    //   var multiFile = await http.MultipartFile.fromPath("foto", image.path,
+    //   var multipartFile =
+    //       http.MultipartFile("foto", stream, length, filename: filename);
+    //   var multiFile = await http.MultipartFile.fromPath('foto', image.path,
     //       filename: filename);
 
-    //   files.add(multiFile);
+    //   files.add(multipartFile);
     // }
     // request.files.addAll(files);
-
     // //* END upload images
 
     // //* Upload lokasi
@@ -106,10 +105,12 @@ class ReportService {
     // //! Send request
     // try {
     //   var response = await request.send();
+
     //   print(response.statusCode);
     //   print(response.persistentConnection);
     //   print(response.reasonPhrase);
     //   print(response.headers);
+
     //   if (response.statusCode == 200 || response.statusCode == 201) {
     //     response.stream.transform(utf8.decoder).listen((value) {
     //       print(value);
@@ -130,62 +131,81 @@ class ReportService {
     // });
 
     //! DIO ==============================================
-    var arrImage = [];
+
+    var formData = FormData();
     for (var img in images) {
-      arrImage.add(await Dio.MultipartFile.fromFile(img.path,
-          filename: img.path.split("/").last));
+      formData.files.addAll([
+        MapEntry(
+            "foto[]",
+            await Dio.MultipartFile.fromFile(img.path,
+                filename: img.path.split("/").last))
+      ]);
+
+      print("img.path: ${img.path}");
+      print("imgNAME: ${img.path.split("/").last}");
     }
+    formData.fields.addAll([
+      MapEntry("user_id", userId.toString()),
+      MapEntry("perintah_jalan_id", perintahJalanId.toString()),
+      MapEntry("nama_kegiatan", namaKegiatan),
+      // MapEntry("foto", img.path.split("/").last),
+      MapEntry("lokasi[0]", lokasi[0]),
+      MapEntry("lokasi[1]", lokasi[1]),
+      MapEntry("deskripsi", deskripsi)
+    ]);
 
-    Dio.FormData formData = Dio.FormData.fromMap({
-      "user_id": userId.toString(),
-      "perintah_jalan_id": perintahJalanId.toString(),
-      "nama_kegiatan": namaKegiatan,
-      "foto": arrImage,
-      "lokasi": lokasi.toString(),
-      "deskripsi": deskripsi,
-    });
-    print(formData.fields);
-
+    // Dio.FormData formData = Dio.FormData.fromMap({
+    //   "user_id": userId.toString(),
+    //   "perintah_jalan_id": perintahJalanId.toString(),
+    //   "nama_kegiatan": namaKegiatan,
+    //   "foto": arrImage,
+    //   "lokasi": lokasi.toString(),
+    //   "deskripsi": deskripsi,
+    // });
+    print("=====FIELD: ${formData.fields}");
+    print("=====FILES: ${formData.files}");
     try {
-      Dio.Response response = await Dio.Dio().post(_url,
+      Dio.Response response = await Dio.Dio().postUri(Uri.parse(_url),
           data: formData,
           options: Options(
             headers: {
-              "content-type": "multipart/form-data",
-              "Authorization": "Bearer $token",
+              "content-type": "application/json",
+              // "Authorization": "Bearer $token",
             },
             followRedirects: true,
             // will not throw errors
             validateStatus: (status) => true,
+            method: "POST",
           ));
+
+      print(response.statusCode);
       print('RESPONSE ${response.data}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        Map<String, dynamic> json = jsonDecode(response.data);
-        return json["message"];
+        // Map<String, dynamic> json = jsonDecode(response.data);
+        print('ini json =>${response.data}');
+        return response.data;
       } else {
-        throw Exception("Failed to load report");
+        return response.data;
       }
     } catch (e) {
       throw Exception(e.toString());
     }
-
-    // //! CEK RESPONSE
   }
 
   //! PUT Request
 
   //! DELETE Request
   Future<ResponseModel> deleteReport(int id) async {
-    // print("ID yang dibawa $id");
+    print("ID yang dibawa $id");
 
     final token = await SecureStorageService.storage
         .read(key: SecureStorageService.tokenKey);
 
     final response = await http.delete(Uri.parse(_url + "/" + id.toString()),
         headers: HelperService.buildHeaders(accessToken: token));
-    // print("DELETE Response ${response.statusCode}");
-    // print(response.body);
+    print("DELETE Response ${response.statusCode}");
+    print(response.body);
 
     try {
       if (response.statusCode == 200) {

@@ -477,12 +477,12 @@ class _LetterPageState extends State<LetterPage> {
                               element.perintahJalanId.id == widget.surat.id)
                           .length,
                       itemBuilder: (context, index) {
+                        final item = state.reports
+                            .where((element) =>
+                                element.perintahJalanId.id == widget.surat.id)
+                            .toList()[index];
                         return Dismissible(
-                          key: Key(state.reports
-                              .where((element) =>
-                                  element.perintahJalanId.id == widget.surat.id)
-                              .elementAt(index)
-                              .toString()),
+                          key: Key(item.id.toString()),
                           direction: DismissDirection.endToStart,
                           background: Container(
                             margin: const EdgeInsets.only(bottom: 12),
@@ -497,6 +497,7 @@ class _LetterPageState extends State<LetterPage> {
                           ),
                           confirmDismiss: (direction) {
                             return showDialog(
+                              barrierDismissible: true,
                               context: context,
                               builder: (context) {
                                 return AlertDialog(
@@ -557,10 +558,10 @@ class _LetterPageState extends State<LetterPage> {
                                                 .elementAt(index)
                                                 .id);
                                         setState(() {
+                                          length = length - 1;
                                           context
                                               .read<ReportCubit>()
                                               .getAllReport();
-                                          length = length - 1;
                                         });
                                       },
                                     ),
@@ -569,12 +570,7 @@ class _LetterPageState extends State<LetterPage> {
                               },
                             );
                           },
-                          child: CardLaporanWidget(
-                              report: state.reports
-                                  .where((element) =>
-                                      element.perintahJalanId.id ==
-                                      widget.surat.id)
-                                  .elementAt(index)),
+                          child: CardLaporanWidget(report: item),
                         );
                       },
                     ),
@@ -600,7 +596,8 @@ class _LetterPageState extends State<LetterPage> {
                           suratJalanId: widget.surat.id,
                         ),
                       ),
-                    );
+                    ).then((value) =>
+                        {context.read<ReportCubit>().getAllReport()});
                   },
                   child: Row(
                     children: [

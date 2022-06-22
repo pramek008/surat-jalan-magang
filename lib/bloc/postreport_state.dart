@@ -14,7 +14,7 @@ class PostreportLoadingState extends PostreportState {
 }
 
 class PostreportSuccessState extends PostreportState {
-  final String response;
+  final ResponseModel response;
 
   PostreportSuccessState(this.response);
 

@@ -1,7 +1,8 @@
 // To parse this JSON data, do
 //
-//     final ReportModel = ReportModelFromJson(jsonString);
+//     final reportModel = reportModelFromJson(jsonString);
 
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
 class ReportModel {

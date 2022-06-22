@@ -21,30 +21,6 @@ class ReportCubit extends Cubit<ReportState> {
     }
   }
 
-  void postReport(
-      {required int userId,
-      required int perintahJalanId,
-      required String namaKegiatan,
-      required List images,
-      required List lokasi,
-      required String deskripsi}) async {
-    emit(ReportLoading());
-    try {
-      final response = await ReportService().postReport(
-          userId: userId,
-          perintahJalanId: perintahJalanId,
-          namaKegiatan: namaKegiatan,
-          images: images,
-          lokasi: lokasi,
-          deskripsi: deskripsi);
-      emit(ReportResponse(
-          response:
-              ResponseModel(status: response, message: response.toString())));
-    } catch (e) {
-      emit(ReportError(message: e.toString()));
-    }
-  }
-
   void deleteReport(int reportId) async {
     emit(ReportLoading());
     try {

@@ -11,17 +11,17 @@ part 'postreport_state.dart';
 
 class PostreportBloc extends Bloc<PostreportEvent, PostreportState> {
   PostreportBloc() : super(PostreportInitial()) {
-    on<PostreportRequestedEvent>((event, emit) {
+    on<PostreportRequestedEvent>((event, emit) async {
       emit(PostreportLoadingState());
       try {
-        final response = ReportService().postReport(
+        final response = await ReportService().postReport(
             userId: event.userId,
             perintahJalanId: event.perintahJalanId,
             namaKegiatan: event.namaKegiatan,
             images: event.images,
             lokasi: event.lokasi,
             deskripsi: event.deskripsi);
-        emit(PostreportSuccessState(response.toString()));
+        emit(PostreportSuccessState(response));
       } catch (e) {
         emit(PostreportFailureState(
             ResponseModel(message: e.toString(), status: '')));

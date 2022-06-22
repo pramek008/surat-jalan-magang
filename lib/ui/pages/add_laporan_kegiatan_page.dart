@@ -658,98 +658,112 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
       }
 
       Widget btnSubmit() {
-        return SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: primaryColor,
-            ),
-            onPressed: () {
-              if (namaKegiatanController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Nama Kegiatan tidak boleh kosong',
-                      style: txRegular.copyWith(
-                        color: whiteColor,
-                      ),
+        return BlocConsumer<PostreportBloc, PostreportState>(
+          listener: (context, state) {
+            if (state is PostreportFailureState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.response.message.toString(),
+                    style: txRegular.copyWith(
+                      color: whiteColor,
                     ),
-                    backgroundColor: redStatusColor,
                   ),
-                );
-              } else if (notulenController.text.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Notulen tidak boleh kosong',
-                      style: txRegular.copyWith(
-                        color: whiteColor,
+                  backgroundColor: redStatusColor,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            return SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: primaryColor,
+                ),
+                onPressed: () {
+                  if (namaKegiatanController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Nama Kegiatan tidak boleh kosong',
+                          style: txRegular.copyWith(
+                            color: whiteColor,
+                          ),
+                        ),
+                        backgroundColor: redStatusColor,
                       ),
-                    ),
-                    backgroundColor: redStatusColor,
-                  ),
-                );
-              } else if (longitude == null || latitude == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Lokasi tidak boleh kosong',
-                      style: txRegular.copyWith(
-                        color: whiteColor,
+                    );
+                  } else if (notulenController.text.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Notulen tidak boleh kosong',
+                          style: txRegular.copyWith(
+                            color: whiteColor,
+                          ),
+                        ),
+                        backgroundColor: redStatusColor,
                       ),
-                    ),
-                    backgroundColor: redStatusColor,
-                  ),
-                );
-              } else if (_imagesList.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Foto tidak boleh kosong',
-                      style: txRegular.copyWith(
-                        color: whiteColor,
+                    );
+                  } else if (longitude == null || latitude == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Lokasi tidak boleh kosong',
+                          style: txRegular.copyWith(
+                            color: whiteColor,
+                          ),
+                        ),
+                        backgroundColor: redStatusColor,
                       ),
-                    ),
-                    backgroundColor: redStatusColor,
-                  ),
-                );
-              } else {
-                context.read<PostreportBloc>().add(PostreportRequestedEvent(
-                    userId: widget.userId,
-                    perintahJalanId: widget.suratJalanId,
-                    namaKegiatan: namaKegiatanController.text,
-                    images: _imagesList,
-                    lokasi: _lokasi,
-                    deskripsi: notulenController.text));
-                // context.read<ReportCubit>().postReport(
-                //     userId: widget.userId,
-                //     perintahJalanId: widget.suratJalanId,
-                //     namaKegiatan: namaKegiatanController.text,
-                //     images: _imagesList,
-                //     lokasi: _lokasi,
-                //     deskripsi: notulenController.text);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Kegiatan berhasil ditambahkan',
-                      style: txRegular.copyWith(
-                        color: whiteColor,
+                    );
+                  } else if (_imagesList.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Foto tidak boleh kosong',
+                          style: txRegular.copyWith(
+                            color: whiteColor,
+                          ),
+                        ),
+                        backgroundColor: redStatusColor,
                       ),
-                    ),
-                    backgroundColor: greenStatusColor,
+                    );
+                  } else {
+                    context.read<PostreportBloc>().add(PostreportRequestedEvent(
+                        userId: widget.userId,
+                        perintahJalanId: widget.suratJalanId,
+                        namaKegiatan: namaKegiatanController.text,
+                        images: _imagesList,
+                        lokasi: _lokasi,
+                        deskripsi: notulenController.text));
+
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Kegiatan berhasil ditambahkan',
+                          style: txRegular.copyWith(
+                            color: whiteColor,
+                          ),
+                        ),
+                        backgroundColor: greenStatusColor,
+                      ),
+                    );
+                  }
+                },
+                child: Text(
+                  'Buat Laporan',
+                  style: txSemiBold.copyWith(
+                    color: whiteColor,
+                    fontSize: 18,
                   ),
-                );
-              }
-            },
-            child: Text(
-              'Buat Laporan',
-              style: txSemiBold.copyWith(
-                color: whiteColor,
-                fontSize: 18,
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       }
 
