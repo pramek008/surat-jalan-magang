@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:surat_jalan/bloc/postreport_bloc.dart';
 import 'package:surat_jalan/cubit/location_cubit.dart';
-import 'package:surat_jalan/cubit/report_cubit.dart';
 import 'package:surat_jalan/shared/theme.dart';
 
 class LaporanKegiatanAddPage extends StatefulWidget {
@@ -31,7 +30,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
   final TextEditingController notulenController = TextEditingController();
   final TextEditingController namaKegiatanController = TextEditingController();
 
-  late GoogleMapController mapController;
+  GoogleMapController? _mapController;
   static const LatLng _latLng = LatLng(-7.8093128, 110.3136509);
   static const CameraPosition _initialCameraPosition = CameraPosition(
     target: _latLng,
@@ -40,23 +39,23 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
   final Set<Marker> _markers = {};
 
   Future<void> fromGallery() async {
-    final List<XFile>? selectedImage = await _picker.pickMultiImage();
+    final List<XFile>? selectedImage =
+        await _picker.pickMultiImage(maxHeight: 1000, maxWidth: 1000);
     if (selectedImage != null) {
       _imagesList.addAll(selectedImage);
     }
     setState(() {});
-    // print(selectedImage!.length);
     // print(_imagesList);
   }
 
   void fromCamera() async {
-    final XFile? selectedImage =
-        await _picker.pickImage(source: ImageSource.camera);
+    final XFile? selectedImage = await _picker.pickImage(
+        source: ImageSource.camera, maxHeight: 1000, maxWidth: 1000);
     if (selectedImage != null) {
       _imagesList.add(selectedImage);
     }
     setState(() {});
-    // print(selectedImage!.path);
+    // print(selectedImage!.readAsBytes());
     // print('list lengt ${_imagesList.length}');
   }
 
@@ -571,7 +570,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                       myLocationButtonEnabled: true,
                       mapType: MapType.normal,
                       onMapCreated: (GoogleMapController controller) {
-                        mapController = controller;
+                        _mapController = controller;
                       },
                     ),
                   )
@@ -579,7 +578,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
               );
             } else if (state is LocationLoaded) {
               print("Current Posisition: ${state.position}");
-              mapController.animateCamera(
+              _mapController?.animateCamera(
                 CameraUpdate.newCameraPosition(
                   CameraPosition(
                     target: LatLng(
@@ -663,7 +662,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                     zoomControlsEnabled: false,
                     mapType: MapType.normal,
                     onMapCreated: (GoogleMapController controller) {
-                      mapController = controller;
+                      _mapController = controller;
                     },
                   ),
                 )
@@ -690,7 +689,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                     backgroundColor: greenStatusColor,
                   ),
                 );
-                Navigator.pop(context);
+                Navigator.of(context).pop();
               }
             } else if (state is PostreportFailureState) {
               print('FAILURE state ${state.response.toString()}');
