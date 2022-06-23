@@ -477,12 +477,13 @@ class _LetterPageState extends State<LetterPage> {
                               element.perintahJalanId.id == widget.surat.id)
                           .length,
                       itemBuilder: (context, index) {
-                        final item = state.reports
+                        List item = state.reports
                             .where((element) =>
                                 element.perintahJalanId.id == widget.surat.id)
-                            .toList()[index];
+                            .toList();
+                        final report = item[index];
                         return Dismissible(
-                          key: Key(item.id.toString()),
+                          key: Key(report.id.toString()),
                           direction: DismissDirection.endToStart,
                           background: Container(
                             margin: const EdgeInsets.only(bottom: 12),
@@ -547,21 +548,21 @@ class _LetterPageState extends State<LetterPage> {
                                         ),
                                       ),
                                       onPressed: () {
-                                        Navigator.of(context).pop(true);
-                                        context
-                                            .read<ReportCubit>()
-                                            .deleteReport(state.reports
-                                                .where((element) =>
-                                                    element
-                                                        .perintahJalanId.id ==
-                                                    widget.surat.id)
-                                                .elementAt(index)
-                                                .id);
                                         setState(() {
-                                          length = length - 1;
+                                          Navigator.of(context).pop(true);
+                                          context
+                                              .read<ReportCubit>()
+                                              .deleteReport(state.reports
+                                                  .where((element) =>
+                                                      element
+                                                          .perintahJalanId.id ==
+                                                      widget.surat.id)
+                                                  .elementAt(index)
+                                                  .id);
                                           context
                                               .read<ReportCubit>()
                                               .getAllReport();
+                                          item.removeAt(index);
                                         });
                                       },
                                     ),
@@ -570,7 +571,8 @@ class _LetterPageState extends State<LetterPage> {
                               },
                             );
                           },
-                          child: CardLaporanWidget(report: item),
+                          child:
+                              CardLaporanWidget(report: item.elementAt(index)),
                         );
                       },
                     ),

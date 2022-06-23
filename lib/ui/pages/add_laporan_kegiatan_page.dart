@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
@@ -29,6 +30,14 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
 
   final TextEditingController notulenController = TextEditingController();
   final TextEditingController namaKegiatanController = TextEditingController();
+
+  late GoogleMapController mapController;
+  static const LatLng _latLng = LatLng(-7.8093128, 110.3136509);
+  static const CameraPosition _initialCameraPosition = CameraPosition(
+    target: _latLng,
+    zoom: 14,
+  );
+  final Set<Marker> _markers = {};
 
   Future<void> fromGallery() async {
     final List<XFile>? selectedImage = await _picker.pickMultiImage();
@@ -520,13 +529,8 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
             if (state is LocationError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(
-                    state.message.toString(),
-                    style: txRegular.copyWith(
-                      color: whiteColor,
-                    ),
-                  ),
-                  backgroundColor: redStatusColor,
+                  content: Text(state.message),
+                  backgroundColor: Colors.red,
                 ),
               );
             }
@@ -546,54 +550,72 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                           fontSize: 18,
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          context.read<LocationCubit>().getCurrentLocation();
-                        },
-                        style: TextButton.styleFrom(
-                          shadowColor: primaryColor.withOpacity(0.8),
-                          backgroundColor: primaryColor,
-                        ),
-                        child: Text(
-                          'Set Lokasi',
-                          style: txMedium.copyWith(
-                            color: whiteColor,
-                            fontSize: 14,
-                          ),
-                        ),
+                      CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
                       ),
                     ],
                   ),
                   const SizedBox(
                     height: 10,
                   ),
-                  const Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                  Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: greyDeepColor,
+                    ),
+                    child: GoogleMap(
+                      initialCameraPosition: _initialCameraPosition,
+                      markers: _markers,
+                      zoomControlsEnabled: false,
+                      myLocationButtonEnabled: true,
+                      mapType: MapType.normal,
+                      onMapCreated: (GoogleMapController controller) {
+                        mapController = controller;
+                      },
+                    ),
+                  )
                 ],
               );
             } else if (state is LocationLoaded) {
-              //* menangkap data alamat menurut lokasi
-              street = state.address.street.toString();
-              subLocality = state.address.subLocality.toString();
-              locality = state.address.locality.toString();
-              subAdministrativeArea =
-                  state.address.subAdministrativeArea.toString();
-              administrativeArea = state.address.administrativeArea.toString();
-              country = state.address.country.toString();
+              print("Current Posisition: ${state.position}");
+              mapController.animateCamera(
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target: LatLng(
+                        state.position.latitude, state.position.longitude),
+                    zoom: 15,
+                  ),
+                ),
+              );
 
-              oneLineAdd =
-                  '$street, $subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country';
-
-              //* menangkap data lokasi (long dan lat)
-              longitude = double.tryParse(state.position.longitude.toString());
               latitude = double.tryParse(state.position.latitude.toString());
+              longitude = double.tryParse(state.position.longitude.toString());
               _lokasi.clear();
-
               while (_lokasi.length <= 1) {
-                _lokasi.add(longitude.toString());
                 _lokasi.add(latitude.toString());
+                _lokasi.add(longitude.toString());
               }
+
+              _markers.clear();
+              _markers.add(
+                Marker(
+                  markerId: const MarkerId('myMarker'),
+                  onDrag: (LatLng position) {
+                    setState(() {
+                      position = _latLng;
+                    });
+                    print("Drag Position: $position");
+                  },
+                  position:
+                      LatLng(state.position.latitude, state.position.longitude),
+                  infoWindow: InfoWindow(
+                    title: state.address.locality,
+                    snippet:
+                        '${state.position.latitude}, ${state.position.longitude}',
+                  ),
+                ),
+              );
             }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -629,28 +651,22 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                 const SizedBox(
                   height: 10,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Alamat',
-                      style: txMedium.copyWith(
-                        fontSize: 16,
-                        color: blackColor,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Text(
-                        oneLineAdd,
-                        style: txRegular.copyWith(
-                          fontSize: 16,
-                          color: blackColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    color: greyDeepColor,
+                  ),
+                  child: GoogleMap(
+                    initialCameraPosition: _initialCameraPosition,
+                    markers: _markers,
+                    zoomControlsEnabled: false,
+                    mapType: MapType.normal,
+                    onMapCreated: (GoogleMapController controller) {
+                      mapController = controller;
+                    },
+                  ),
+                )
               ],
             );
           },
@@ -660,7 +676,24 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
       Widget btnSubmit() {
         return BlocConsumer<PostreportBloc, PostreportState>(
           listener: (context, state) {
-            if (state is PostreportFailureState) {
+            if (state is PostreportSuccessState) {
+              print('SUCCESS state ${state.response.toString()}');
+              if (state.response.status.toString() == "success") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      state.response.message.toString(),
+                      style: txRegular.copyWith(
+                        color: whiteColor,
+                      ),
+                    ),
+                    backgroundColor: greenStatusColor,
+                  ),
+                );
+                Navigator.pop(context);
+              }
+            } else if (state is PostreportFailureState) {
+              print('FAILURE state ${state.response.toString()}');
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -740,16 +773,15 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                         lokasi: _lokasi,
                         deskripsi: notulenController.text));
 
-                    Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'Kegiatan berhasil ditambahkan',
+                          'Kegiatan Sedang ditambahkan',
                           style: txRegular.copyWith(
                             color: whiteColor,
                           ),
                         ),
-                        backgroundColor: greenStatusColor,
+                        backgroundColor: Colors.blueAccent,
                       ),
                     );
                   }

@@ -28,7 +28,7 @@ class ResponseModel {
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": data?.toJson(),
+        "data": data!.toJson(),
       };
 }
 
