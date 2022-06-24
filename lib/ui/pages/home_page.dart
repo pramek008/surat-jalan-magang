@@ -12,6 +12,7 @@ import 'package:surat_jalan/ui/widgets/card_news_widget.dart';
 
 import '../../bloc/auth_bloc.dart';
 import '../../cubit/news_cubit.dart';
+import '../../cubit/report_cubit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     context.read<LetterCubit>().getAllLetter();
+    context.read<ReportCubit>().getAllReport();
     context.read<AuthBloc>().add(AuthLoadUserEvent());
     context.read<NewsCubit>().getAllNews();
     super.initState();

@@ -454,7 +454,24 @@ class _LetterPageState extends State<LetterPage> {
             const SizedBox(height: 12),
 
             //* List Card Laporan Perjalanan Dinas
-            BlocBuilder<ReportCubit, ReportState>(
+            BlocConsumer<ReportCubit, ReportState>(
+              listener: (context, state) {
+                if (state is ReportResponse) {
+                  print(state);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        state.response.message,
+                        style: txRegular.copyWith(
+                          color: whiteColor,
+                          fontSize: 16,
+                        ),
+                      ),
+                      backgroundColor: redStatusColor,
+                    ),
+                  );
+                }
+              },
               builder: (context, state) {
                 if (state is ReportLoaded) {
                   double length = double.parse(state.reports
@@ -466,11 +483,7 @@ class _LetterPageState extends State<LetterPage> {
                     height: 120 * length,
                     child: ListView.builder(
                       physics: const NeverScrollableScrollPhysics(
-                        // disable scroll
-                        parent: AlwaysScrollableScrollPhysics(
-                            // enable scroll
-                            // parent: BouncingScrollPhysics(),
-                            ),
+                        parent: AlwaysScrollableScrollPhysics(),
                       ),
                       itemCount: state.reports
                           .where((element) =>
@@ -549,6 +562,7 @@ class _LetterPageState extends State<LetterPage> {
                                       ),
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
+                                        Navigator.of(context).pop();
                                         context
                                             .read<ReportCubit>()
                                             .deleteReport(state.reports
@@ -558,13 +572,12 @@ class _LetterPageState extends State<LetterPage> {
                                                     widget.surat.id)
                                                 .elementAt(index)
                                                 .id);
-                                        setState(() {
-                                          item.removeAt(index);
-                                          context
-                                              .read<ReportCubit>()
-                                              .getAllReport();
-                                          item.removeAt(index);
-                                        });
+                                        // setState(() {
+                                        // state.reports.removeAt(index);
+                                        //   context
+                                        //       .read<ReportCubit>()
+                                        //       .getAllReport();
+                                        // });
                                       },
                                     ),
                                   ],
@@ -572,8 +585,7 @@ class _LetterPageState extends State<LetterPage> {
                               },
                             );
                           },
-                          child:
-                              CardLaporanWidget(report: item.elementAt(index)),
+                          child: CardLaporanWidget(report: item[index]),
                         );
                       },
                     ),

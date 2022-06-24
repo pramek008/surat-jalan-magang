@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surat_jalan/cubit/page_cubit.dart';
@@ -58,12 +59,22 @@ class MainPage extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           backgroundColor: backgrounColor,
-          body: SafeArea(
-            child: Stack(
-              children: [
-                buildContent(state),
-                buildButtonNav(),
-              ],
+          body: DoubleBackToCloseApp(
+            snackBar: SnackBar(
+              backgroundColor: greyIconColor,
+              duration: Duration(seconds: 2),
+              behavior: SnackBarBehavior.floating,
+              content: Text(
+                'Tekan sekali lagi untuk keluar',
+              ),
+            ),
+            child: SafeArea(
+              child: Stack(
+                children: [
+                  buildContent(state),
+                  buildButtonNav(),
+                ],
+              ),
             ),
           ),
         );

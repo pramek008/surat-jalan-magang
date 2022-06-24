@@ -831,21 +831,62 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: primaryColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: defaultMargin,
-              // right: defaultMargin,
-              // left: defaultMargin,
-            ),
-            child: Column(
-              children: [
-                heading(),
-                content(),
-              ],
+    return WillPopScope(
+      onWillPop: () async {
+        bool willLeave = false;
+        // show the confirm dialog
+        await showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                  title: Text(
+                    'Keluar Halaman ?',
+                    style: txSemiBold.copyWith(
+                      color: primaryColor.withOpacity(0.8),
+                      fontSize: 22,
+                    ),
+                  ),
+                  content: const Text(
+                      'Apakah anda yakin ingin keluar dari halaman ini?'),
+                  actionsAlignment: MainAxisAlignment.center,
+                  actionsPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () {
+                        willLeave = true;
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Keluar',
+                        style: txMedium,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text(
+                        'Tidak',
+                        style: txMedium,
+                      ),
+                    )
+                  ],
+                ));
+        return willLeave;
+      },
+      child: Scaffold(
+        backgroundColor: primaryColor,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: defaultMargin,
+                // right: defaultMargin,
+                // left: defaultMargin,
+              ),
+              child: Column(
+                children: [
+                  heading(),
+                  content(),
+                ],
+              ),
             ),
           ),
         ),

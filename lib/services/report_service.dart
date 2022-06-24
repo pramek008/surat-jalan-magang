@@ -2,13 +2,14 @@ import "dart:async";
 import "dart:convert";
 import "package:dio/dio.dart" as Dio;
 import "package:dio/dio.dart";
+import 'package:flutter/widgets.dart';
 import "package:surat_jalan/models/report_model.dart";
 import "package:http/http.dart" as http;
 import "package:surat_jalan/models/response_model.dart";
 import "package:surat_jalan/services/helper_service.dart";
 import "package:surat_jalan/services/secure_storage_service.dart";
 
-class ReportService {
+class ReportService with ChangeNotifier {
   final String _url = "http://103.100.27.29/sppd/public/api/laporan-jalan";
 
   //! GET Request
@@ -61,17 +62,18 @@ class ReportService {
       MapEntry("user_id", userId.toString()),
       MapEntry("perintah_jalan_id", perintahJalanId.toString()),
       MapEntry("nama_kegiatan", namaKegiatan),
-      // MapEntry("foto", img.path.split("/").last),
       MapEntry("lokasi[0]", lokasi[0]),
       MapEntry("lokasi[1]", lokasi[1]),
       MapEntry("deskripsi", deskripsi)
     ]);
 
-    print("=====FIELD: ${formData.fields}");
-    print("=====FILES: ${formData.files}");
+    // print("=====FIELD: ${formData.fields}");
+    // print("=====FILES: ${formData.files}");
     try {
       Dio.Response response = await Dio.Dio().postUri(Uri.parse(_url),
-          data: formData,
+          data: formData, onSendProgress: (int sent, int total) {
+        print("=====PROGRESS: $sent / $total");
+      },
           options: Options(
             headers: {
               "content-type": "application/json",
@@ -109,14 +111,7 @@ class ReportService {
             message: json["message"] as String,
           );
       }
-
-      // if (response.statusCode == 200 || response.statusCode == 201) {
-      //   return response.data;
-      // } else {
-      //   return response.data;
-      // }
     } catch (e) {
-      print(e);
       throw Exception(e.toString());
     }
   }
@@ -130,16 +125,34 @@ class ReportService {
     final token = await SecureStorageService.storage
         .read(key: SecureStorageService.tokenKey);
 
-    final response = await http.delete(Uri.parse(_url + "/" + id.toString()),
-        headers: HelperService.buildHeaders(accessToken: token));
-    print("DELETE Response ${response.statusCode}");
-    print(response.body);
-
     try {
-      if (response.statusCode == 200) {
-        return ResponseModel.fromJson(jsonDecode(response.body));
-      } else {
-        throw Exception("Failed to delete report");
+      final response = await http.delete(Uri.parse(_url + "/" + id.toString()),
+          headers: HelperService.buildHeaders(accessToken: token));
+      print("DELETE Response ${response.statusCode}");
+      print(response.body);
+      final statusType = (response.statusCode / 100).floor() * 100;
+      switch (statusType) {
+        case 200:
+          Map<String, dynamic> json = jsonDecode(response.body);
+          notifyListeners();
+          return ResponseModel(
+            status: json["status"] as String,
+            message: json["message"] as String,
+          );
+        case 400:
+          Map<String, dynamic> json = jsonDecode(response.body);
+          return ResponseModel(
+            status: json["status"] as String,
+            message: json["message"] as String,
+          );
+        case 300:
+        case 500:
+        default:
+          Map<String, dynamic> json = jsonDecode(response.body);
+          return ResponseModel(
+            status: json["status"] as String,
+            message: json["message"] as String,
+          );
       }
     } catch (e) {
       throw Exception(e.toString());

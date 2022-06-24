@@ -155,7 +155,13 @@ class CardLetterTileWidget extends StatelessWidget {
                               ),
                             );
                           } else {
-                            return Container();
+                            return Text(
+                              '...',
+                              style: txSemiBold.copyWith(
+                                fontSize: 20,
+                                color: whiteColor,
+                              ),
+                            );
                           }
                           // return Text(
                           //   '4',

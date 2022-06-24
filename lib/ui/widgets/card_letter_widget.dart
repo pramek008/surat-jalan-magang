@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:surat_jalan/cubit/report_cubit.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/letter_page.dart';
@@ -59,10 +61,46 @@ class CardLetterWidget extends StatelessWidget {
             right: -80,
             child: circleBg(100, 100, 17, color),
           ),
+          // Positioned(
+          //   bottom: 155,
+          //   right: 95,
+          //   child: circleBg(30, 30, 4, color),
+          // ),
           Positioned(
-            bottom: 150,
-            right: 80,
-            child: circleBg(30, 30, 4, color),
+            bottom: 160,
+            right: 5,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: whiteColor.withOpacity(1),
+              ),
+              child: Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: color,
+                ),
+                child: Center(
+                  child: BlocBuilder<ReportCubit, ReportState>(
+                    builder: (context, state) {
+                      if (state is ReportLoaded) {
+                        return Text(
+                          '${state.reports.where((element) => element.perintahJalanId.id == surat.id).length}',
+                          style: txSemiBold.copyWith(
+                            fontSize: 18,
+                            color: whiteColor,
+                          ),
+                        );
+                      } else {
+                        return const Text('...');
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
           ),
           Positioned(
             bottom: -70,
@@ -80,7 +118,7 @@ class CardLetterWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(

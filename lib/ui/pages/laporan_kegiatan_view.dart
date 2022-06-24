@@ -619,7 +619,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
             fotoKegiatan(),
             notulen(),
             lokasi(),
-            btnSubmit(),
+            // btnSubmit(),
           ],
         ),
       );
