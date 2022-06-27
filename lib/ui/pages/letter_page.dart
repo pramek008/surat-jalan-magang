@@ -563,6 +563,7 @@ class _LetterPageState extends State<LetterPage> {
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
                                         Navigator.of(context).pop();
+
                                         context
                                             .read<ReportCubit>()
                                             .deleteReport(state.reports
@@ -572,8 +573,13 @@ class _LetterPageState extends State<LetterPage> {
                                                     widget.surat.id)
                                                 .elementAt(index)
                                                 .id);
+                                        setState(() {
+                                          context
+                                              .read<ReportCubit>()
+                                              .getAllReport();
+                                        });
                                         // setState(() {
-                                        // state.reports.removeAt(index);
+                                        //   state.reports.removeAt(index);
                                         //   context
                                         //       .read<ReportCubit>()
                                         //       .getAllReport();

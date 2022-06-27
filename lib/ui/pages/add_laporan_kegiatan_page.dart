@@ -6,10 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:surat_jalan/bloc/postreport_bloc.dart';
 import 'package:surat_jalan/cubit/location_cubit.dart';
+import 'package:surat_jalan/services/map_provider_services.dart';
 import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/ui/pages/gmap_fullview_page.dart';
 
 class LaporanKegiatanAddPage extends StatefulWidget {
   final int userId;
@@ -31,12 +34,14 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
   final TextEditingController namaKegiatanController = TextEditingController();
 
   GoogleMapController? _mapController;
-  static const LatLng _latLng = LatLng(-7.8093128, 110.3136509);
-  static const CameraPosition _initialCameraPosition = CameraPosition(
+  static LatLng _latLng = LatLng(-7.8093128, 110.3136509);
+  static CameraPosition _initialCameraPosition = CameraPosition(
     target: _latLng,
     zoom: 14,
   );
-  final Set<Marker> _markers = {};
+  final Set<Marker> _markers = Set();
+
+  LatLng? _currentPosition;
 
   Future<void> fromGallery() async {
     final List<XFile>? selectedImage =
@@ -59,6 +64,54 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
     // print('list lengt ${_imagesList.length}');
   }
 
+  void _awaitReturnValueFrom(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChangeNotifierProvider(
+          create: (context) => MapProviderServices(),
+          child: const GmapView(),
+        ),
+      ),
+    );
+    print(result);
+    if (result != null) {
+      _currentPosition = result;
+      _latLng = result;
+      setState(() {
+        _mapController?.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(
+                  _currentPosition!.latitude, _currentPosition!.longitude),
+              zoom: 15,
+            ),
+          ),
+        );
+        _markers.clear();
+        _markers.add(
+          Marker(
+            markerId: const MarkerId('myMarker'),
+            onDrag: (LatLng position) {
+              setState(() {
+                position = _latLng;
+              });
+              print("Drag Position: $position");
+            },
+            position: _currentPosition ??
+                LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+          ),
+        );
+      });
+      while (_lokasi.length <= 1) {
+        _lokasi.add(_currentPosition!.latitude.toString());
+        _lokasi.add(_currentPosition!.longitude.toString());
+      }
+      print("Position TO POST: ${_currentPosition.toString()}");
+      print("LOKASI TO POST: ${_lokasi.toString()}");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     //* Text field controller
@@ -72,9 +125,6 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
 
     String oneLineAdd =
         '${street ?? ''} ${subLocality ?? ''} ${locality ?? ''} ${subAdministrativeArea ?? ''} ${administrativeArea ?? ''} ${country ?? ''}';
-
-    double? latitude;
-    double? longitude;
 
     //*========================== UI ============================
     Widget heading() {
@@ -523,152 +573,69 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
       }
 
       Widget lokasi() {
-        return BlocConsumer<LocationCubit, LocationState>(
-          listener: (context, state) {
-            if (state is LocationError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state is LocationLoading) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Lokasi Kegiatan',
-                        style: txMedium.copyWith(
-                          color: primaryColor,
-                          fontSize: 18,
-                        ),
-                      ),
-                      CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: greyDeepColor,
-                    ),
-                    child: GoogleMap(
-                      initialCameraPosition: _initialCameraPosition,
-                      markers: _markers,
-                      zoomControlsEnabled: false,
-                      myLocationButtonEnabled: true,
-                      mapType: MapType.normal,
-                      onMapCreated: (GoogleMapController controller) {
-                        _mapController = controller;
-                      },
-                    ),
-                  )
-                ],
-              );
-            } else if (state is LocationLoaded) {
-              print("Current Posisition: ${state.position}");
-              _mapController?.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: LatLng(
-                        state.position.latitude, state.position.longitude),
-                    zoom: 15,
-                  ),
-                ),
-              );
-
-              latitude = double.tryParse(state.position.latitude.toString());
-              longitude = double.tryParse(state.position.longitude.toString());
-              _lokasi.clear();
-              while (_lokasi.length <= 1) {
-                _lokasi.add(latitude.toString());
-                _lokasi.add(longitude.toString());
-              }
-
-              _markers.clear();
-              _markers.add(
-                Marker(
-                  markerId: const MarkerId('myMarker'),
-                  onDrag: (LatLng position) {
-                    setState(() {
-                      position = _latLng;
-                    });
-                    print("Drag Position: $position");
-                  },
-                  position:
-                      LatLng(state.position.latitude, state.position.longitude),
-                  infoWindow: InfoWindow(
-                    title: state.address.locality,
-                    snippet:
-                        '${state.position.latitude}, ${state.position.longitude}',
-                  ),
-                ),
-              );
-            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Lokasi Kegiatan',
-                      style: txMedium.copyWith(
-                        color: primaryColor,
-                        fontSize: 18,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        context.read<LocationCubit>().getCurrentLocation();
-                      },
-                      style: TextButton.styleFrom(
-                        shadowColor: primaryColor.withOpacity(0.8),
-                        backgroundColor: primaryColor,
-                      ),
-                      child: Text(
-                        'Set Lokasi',
-                        style: txMedium.copyWith(
-                          color: whiteColor,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    color: greyDeepColor,
+                Text(
+                  'Lokasi Kegiatan',
+                  style: txMedium.copyWith(
+                    color: primaryColor,
+                    fontSize: 18,
                   ),
-                  child: GoogleMap(
-                    initialCameraPosition: _initialCameraPosition,
-                    markers: _markers,
-                    zoomControlsEnabled: false,
-                    mapType: MapType.normal,
-                    onMapCreated: (GoogleMapController controller) {
-                      _mapController = controller;
-                    },
+                ),
+                TextButton(
+                  onPressed: () async {
+                    _awaitReturnValueFrom(context);
+                    // await Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => ChangeNotifierProvider(
+                    //       create: (context) => MapProviderServices(),
+                    //       child: const GmapView(),
+                    //     ),
+                    //   ),
+                    // );
+                  },
+                  style: TextButton.styleFrom(
+                    shadowColor: primaryColor.withOpacity(0.8),
+                    backgroundColor: primaryColor,
+                  ),
+                  child: Text(
+                    'Set Lokasi',
+                    style: txMedium.copyWith(
+                      color: whiteColor,
+                      fontSize: 14,
+                    ),
                   ),
                 )
               ],
-            );
-          },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: greyDeepColor,
+              ),
+              child: GoogleMap(
+                initialCameraPosition: _initialCameraPosition,
+                markers: _markers,
+                zoomControlsEnabled: false,
+                mapType: MapType.normal,
+                onMapCreated: (GoogleMapController controller) {
+                  _mapController = controller;
+                },
+                onCameraMove: (CameraPosition position) {
+                  _initialCameraPosition = position;
+                },
+              ),
+            )
+          ],
         );
       }
 
@@ -739,7 +706,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                         backgroundColor: redStatusColor,
                       ),
                     );
-                  } else if (longitude == null || latitude == null) {
+                  } else if (_lokasi.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -775,7 +742,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'Kegiatan Sedang ditambahkan',
+                          'Kegiatan Sedang ditambahkan, Mohon Tunggu',
                           style: txRegular.copyWith(
                             color: whiteColor,
                           ),

@@ -61,11 +61,11 @@ class CardLetterWidget extends StatelessWidget {
             right: -80,
             child: circleBg(100, 100, 17, color),
           ),
-          // Positioned(
-          //   bottom: 155,
-          //   right: 95,
-          //   child: circleBg(30, 30, 4, color),
-          // ),
+          Positioned(
+            top: 45,
+            left: 10,
+            child: circleBg(35, 35, 7, color),
+          ),
           Positioned(
             bottom: 160,
             right: 5,
@@ -94,7 +94,10 @@ class CardLetterWidget extends StatelessWidget {
                           ),
                         );
                       } else {
-                        return const Text('...');
+                        return Text(
+                          '...',
+                          style: txSemiBold.copyWith(color: whiteColor),
+                        );
                       }
                     },
                   ),
@@ -183,22 +186,12 @@ class CardLetterWidget extends StatelessWidget {
     //*Master Class
     return InkWell(
       onTap: () {
-        // Future.delayed(Duration.zero, () {
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (context) => LetterPage(
-        //         surat: surat,
-        //       ),
-        //     ),
-        //   );
-        // });
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => LetterPage(surat: surat),
           ),
-        );
+        ).then((value) => BlocProvider.of<ReportCubit>(context).getAllReport());
       },
       child: Container(
         width: 140,

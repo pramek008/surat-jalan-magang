@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
         const Color(0xffDA4505),
         const Color(0xff9E20D9),
       ];
-      if (letter.isEmpty) {
+      if (letter.where((element) => element.userId.id == user.id).isEmpty) {
         return Container(
           margin: EdgeInsets.symmetric(
             horizontal: defaultMargin,
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Surat Perjalanan',
+                'Surat Perjalanan Dinas',
                 style: txSemiBold.copyWith(
                   color: blackColor,
                   fontSize: 24,
@@ -136,11 +136,16 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 16,
               ),
-              Text(
-                'Tidak ada surat perjalanan',
-                style: txMedium.copyWith(
-                  color: redStatusColor,
-                  fontSize: 20,
+              SizedBox(
+                height: 220,
+                child: Center(
+                  child: Text(
+                    'Tidak ada surat perjalanan',
+                    style: txMedium.copyWith(
+                      color: redStatusColor,
+                      fontSize: 20,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -222,8 +227,6 @@ class _HomePageState extends State<HomePage> {
             children: [
               Wrap(
                 runSpacing: 10,
-                // runAlignment: WrapAlignment.start,
-                // alignment: WrapAlignment.start,
                 children: [
                   timeHeading(),
                   BlocBuilder<AuthBloc, AuthState>(
