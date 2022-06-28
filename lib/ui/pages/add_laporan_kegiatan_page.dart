@@ -103,6 +103,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
           ),
         );
       });
+      _lokasi.clear();
       while (_lokasi.length <= 1) {
         _lokasi.add(_currentPosition!.latitude.toString());
         _lokasi.add(_currentPosition!.longitude.toString());
@@ -589,15 +590,6 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                 TextButton(
                   onPressed: () async {
                     _awaitReturnValueFrom(context);
-                    // await Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => ChangeNotifierProvider(
-                    //       create: (context) => MapProviderServices(),
-                    //       child: const GmapView(),
-                    //     ),
-                    //   ),
-                    // );
                   },
                   style: TextButton.styleFrom(
                     shadowColor: primaryColor.withOpacity(0.8),

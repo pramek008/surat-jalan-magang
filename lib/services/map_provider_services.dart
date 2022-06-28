@@ -43,14 +43,14 @@ class MapProviderServices with ChangeNotifier {
     notifyListeners();
   }
 
-  // void _addMarker(LatLng location, String address) {
-  //   _markers.add(Marker(
-  //       markerId: MarkerId(location.toString()),
-  //       position: location,
-  //       infoWindow: InfoWindow(title: address, snippet: "go here"),
-  //       icon: BitmapDescriptor.defaultMarker));
-  //   notifyListeners();
-  // }
+  void _addMarker(LatLng location, String address) {
+    _markers.add(Marker(
+        markerId: MarkerId(location.toString()),
+        position: location,
+        infoWindow: InfoWindow(title: address, snippet: "go here"),
+        icon: BitmapDescriptor.defaultMarker));
+    notifyListeners();
+  }
 
   void onCameraMove(CameraPosition position) async {
     // print(position.target);
@@ -69,7 +69,7 @@ class MapProviderServices with ChangeNotifier {
     print(
         "the latitude is: ${position.longitude} and th longitude is: ${position.longitude} ");
     locationController.text = placemark[0].subLocality!;
-    // _addMarker(_initialposition, placemark[0].name!);
+    _addMarker(_initialposition, placemark[0].name!);
     _mapController.moveCamera(CameraUpdate.newLatLng(_initialposition));
     print("initial position is : ${placemark[0].locality}");
     notifyListeners();

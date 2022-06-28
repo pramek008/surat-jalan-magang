@@ -66,8 +66,8 @@ class _GmapViewState extends State<GmapView> {
                 },
                 child: FloatingActionButton(
                   onPressed: () {
-                    provmaps.getCurrentLocation();
                     context.read<LocationCubit>().getCurrentLocation();
+                    provmaps.getCurrentLocation();
                   },
                   backgroundColor: Colors.blueAccent,
                   child: const Icon(
@@ -155,7 +155,7 @@ class _GmapViewState extends State<GmapView> {
               child: Icon(
                 Icons.location_on,
                 size: 50,
-                color: Colors.redAccent,
+                color: Colors.blueAccent,
               ),
             )
           ],

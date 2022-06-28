@@ -1,9 +1,11 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
+import 'package:surat_jalan/ui/pages/gallery_view_page.dart';
 
 import '../../cubit/location_cubit.dart';
 import '../../models/report_model.dart';
@@ -18,25 +20,27 @@ class LaporanKegiatanView extends StatefulWidget {
 }
 
 class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
-  final ImagePicker _picker = ImagePicker();
-  final List<XFile> _imagesList = [];
+  // final ImagePicker _picker = ImagePicker();
+  // final List<XFile> _imagesList = [];
 
-  Future<void> fromGallery() async {
-    final List<XFile>? selectedImage = await _picker.pickMultiImage();
-    if (selectedImage != null) {
-      _imagesList.addAll(selectedImage);
-    }
-    setState(() {});
-  }
+  GoogleMapController? _mapController;
 
-  void fromCamera() async {
-    final XFile? selectedImage =
-        await _picker.pickImage(source: ImageSource.camera);
-    if (selectedImage != null) {
-      _imagesList.add(selectedImage);
-    }
-    setState(() {});
-  }
+  // Future<void> fromGallery() async {
+  //   final List<XFile>? selectedImage = await _picker.pickMultiImage();
+  //   if (selectedImage != null) {
+  //     _imagesList.addAll(selectedImage);
+  //   }
+  //   setState(() {});
+  // }
+
+  // void fromCamera() async {
+  //   final XFile? selectedImage =
+  //       await _picker.pickImage(source: ImageSource.camera);
+  //   if (selectedImage != null) {
+  //     _imagesList.add(selectedImage);
+  //   }
+  //   setState(() {});
+  // }
 
   void positionfromDb() {
     double? lat = double.tryParse(widget.report.lokasi[0]);
@@ -244,116 +248,121 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
         int coutList = widget.report.foto.length;
         int manyRow = (coutList / 3).ceil();
 
-        Widget buildSheet(context, state) => Material(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: whiteColor,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 8,
-                      width: 50,
-                      margin: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: greySubHeaderColor,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        fromCamera();
-                      },
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.camera_alt,
-                            size: 40,
-                            color: greyDeepColor,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            'From Camera',
-                            style: txMedium.copyWith(
-                              fontSize: 18,
-                              color: blackColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        fromGallery();
-                      },
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.photo_library_outlined,
-                            size: 40,
-                            color: greyDeepColor,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            'From Galery',
-                            style: txMedium.copyWith(
-                              fontSize: 18,
-                              color: blackColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
+        // Widget buildSheet(context, state) => Material(
+        //       child: Container(
+        //         decoration: BoxDecoration(
+        //           color: whiteColor,
+        //         ),
+        //         child: Column(
+        //           crossAxisAlignment: CrossAxisAlignment.center,
+        //           children: [
+        //             Container(
+        //               height: 8,
+        //               width: 50,
+        //               margin: const EdgeInsets.all(10),
+        //               decoration: BoxDecoration(
+        //                 color: greySubHeaderColor,
+        //                 borderRadius: BorderRadius.circular(16),
+        //               ),
+        //             ),
+        //             const SizedBox(
+        //               height: 10,
+        //             ),
+        //             InkWell(
+        //               onTap: () {
+        //                 // fromCamera();
+        //               },
+        //               child: Row(
+        //                 children: [
+        //                   Icon(
+        //                     Icons.camera_alt,
+        //                     size: 40,
+        //                     color: greyDeepColor,
+        //                   ),
+        //                   const SizedBox(
+        //                     width: 10,
+        //                   ),
+        //                   Text(
+        //                     'From Camera',
+        //                     style: txMedium.copyWith(
+        //                       fontSize: 18,
+        //                       color: blackColor,
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //             const SizedBox(
+        //               height: 15,
+        //             ),
+        //             InkWell(
+        //               onTap: () {
+        //                 // fromGallery();
+        //               },
+        //               child: Row(
+        //                 children: [
+        //                   Icon(
+        //                     Icons.photo_library_outlined,
+        //                     size: 40,
+        //                     color: greyDeepColor,
+        //                   ),
+        //                   const SizedBox(
+        //                     width: 10,
+        //                   ),
+        //                   Text(
+        //                     'From Galery',
+        //                     style: txMedium.copyWith(
+        //                       fontSize: 18,
+        //                       color: blackColor,
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //     );
 
-        //*Buttom Sheet builder
-        Future showSheet() {
-          return showSlidingBottomSheet(
-            context,
-            builder: (context) => SlidingSheetDialog(
-              snapSpec: const SnapSpec(
-                snappings: [0.7, 0.7],
-              ),
-              builder: buildSheet,
-              padding: const EdgeInsets.only(
-                // top: 24,
-                left: 20,
-                right: 20,
-                bottom: 28,
-              ),
-              elevation: 12,
-              cornerRadius: 16,
-              dismissOnBackdropTap: true,
-            ),
-          );
-        }
+        // //*Buttom Sheet builder
+        // Future showSheet() {
+        //   return showSlidingBottomSheet(
+        //     context,
+        //     builder: (context) => SlidingSheetDialog(
+        //       snapSpec: const SnapSpec(
+        //         snappings: [0.7, 0.7],
+        //       ),
+        //       builder: buildSheet,
+        //       padding: const EdgeInsets.only(
+        //         // top: 24,
+        //         left: 20,
+        //         right: 20,
+        //         bottom: 28,
+        //       ),
+        //       elevation: 12,
+        //       cornerRadius: 16,
+        //       dismissOnBackdropTap: true,
+        //     ),
+        //   );
+        // }
 
         Widget imageData(String image, int? index) {
           return Stack(
             children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        "http://103.100.27.29/sppd/public/storage/$image"),
-                    fit: BoxFit.cover,
+              InkWell(
+                onTap: () {
+                  _openGalery(index!);
+                },
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                          "http://103.100.27.29/sppd/public/storage/$image"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -382,42 +391,42 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
           );
         }
 
-        Widget addImage() {
-          return InkWell(
-            onTap: showSheet,
-            child: DottedBorder(
-              color: greyIconColor,
-              radius: const Radius.circular(20),
-              dashPattern: const [10, 10],
-              borderType: BorderType.RRect,
-              strokeWidth: 3,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/icon_addPicture.png',
-                        width: 30,
-                        height: 30,
-                        color: greyIconColor,
-                      ),
-                      Text(
-                        'Tambah Foto',
-                        style: txRegular.copyWith(
-                          color: greyIconColor,
-                          fontSize: 14,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        }
+        // Widget addImage() {
+        //   return InkWell(
+        //     onTap: showSheet,
+        //     child: DottedBorder(
+        //       color: greyIconColor,
+        //       radius: const Radius.circular(20),
+        //       dashPattern: const [10, 10],
+        //       borderType: BorderType.RRect,
+        //       strokeWidth: 3,
+        //       child: Padding(
+        //         padding: const EdgeInsets.all(8.0),
+        //         child: Center(
+        //           child: Column(
+        //             mainAxisAlignment: MainAxisAlignment.center,
+        //             children: [
+        //               Image.asset(
+        //                 'assets/icon_addPicture.png',
+        //                 width: 30,
+        //                 height: 30,
+        //                 color: greyIconColor,
+        //               ),
+        //               Text(
+        //                 'Tambah Foto',
+        //                 style: txRegular.copyWith(
+        //                   color: greyIconColor,
+        //                   fontSize: 14,
+        //                 ),
+        //                 textAlign: TextAlign.center,
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   );
+        // }
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -433,7 +442,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
               height: 10,
             ),
             SizedBox(
-                height: isImage ? (manyRow * 125) : 10,
+                height: isImage ? (manyRow * 120) : 10,
                 child: GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -555,7 +564,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 15),
+                      padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         oneLineAdd,
                         style: txRegular.copyWith(
@@ -564,6 +573,35 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      height: 200,
+                      child: GoogleMap(
+                        initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                              //-7.8093128, 110.3136509
+                              double.tryParse(widget.report.lokasi.first)!,
+                              double.tryParse(widget.report.lokasi.last)!,
+                            ),
+                            zoom: 18),
+                        markers: {
+                          Marker(
+                            markerId: const MarkerId('myMarker'),
+                            position: LatLng(
+                              double.tryParse(widget.report.lokasi.first)!,
+                              double.tryParse(widget.report.lokasi.last)!,
+                            ),
+                          ),
+                        },
+                        zoomControlsEnabled: false,
+                        mapType: MapType.normal,
+                        onMapCreated: (GoogleMapController controller) {
+                          _mapController = controller;
+                        },
+                      ),
+                    )
                   ],
                 ),
               ],
@@ -601,7 +639,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
           left: defaultMargin,
           right: defaultMargin,
           top: defaultMargin,
-          bottom: 50,
+          bottom: 70,
         ),
         decoration: BoxDecoration(
           color: whiteColor,
@@ -619,6 +657,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
             fotoKegiatan(),
             notulen(),
             lokasi(),
+
             // btnSubmit(),
           ],
         ),
@@ -643,6 +682,18 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  void _openGalery(int index) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GalleryViewPage(
+          images: widget.report.foto,
+          index: index,
         ),
       ),
     );
