@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:surat_jalan/bloc/auth_bloc.dart';
 import 'package:surat_jalan/models/user_model.dart';
 import 'package:surat_jalan/shared/theme.dart';
@@ -20,6 +21,8 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   Widget build(BuildContext context) {
+    var formatter = NumberFormat('#########,##########');
+
     Widget heading() {
       return Padding(
         padding: EdgeInsets.symmetric(
@@ -150,8 +153,10 @@ class _AccountPageState extends State<AccountPage> {
           children: [
             accountComponent('Nama', user.name),
             accountComponent('Username', user.username),
-            accountComponent('Email', user.email),
-            accountComponent('Position', user.jabatan),
+            accountComponent('E-Mail', user.email),
+            accountComponent('NIP',
+                formatter.format(int.parse(user.nip)).replaceAll(',', ' ')),
+            accountComponent('Jabatan', user.jabatan),
           ],
         ),
       );

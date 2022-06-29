@@ -10,6 +10,7 @@ class UserModel {
     required this.name,
     required this.username,
     required this.email,
+    required this.nip,
     required this.jabatan,
     required this.password,
     required this.createdAt,
@@ -20,6 +21,7 @@ class UserModel {
   final String name;
   final String username;
   final String email;
+  final String nip;
   final String jabatan;
   final String password;
   final DateTime createdAt;
@@ -35,6 +37,7 @@ class UserModel {
         name: json["name"],
         username: json["username"],
         email: json["email"],
+        nip: json["nip"],
         jabatan: json["jabatan"],
         password: json["password"],
         createdAt: DateTime.parse(json["created_at"]),
@@ -46,6 +49,7 @@ class UserModel {
         "name": name,
         "username": username,
         "email": email,
+        "nip": nip,
         "jabatan": jabatan,
         "password": password,
         "created_at": createdAt.toIso8601String(),

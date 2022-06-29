@@ -155,6 +155,24 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(
+                height: 20,
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  onTap: () {
+                    // Navigator.pushNamed(context, '/forgot_password');
+                  },
+                  child: Text(
+                    'Lupa Password?',
+                    style: txRegular.copyWith(
+                      color: greySubHeaderColor,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
                 height: 40,
               ),
               if (_isLoading == true)
@@ -271,7 +289,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 35,
                   ),
-                  footer(),
+                  // footer(),
                 ],
               ),
             ),

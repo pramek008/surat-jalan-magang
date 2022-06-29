@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +8,7 @@ import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/add_laporan_kegiatan_page.dart';
 import 'package:surat_jalan/ui/widgets/card_laporan_widget.dart';
 import 'package:surat_jalan/ui/widgets/letter_status_widget.dart';
+import 'package:pdf/pdf.dart';
 
 import '../../cubit/report_cubit.dart';
 
@@ -640,6 +639,36 @@ class _LetterPageState extends State<LetterPage> {
         );
       }
 
+      Widget exportPdf() {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            TextButton(
+              onPressed: () async {
+                // final pdf = await
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: primaryColor,
+                ),
+                child: Text(
+                  'Export PDF',
+                  style: txSemiBold.copyWith(
+                    color: whiteColor,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+
       //! MASTER Widget Content (untuk menampung semua widget component)
       return Wrap(
         runSpacing: 16,
@@ -653,6 +682,7 @@ class _LetterPageState extends State<LetterPage> {
           dayCountdown(),
           deskripsiPenugasan(),
           laporanPerjalananDinas(),
+          exportPdf(),
         ],
       );
     }
