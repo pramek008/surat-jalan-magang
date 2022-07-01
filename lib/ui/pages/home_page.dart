@@ -111,6 +111,8 @@ class _HomePageState extends State<HomePage> {
     }
 
     Widget suratPerjalanan(List<LetterModel> letter, UserModel user) {
+      var lastday = DateTime.now().subtract(const Duration(days: 1));
+
       var colors = [
         const Color(0xff006EE9),
         const Color(0xff18DC4F),
@@ -180,7 +182,9 @@ class _HomePageState extends State<HomePage> {
                   .where((element) => element.userId.id == user.id)
                   .map((e) => CardLetterWidget(
                         surat: e,
-                        color: (colors..shuffle()).first,
+                        color:
+                            e.tglAkhir.isAfter(lastday) ? colors[1] : colors[3],
+                        // color: (colors..shuffle()).first,
                       ))
                   .toList(),
             ),

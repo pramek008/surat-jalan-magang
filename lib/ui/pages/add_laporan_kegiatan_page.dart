@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:surat_jalan/bloc/postreport_bloc.dart';
-import 'package:surat_jalan/cubit/location_cubit.dart';
 import 'package:surat_jalan/services/map_provider_services.dart';
 import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/gmap_fullview_page.dart';
@@ -34,7 +33,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
   final TextEditingController namaKegiatanController = TextEditingController();
 
   GoogleMapController? _mapController;
-  static LatLng _latLng = LatLng(-7.8093128, 110.3136509);
+  static LatLng _latLng = const LatLng(-7.8093128, 110.3136509);
   static CameraPosition _initialCameraPosition = CameraPosition(
     target: _latLng,
     zoom: 14,
@@ -74,7 +73,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
         ),
       ),
     );
-    print(result);
+    // print(result);
     if (result != null) {
       _currentPosition = result;
       _latLng = result;
@@ -96,7 +95,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
               setState(() {
                 position = _latLng;
               });
-              print("Drag Position: $position");
+              // print("Drag Position: $position");
             },
             position: _currentPosition ??
                 LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
@@ -108,8 +107,8 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
         _lokasi.add(_currentPosition!.latitude.toString());
         _lokasi.add(_currentPosition!.longitude.toString());
       }
-      print("Position TO POST: ${_currentPosition.toString()}");
-      print("LOKASI TO POST: ${_lokasi.toString()}");
+      // print("Position TO POST: ${_currentPosition.toString()}");
+      // print("LOKASI TO POST: ${_lokasi.toString()}");
     }
   }
 
@@ -837,8 +836,6 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
             child: Padding(
               padding: EdgeInsets.only(
                 top: defaultMargin,
-                // right: defaultMargin,
-                // left: defaultMargin,
               ),
               child: Column(
                 children: [

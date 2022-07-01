@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surat_jalan/bloc/login_bloc.dart';
 import 'package:surat_jalan/shared/theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -22,6 +23,74 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     bool _isLoading = false;
+
+    _laucnhWhatsapp() async {
+      //! Launch the WhatsApp app HARUS GANTI Nomor punya
+      var noWhatsapp = '6282176515234';
+      var message = 'Halo, saya lupa password saya, mohon bantuannya.';
+      var whatsappAndroid =
+          Uri.parse("whatsapp://send?phone=$noWhatsapp&text=$message");
+      // Uri.parse(
+      //     "https://api.whatsapp.com/send/?phone=$noWhatsapp&text=$message");
+
+      if (await canLaunchUrl(whatsappAndroid)) {
+        await launchUrl(whatsappAndroid);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text("WhatsApp tidak terinstall di perangkat ini"),
+            backgroundColor: redStatusColor,
+          ),
+        );
+      }
+    }
+
+    void buildModal(BuildContext context) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Lupa Password ?',
+              style: txSemiBold.copyWith(
+                color: primaryColor.withOpacity(0.8),
+                fontSize: 22,
+              ),
+            ),
+            content: Text(
+              'Silakan hubungi admin untuk mendapatkan akses ?',
+              style: txRegular.copyWith(
+                color: blackColor.withOpacity(0.8),
+                fontSize: 18,
+              ),
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actionsPadding: const EdgeInsets.symmetric(horizontal: 20),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  // Navigator.of(context).pop();
+                  _laucnhWhatsapp();
+                },
+                child: Text(
+                  'Hubungi',
+                  style: txMedium,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Batal',
+                  style: txMedium,
+                ),
+              )
+            ],
+          );
+        },
+      );
+    }
 
     Widget heading() {
       return Padding(
@@ -52,7 +121,6 @@ class _LoginPageState extends State<LoginPage> {
           } else if (state is LoginLoadingState) {
             _isLoading = true;
           } else if (state is LoginSuccessState) {
-            // print(state.response.status);
             _isLoading = false;
             if (state.response.status.toString() == "success") {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -162,6 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: InkWell(
                   onTap: () {
                     // Navigator.pushNamed(context, '/forgot_password');
+                    buildModal(context);
                   },
                   child: Text(
                     'Lupa Password?',
@@ -179,7 +248,6 @@ class _LoginPageState extends State<LoginPage> {
                 Center(
                   child: Container(
                       color: whiteColor,
-                      width: double.infinity,
                       child: const CircularProgressIndicator()),
                 )
               else
@@ -193,19 +261,26 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       if (_emailController.text.isEmpty ||
                           _passwordController.text.isEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Error'),
-                            content: const Text('Mohon Isi Seluruh Kolom !'),
-                            actions: [
-                              TextButton(
-                                child: const Text('OK'),
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                            ],
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content:
+                                Text('Email dan Password tidak boleh kosong'),
+                            backgroundColor: Colors.blueGrey,
                           ),
                         );
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (context) => AlertDialog(
+                        //     title: const Text('Error'),
+                        //     content: const Text('Mohon Isi Seluruh Kolom !'),
+                        //     actions: [
+                        //       TextButton(
+                        //         child: const Text('OK'),
+                        //         onPressed: () => Navigator.pop(context),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // );
                       } else {
                         context.read<LoginBloc>().add(
                               LoginRequestedEvent(

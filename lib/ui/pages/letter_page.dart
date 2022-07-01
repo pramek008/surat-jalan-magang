@@ -8,7 +8,6 @@ import 'package:surat_jalan/shared/theme.dart';
 import 'package:surat_jalan/ui/pages/add_laporan_kegiatan_page.dart';
 import 'package:surat_jalan/ui/widgets/card_laporan_widget.dart';
 import 'package:surat_jalan/ui/widgets/letter_status_widget.dart';
-import 'package:pdf/pdf.dart';
 
 import '../../cubit/report_cubit.dart';
 
@@ -35,8 +34,8 @@ class _LetterPageState extends State<LetterPage> {
 
   //* Untuk memeriksa status surat apakah masih berjalan atau sudah selesai
   bool isExpired(DateTime tglAkhir) {
-    DateTime now = DateTime.now();
-    if (now.isAfter(tglAkhir)) {
+    var lastday = DateTime.now().subtract(const Duration(days: 1));
+    if (lastday.isAfter(tglAkhir)) {
       return false;
     } else {
       return true;
@@ -456,7 +455,6 @@ class _LetterPageState extends State<LetterPage> {
             BlocConsumer<ReportCubit, ReportState>(
               listener: (context, state) {
                 if (state is ReportResponse) {
-                  print(state);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
@@ -561,7 +559,6 @@ class _LetterPageState extends State<LetterPage> {
                                       ),
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
-                                        // setState(() {});
                                       },
                                     ),
                                   ],
@@ -578,11 +575,11 @@ class _LetterPageState extends State<LetterPage> {
                                       widget.surat.id)
                                   .elementAt(index)
                                   .id);
-                              Navigator.of(context).pop();
+                              // Navigator.of(context).pop();
 
                               setState(() {
                                 item.removeAt(index);
-                                // context.read<ReportCubit>().getAllReport();
+                                context.read<ReportCubit>().getAllReport();
                                 // length = double.parse(item.length.toString());
                               });
                             }
@@ -682,7 +679,7 @@ class _LetterPageState extends State<LetterPage> {
           dayCountdown(),
           deskripsiPenugasan(),
           laporanPerjalananDinas(),
-          exportPdf(),
+          // exportPdf(),
         ],
       );
     }

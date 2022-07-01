@@ -47,6 +47,7 @@ class _LetterOnProgressListTabState extends State<LetterOnProgressListTab> {
         },
         builder: (context, state) {
           if (state is LetterLoaded) {
+            var lastday = DateTime.now().subtract(const Duration(days: 1));
             return SingleChildScrollView(
               child: BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, authState) {
@@ -57,15 +58,14 @@ class _LetterOnProgressListTabState extends State<LetterOnProgressListTab> {
                     //* logic penugasan yang SEDANG dilakukan
                     children: state.letters
                         .where((element) => element.userId.id == user?.id)
-                        .where((element) =>
-                            element.tglAkhir.isAfter(DateTime.now()))
+                        .where((element) => element.tglAkhir.isAfter(lastday))
                         .map((e) => Container(
                               padding: e ==
                                       state.letters
                                           .where((element) =>
                                               element.userId.id == user?.id)
-                                          .where((element) => element.tglAkhir
-                                              .isAfter(DateTime.now()))
+                                          .where((element) =>
+                                              element.tglAkhir.isAfter(lastday))
                                           .first
                                   ? EdgeInsets.only(
                                       top: defaultMargin,
@@ -76,8 +76,8 @@ class _LetterOnProgressListTabState extends State<LetterOnProgressListTab> {
                                       state.letters
                                           .where((element) =>
                                               element.userId.id == user?.id)
-                                          .where((element) => element.tglAkhir
-                                              .isAfter(DateTime.now()))
+                                          .where((element) =>
+                                              element.tglAkhir.isAfter(lastday))
                                           .last
                                   ? EdgeInsets.only(
                                       bottom:
@@ -88,21 +88,6 @@ class _LetterOnProgressListTabState extends State<LetterOnProgressListTab> {
                                   color: (colors..shuffle()).first, surat: e),
                             ))
                         .toList(),
-                    // [
-                    // for (var i = 0; i < dummySurat.length; i++)
-                    //   Container(
-                    //     padding: i == 0
-                    //         ? EdgeInsets.only(top: defaultMargin)
-                    //         : const EdgeInsets.only(top: 0),
-                    //     margin: i == dummySurat.length - 1
-                    //         ? const EdgeInsets.only(bottom: 80)
-                    //         : const EdgeInsets.only(bottom: 0),
-                    //     child: CardLetterTileWidget(
-                    //       surat: dummySurat[i],
-                    //       color: colors[i],
-                    //     ),
-                    //   ),
-                    // ],
                   );
                 },
               ),

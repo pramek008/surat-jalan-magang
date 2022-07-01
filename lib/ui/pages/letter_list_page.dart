@@ -29,6 +29,8 @@ class _LetterListPageState extends State<LetterListPage> {
     return BlocBuilder<LetterCubit, LetterState>(
       builder: (context, state) {
         if (state is LetterLoaded) {
+          var lastday = DateTime.now().subtract(const Duration(days: 1));
+
           return DefaultTabController(
             length: 2,
             child: BlocBuilder<AuthBloc, AuthState>(
@@ -58,7 +60,7 @@ class _LetterListPageState extends State<LetterListPage> {
                       tabs: [
                         Tab(
                           child: Text(
-                            'Terbaru ( ${state.letters.where((element) => element.userId.id == user?.id).where((element) => element.tglAkhir.isAfter(DateTime.now())).length} )',
+                            'Terbaru ( ${state.letters.where((element) => element.userId.id == user?.id).where((element) => element.tglAkhir.isAfter(lastday)).length} )',
                             // 'Terbaru ( ${state.letters.where((element) => element.tglAkhir.isAfter(DateTime.now())).length} )',
                             style: txSemiBold.copyWith(fontSize: 16),
                           ),
@@ -66,7 +68,7 @@ class _LetterListPageState extends State<LetterListPage> {
                         Tab(
                           child: Text(
                             // 'Selesai ( ${dummySurat.where((element) => element.tglAkhir.isBefore(DateTime.now())).length} )',
-                            'Selesai ( ${state.letters.where((element) => element.userId.id == user?.id).where((element) => element.tglAkhir.isBefore(DateTime.now())).length} )',
+                            'Selesai ( ${state.letters.where((element) => element.userId.id == user?.id).where((element) => element.tglAkhir.isBefore(lastday)).length} )',
                             style: txSemiBold.copyWith(fontSize: 16),
                           ),
                         ),

@@ -46,6 +46,7 @@ class _LetterDoneListTabState extends State<LetterDoneListTab> {
         },
         builder: (context, state) {
           if (state is LetterLoaded) {
+            var lastday = DateTime.now().subtract(const Duration(days: 1));
             return SingleChildScrollView(
               child: BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, authState) {
@@ -56,15 +57,14 @@ class _LetterDoneListTabState extends State<LetterDoneListTab> {
                     //* logic penugasan yang SUDAH SELESAI dilakukan
                     children: state.letters
                         .where((element) => element.userId.id == user?.id)
-                        .where((element) =>
-                            element.tglAkhir.isBefore(DateTime.now()))
+                        .where((element) => element.tglAkhir.isBefore(lastday))
                         .map((e) => Container(
                               padding: e ==
                                       state.letters
                                           .where((element) =>
                                               element.userId.id == user?.id)
                                           .where((element) => element.tglAkhir
-                                              .isBefore(DateTime.now()))
+                                              .isBefore(lastday))
                                           .first
                                   ? EdgeInsets.only(top: defaultMargin)
                                   : const EdgeInsets.only(top: 0),
@@ -73,7 +73,7 @@ class _LetterDoneListTabState extends State<LetterDoneListTab> {
                                           .where((element) =>
                                               element.userId.id == user?.id)
                                           .where((element) => element.tglAkhir
-                                              .isBefore(DateTime.now()))
+                                              .isBefore(lastday))
                                           .last
                                   ? EdgeInsets.only(
                                       bottom:
