@@ -38,7 +38,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
     target: _latLng,
     zoom: 14,
   );
-  final Set<Marker> _markers = Set();
+  final Set<Marker> _markers = {};
 
   LatLng? _currentPosition;
 
@@ -83,7 +83,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
             CameraPosition(
               target: LatLng(
                   _currentPosition!.latitude, _currentPosition!.longitude),
-              zoom: 15,
+              zoom: 18,
             ),
           ),
         );
@@ -114,17 +114,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
 
   @override
   Widget build(BuildContext context) {
-    //* Text field controller
-
-    String? street;
-    String? subLocality;
-    String? locality;
-    String? subAdministrativeArea;
-    String? administrativeArea;
-    String? country;
-
-    String oneLineAdd =
-        '${street ?? ''} ${subLocality ?? ''} ${locality ?? ''} ${subAdministrativeArea ?? ''} ${administrativeArea ?? ''} ${country ?? ''}';
+    bool _isLoading = false;
 
     //*========================== UI ============================
     Widget heading() {
@@ -634,7 +624,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
         return BlocConsumer<PostreportBloc, PostreportState>(
           listener: (context, state) {
             if (state is PostreportSuccessState) {
-              print('SUCCESS state ${state.response.toString()}');
+              // print('SUCCESS state ${state.response.toString()}');
               if (state.response.status.toString() == "success") {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -650,7 +640,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                 Navigator.of(context).pop();
               }
             } else if (state is PostreportFailureState) {
-              print('FAILURE state ${state.response.toString()}');
+              // print('FAILURE state ${state.response.toString()}');
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -665,6 +655,11 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
             }
           },
           builder: (context, state) {
+            if (_isLoading == true) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
             return SizedBox(
               width: double.infinity,
               height: 50,
@@ -729,7 +724,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                         images: _imagesList,
                         lokasi: _lokasi,
                         deskripsi: notulenController.text));
-
+                    _isLoading = true;
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(

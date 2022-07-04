@@ -36,6 +36,7 @@ class MapProviderServices with ChangeNotifier {
 
     locationController.text =
         "$name, $sublocal, $city, $subdistrict, $province, $country";
+    notifyListeners();
   }
 
   void onCreated(GoogleMapController controller) {

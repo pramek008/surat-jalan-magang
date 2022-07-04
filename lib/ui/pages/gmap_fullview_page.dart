@@ -80,7 +80,7 @@ class _GmapViewState extends State<GmapView> {
             Positioned(
               top: 0,
               child: Container(
-                height: 155,
+                height: 135,
                 width: MediaQuery.of(context).size.width - 20,
                 margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -100,7 +100,7 @@ class _GmapViewState extends State<GmapView> {
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
+                    children: [
                       const Text(
                         "Lokasi Anda",
                         style: TextStyle(
@@ -109,21 +109,30 @@ class _GmapViewState extends State<GmapView> {
                         ),
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
-                      TextField(
+                      Text(
+                        provmaps.locationController.text,
+                        style: txRegular.copyWith(
+                          color: blackColor,
+                          fontSize: 16,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                         maxLines: 3,
-                        controller: provmaps.locationController,
-                        decoration: InputDecoration(
-                            contentPadding: EdgeInsetsGeometry.lerp(
-                                const EdgeInsets.symmetric(horizontal: 15),
-                                const EdgeInsets.symmetric(vertical: 15),
-                                0.5),
-                            border: OutlineInputBorder(
-                                borderSide:
-                                    const BorderSide(color: Colors.white38),
-                                borderRadius: BorderRadius.circular(10))),
                       ),
+                      // TextField(
+                      //   maxLines: 3,
+                      //   controller: provmaps.locationController,
+                      //   decoration: InputDecoration(
+                      //       contentPadding: EdgeInsetsGeometry.lerp(
+                      //           const EdgeInsets.symmetric(horizontal: 15),
+                      //           const EdgeInsets.symmetric(vertical: 15),
+                      //           0.5),
+                      //       border: OutlineInputBorder(
+                      //           borderSide:
+                      //               const BorderSide(color: Colors.white38),
+                      //           borderRadius: BorderRadius.circular(10))),
+                      // ),
                     ],
                   ),
                 ),
@@ -143,7 +152,7 @@ class _GmapViewState extends State<GmapView> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    "Konfirmasi Pilih Lokasi",
+                    "Pilih Lokasi",
                     style: txMedium.copyWith(color: whiteColor),
                   ),
                   alignment: Alignment.center,
