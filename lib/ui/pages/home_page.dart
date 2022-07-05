@@ -275,10 +275,12 @@ class _HomePageState extends State<HomePage> {
                                 fontSize: 24,
                               ),
                             ),
-                            const SizedBox(
+                            SizedBox(
                                 height: 220,
-                                child:
-                                    Center(child: CircularProgressIndicator())),
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                  color: primaryColor,
+                                ))),
                           ],
                         ),
                       );
@@ -309,10 +311,12 @@ class _HomePageState extends State<HomePage> {
                                 fontSize: 24,
                               ),
                             ),
-                            const SizedBox(
+                            SizedBox(
                                 height: 220,
-                                child:
-                                    Center(child: CircularProgressIndicator())),
+                                child: Center(
+                                    child: CircularProgressIndicator(
+                                  color: primaryColor,
+                                ))),
                           ],
                         ),
                       );

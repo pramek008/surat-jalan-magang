@@ -86,8 +86,10 @@ class _LetterListPageState extends State<LetterListPage> {
             ),
           );
         }
-        return const Center(
-          child: CircularProgressIndicator(),
+        return Center(
+          child: CircularProgressIndicator(
+            color: primaryColor,
+          ),
         );
       },
     );

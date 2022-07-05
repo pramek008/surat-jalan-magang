@@ -804,6 +804,9 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                   actionsPadding: const EdgeInsets.symmetric(horizontal: 20),
                   actions: [
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: primaryColor,
+                      ),
                       onPressed: () {
                         willLeave = true;
                         Navigator.of(context).pop();
@@ -815,10 +818,8 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                     ),
                     TextButton(
                       onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'Tidak',
-                        style: txMedium,
-                      ),
+                      child: Text('Tidak',
+                          style: txMedium.copyWith(color: primaryColor)),
                     )
                   ],
                 ));

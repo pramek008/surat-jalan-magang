@@ -5,4 +5,5 @@ class SecureStorageService {
 
   static const String tokenKey = 'token';
   static const String userKey = 'user';
+  static const String themeKey = 'theme';
 }

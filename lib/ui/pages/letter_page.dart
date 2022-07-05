@@ -590,16 +590,63 @@ class _LetterPageState extends State<LetterPage> {
                     ),
                   );
                 }
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: primaryColor,
+                  ),
                 );
               },
             ),
 
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                //*add report
+                // const Spacer(),
+                InkWell(
+                  onTap: () {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => LaporanKegiatanAddPage(
+                    //       userId: widget.surat.userId.id,
+                    //       suratJalanId: widget.surat.id,
+                    //     ),
+                    //   ),
+                    // ).then((value) =>
+                    //     {context.read<ReportCubit>().getAllReport()});
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: primaryColor,
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.file_upload_rounded,
+                          size: 35,
+                          color: whiteColor,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Serahkan Laporan',
+                          style: txMedium.copyWith(
+                            color: whiteColor,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                //*end add report progress
                 InkWell(
                   onTap: () {
                     Navigator.push(
@@ -613,21 +660,10 @@ class _LetterPageState extends State<LetterPage> {
                     ).then((value) =>
                         {context.read<ReportCubit>().getAllReport()});
                   },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.add_box_rounded,
-                        size: 60,
-                        color: primaryColor,
-                      ),
-                      // Text(
-                      //   'Tambah Laporan',
-                      //   style: txSemiBold.copyWith(
-                      //     fontSize: 16,
-                      //     color: primaryColor,
-                      //   ),
-                      // )
-                    ],
+                  child: Icon(
+                    Icons.add_box_rounded,
+                    size: 60,
+                    color: primaryColor,
                   ),
                 ),
               ],
