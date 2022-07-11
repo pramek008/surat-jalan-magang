@@ -8,9 +8,10 @@ import 'package:surat_jalan/services/helper_service.dart';
 import 'package:surat_jalan/services/secure_storage_service.dart';
 
 class AuthService {
-  static String url = 'http://103.100.27.29/sppd/public/api/login';
-  static String urlUser = 'http://103.100.27.29/sppd/public/api/user';
-  static String urlLogout = 'http://103.100.27.29/sppd/public/api/logout';
+  static const String _url = 'http://103.100.27.29/sppd/public/api/login';
+  static const String _urlUser = 'http://103.100.27.29/sppd/public/api/user';
+  static const String _urlLogout =
+      'http://103.100.27.29/sppd/public/api/logout';
 
   Future<UserModel> loadUser() async {
     final storage = await SecureStorageService.storage
@@ -48,7 +49,7 @@ class AuthService {
   }
 
   Future<UserModel> catchUser(int id) async {
-    return http.get(Uri.parse(urlUser + '/$id')).then((response) {
+    return http.get(Uri.parse(_urlUser + '/$id')).then((response) {
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         Map<String, dynamic> responseData = jsonResponse["data"];
@@ -63,7 +64,7 @@ class AuthService {
   Future<ResponseModel> login(
       {required String email, required String password}) async {
     final response = await http.post(
-      Uri.parse(url),
+      Uri.parse(_url),
       body: {
         "email": email,
         "password": password,
@@ -108,7 +109,7 @@ class AuthService {
         .read(key: SecureStorageService.tokenKey);
 
     final response = await http.post(
-      Uri.parse(urlLogout),
+      Uri.parse(_urlLogout),
       headers: HelperService.buildHeaders(accessToken: token),
     );
     SecureStorageService.storage.deleteAll();

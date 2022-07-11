@@ -9,6 +9,8 @@ import 'package:surat_jalan/cubit/letter_cubit.dart';
 import 'package:surat_jalan/cubit/location_cubit.dart';
 import 'package:surat_jalan/cubit/news_cubit.dart';
 import 'package:surat_jalan/cubit/page_cubit.dart';
+import 'package:surat_jalan/cubit/theme_cubit.dart';
+import 'package:surat_jalan/services/information_service.dart';
 import 'package:surat_jalan/ui/main_page.dart';
 import 'package:surat_jalan/ui/pages/login_page.dart';
 import 'package:surat_jalan/ui/pages/splash_screen.dart';
@@ -16,13 +18,17 @@ import 'package:surat_jalan/ui/pages/splash_screen.dart';
 import 'cubit/report_cubit.dart';
 
 Future<void> main() async {
+  final InformationService informationService = InformationService();
+  informationService.getInformation();
+
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id_ID', null)
-      .then((_) => runApp(const MyApp()));
+      .then((_) => runApp(MyApp(informationService: informationService)));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final InformationService informationService;
+  const MyApp({Key? key, required this.informationService}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +57,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => PostreportBloc(),
+        ),
+        BlocProvider(
+          create: (context) => ThemeCubit(),
         ),
       ],
       child: MaterialApp(

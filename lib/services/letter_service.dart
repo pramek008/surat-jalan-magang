@@ -4,9 +4,9 @@ import 'package:surat_jalan/models/letter_model.dart';
 
 class LetterService {
   Future<List<LetterModel>> getAllLetter() async {
-    String url = 'http://103.100.27.29/sppd/public/api/perintah-jalan';
+    String _url = 'http://103.100.27.29/sppd/public/api/perintah-jalan';
 
-    final response = await http.get(Uri.parse(url));
+    final response = await http.get(Uri.parse(_url));
     // print(response.statusCode);
     // print(jsonDecode(response.body));
 

@@ -5,9 +5,9 @@ import 'package:http/http.dart' as http;
 
 class NewsService {
   Future<List<NewsModel>> getAllNews() async {
-    String url = 'http://103.100.27.29/sppd/public/api/news';
+    String _url = 'http://103.100.27.29/sppd/public/api/news';
 
-    final response = await http.get(Uri.parse(url));
+    final response = await http.get(Uri.parse(_url));
 
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
