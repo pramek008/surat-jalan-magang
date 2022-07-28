@@ -4,7 +4,7 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surat_jalan/cubit/page_cubit.dart';
-import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/home_page.dart';
 import 'package:surat_jalan/ui/pages/letter_list_page.dart';
 import 'package:surat_jalan/ui/widgets/navbar_item_widget.dart';

@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:surat_jalan/cubit/location_cubit.dart';
-import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/shared/shared_theme.dart';
 
 import '../../services/map_provider_services.dart';
 

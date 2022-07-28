@@ -9,7 +9,7 @@ import 'package:surat_jalan/ui/pages/gallery_view_page.dart';
 
 import '../../cubit/location_cubit.dart';
 import '../../models/report_model.dart';
-import '../../shared/theme.dart';
+import '../../shared/shared_theme.dart';
 
 class LaporanKegiatanView extends StatefulWidget {
   final ReportModel report;

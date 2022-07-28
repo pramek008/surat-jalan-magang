@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:surat_jalan/bloc/postreport_bloc.dart';
 import 'package:surat_jalan/services/map_provider_services.dart';
-import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/gmap_fullview_page.dart';
 
 class LaporanKegiatanAddPage extends StatefulWidget {

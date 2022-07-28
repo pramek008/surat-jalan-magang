@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:surat_jalan/models/news_model.dart';
-import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CardNewsWidget extends StatelessWidget {

@@ -5,7 +5,7 @@ import 'package:surat_jalan/cubit/letter_cubit.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/models/news_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
-import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/account_page.dart';
 import 'package:surat_jalan/ui/widgets/card_letter_widget.dart';
 import 'package:surat_jalan/ui/widgets/card_news_widget.dart';

@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:surat_jalan/bloc/auth_bloc.dart';
 import 'package:surat_jalan/models/letter_model.dart';
-import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/add_laporan_kegiatan_page.dart';
 import 'package:surat_jalan/ui/widgets/card_laporan_widget.dart';
 import 'package:surat_jalan/ui/widgets/letter_status_widget.dart';

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surat_jalan/cubit/theme_cubit.dart';
-import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/shared/shared_theme.dart';
 
 import '../../services/secure_storage_service.dart';
 
@@ -42,11 +42,11 @@ class _SplashScreenState extends State<SplashScreen> {
     //!
 
     if (userStorage != null) {
-      Timer(const Duration(seconds: 2), () {
+      Timer(const Duration(seconds: 3), () {
         Navigator.pushNamedAndRemoveUntil(context, '/main', (route) => false);
       });
     } else {
-      Timer(const Duration(seconds: 2), () {
+      Timer(const Duration(seconds: 3), () {
         Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
       });
     }

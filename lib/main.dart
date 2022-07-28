@@ -18,10 +18,11 @@ import 'package:surat_jalan/ui/pages/splash_screen.dart';
 import 'cubit/report_cubit.dart';
 
 Future<void> main() async {
-  final InformationService informationService = InformationService();
-  informationService.getInformation();
-
   WidgetsFlutterBinding.ensureInitialized();
+
+  final InformationService informationService = InformationService();
+  // await informationService.getInformation();
+
   await initializeDateFormatting('id_ID', null)
       .then((_) => runApp(MyApp(informationService: informationService)));
 }

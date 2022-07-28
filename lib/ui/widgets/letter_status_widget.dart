@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/shared/shared_theme.dart';
 
 class LetterStatusWidget extends StatelessWidget {
   final bool status;

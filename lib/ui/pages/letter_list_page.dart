@@ -4,7 +4,7 @@ import 'package:surat_jalan/bloc/auth_bloc.dart';
 import 'package:surat_jalan/cubit/letter_cubit.dart';
 import 'package:surat_jalan/cubit/report_cubit.dart';
 import 'package:surat_jalan/models/user_model.dart';
-import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/letter_tabs/letter_done_tab.dart';
 import 'package:surat_jalan/ui/pages/letter_tabs/letter_onprogress_tab.dart';
 

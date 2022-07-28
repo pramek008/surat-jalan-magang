@@ -39,7 +39,6 @@ class AuthService {
 
   Future<void> deleteToken() async {
     Duration duration = const Duration(minutes: 120);
-    print(duration);
 
     Future.delayed(duration)
         .then((value) => {SecureStorageService.storage.deleteAll()});
@@ -70,7 +69,7 @@ class AuthService {
         "password": password,
       },
     );
-    print("response login => ${response.body}");
+    // print("response login => ${response.body}");
 
     final statusType = (response.statusCode / 100).floor() * 100;
     switch (statusType) {
@@ -114,7 +113,7 @@ class AuthService {
     );
     SecureStorageService.storage.deleteAll();
 
-    print("response logout = > ${response.body}");
+    // print("response logout = > ${response.body}");
 
     final statusType = (response.statusCode / 100).floor() * 100;
     switch (statusType) {

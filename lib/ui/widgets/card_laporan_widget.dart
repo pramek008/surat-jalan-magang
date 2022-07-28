@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:surat_jalan/cubit/report_cubit.dart';
 import 'package:surat_jalan/models/report_model.dart';
-import 'package:surat_jalan/shared/theme.dart';
+import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/laporan_kegiatan_view.dart';
 
 class CardLaporanWidget extends StatelessWidget {
