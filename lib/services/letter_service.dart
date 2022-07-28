@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:surat_jalan/models/letter_model.dart';
+import 'package:surat_jalan/shared/shared_value.dart';
 
 class LetterService {
   Future<List<LetterModel>> getAllLetter() async {
-    String _url = 'http://103.100.27.29/sppd/public/api/perintah-jalan';
+    // String _url = 'http://103.100.27.29/sppd/public/api/perintah-jalan';
+
+    final String _url = "$baseApiURL/perintah-jalan";
 
     final response = await http.get(Uri.parse(_url));
     // print(response.statusCode);

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:surat_jalan/cubit/theme_cubit.dart';
 import 'package:surat_jalan/shared/shared_theme.dart';
+import 'package:surat_jalan/shared/shared_value.dart';
 
 import '../../services/secure_storage_service.dart';
 
@@ -39,7 +40,10 @@ class _SplashScreenState extends State<SplashScreen> {
     print("User => $user");
     print("Check Splash => $checkInfo");
 
-    //!
+    // //!
+    // Timer(const Duration(seconds: 3), () {
+    //   Navigator.pushNamedAndRemoveUntil(context, '/main', (route) => false);
+    // });
 
     if (userStorage != null) {
       Timer(const Duration(seconds: 3), () {
@@ -54,8 +58,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const String _imgUrl = 'http://103.100.27.29/sppd/public/storage/';
-
     return Scaffold(
       backgroundColor: primaryColor,
       body: BlocBuilder<ThemeCubit, ThemeState>(
@@ -76,18 +78,11 @@ class _SplashScreenState extends State<SplashScreen> {
                   const SizedBox(
                     height: 30,
                   ),
-                  // Text(
-                  //   'Management',
-                  //   style: txSemiBold.copyWith(
-                  //     color: whiteColor,
-                  //     fontSize: 32,
-                  //   ),
-                  // ),
 
-                  Image.network(
-                    _imgUrl + state.informationModel.logoMain!,
-                    height: 250,
-                  ),
+                  // Image.network(
+                  //   baseImageURL + state.informationModel.logoMain!,
+                  //   height: 250,
+                  // ),
                 ],
               ),
             );

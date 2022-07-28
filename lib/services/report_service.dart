@@ -1,5 +1,6 @@
 import "dart:async";
 import "dart:convert";
+// ignore: library_prefixes
 import "package:dio/dio.dart" as Dio;
 import "package:dio/dio.dart";
 import 'package:flutter/widgets.dart';
@@ -8,9 +9,12 @@ import "package:http/http.dart" as http;
 import "package:surat_jalan/models/response_model.dart";
 import "package:surat_jalan/services/helper_service.dart";
 import "package:surat_jalan/services/secure_storage_service.dart";
+import 'package:surat_jalan/shared/shared_value.dart';
 
 class ReportService with ChangeNotifier {
-  final String _url = "http://103.100.27.29/sppd/public/api/laporan-jalan";
+  // final String _url = "http://103.100.27.29/sppd/public/api/laporan-jalan";
+
+  final String _url = "$baseApiURL/laporan-jalan";
 
   //! GET Request
   Future<List<ReportModel>> getAllReport() async {

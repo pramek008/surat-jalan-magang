@@ -6,12 +6,17 @@ import 'package:surat_jalan/models/response_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
 import 'package:surat_jalan/services/helper_service.dart';
 import 'package:surat_jalan/services/secure_storage_service.dart';
+import 'package:surat_jalan/shared/shared_value.dart';
 
 class AuthService {
-  static const String _url = 'http://103.100.27.29/sppd/public/api/login';
-  static const String _urlUser = 'http://103.100.27.29/sppd/public/api/user';
-  static const String _urlLogout =
-      'http://103.100.27.29/sppd/public/api/logout';
+  // static const String _url = 'http://103.100.27.29/sppd/public/api/login';
+  // static const String _urlUser = 'http://103.100.27.29/sppd/public/api/user';
+  // static const String _urlLogout =
+  //     'http://103.100.27.29/sppd/public/api/logout';
+
+  static final String _url = "$baseApiURL/login";
+  static final String _urlUser = "$baseApiURL/user";
+  static final String _urlLogout = "$baseApiURL/logout";
 
   Future<UserModel> loadUser() async {
     final storage = await SecureStorageService.storage
@@ -69,7 +74,7 @@ class AuthService {
         "password": password,
       },
     );
-    // print("response login => ${response.body}");
+    print("response login => ${response.body}");
 
     final statusType = (response.statusCode / 100).floor() * 100;
     switch (statusType) {

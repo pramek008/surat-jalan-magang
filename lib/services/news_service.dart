@@ -3,9 +3,13 @@ import 'dart:convert';
 import '../models/news_model.dart';
 import 'package:http/http.dart' as http;
 
+import '../shared/shared_value.dart';
+
 class NewsService {
   Future<List<NewsModel>> getAllNews() async {
-    String _url = 'http://103.100.27.29/sppd/public/api/news';
+    // String _url = 'http://103.100.27.29/sppd/public/api/news';
+
+    final String _url = "$baseApiURL/news";
 
     final response = await http.get(Uri.parse(_url));
 

@@ -1,40 +1,40 @@
-import 'dart:convert';
+// import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:surat_jalan/models/information_model.dart';
-import 'package:surat_jalan/services/secure_storage_service.dart';
+// import 'package:surat_jalan/models/information_model.dart';
+// import 'package:surat_jalan/services/secure_storage_service.dart';
 
 //* Function to listen if date is range or not
-bool isRange(DateTime start, DateTime end) {
-  if (start.isAfter(end)) {
-    return false;
-  } else {
-    return true;
-  }
-}
+// bool isRange(DateTime start, DateTime end) {
+//   if (start.isAfter(end)) {
+//     return false;
+//   } else {
+//     return true;
+//   }
+// }
 
 //* Get color from local storage or api every time the app is started
-Future<Color> getColor() async {
-  final informationValue = await SecureStorageService.storage
-      .read(key: SecureStorageService.informationKey);
+// Future<Color> getColor() async {
+//   final informationValue = await SecureStorageService.storage
+//       .read(key: SecureStorageService.informationKey);
 
-  InformationModel information =
-      InformationModel.fromJson(json.decode(informationValue!));
+//   InformationModel information =
+//       InformationModel.fromJson(json.decode(informationValue!));
 
-  if (information.startedAt != null && information.expiredAt != null) {
-    if (isRange(information.startedAt!, information.expiredAt!)) {
-      String colorData = information.mainColor.toString().substring(1);
-      String colorFlutter = '0xff' + colorData;
-      Color color = Color(int.parse(colorFlutter));
-      return color;
-    } else {
-      return const Color(0xff006EE9);
-    }
-  } else {
-    return const Color(0xff006EE9);
-  }
-}
+//   if (information.startedAt != null && information.expiredAt != null) {
+//     if (isRange(information.startedAt!, information.expiredAt!)) {
+//       String colorData = information.mainColor.toString().substring(1);
+//       String colorFlutter = '0xff' + colorData;
+//       Color color = Color(int.parse(colorFlutter));
+//       return color;
+//     } else {
+//       return const Color(0xff006EE9);
+//     }
+//   } else {
+//     return const Color(0xff006EE9);
+//   }
+// }
 
 double defaultMargin = 20;
 

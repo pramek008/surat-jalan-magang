@@ -179,6 +179,8 @@ class _HomePageState extends State<HomePage> {
               ),
               scrollDirection: Axis.horizontal,
               children: letter
+                  // //! Dummy karena login masi error
+                  // .where((element) => element.userId.id == 2)
                   .where((element) => element.userId.id == user.id)
                   .map((e) => CardLetterWidget(
                         surat: e,

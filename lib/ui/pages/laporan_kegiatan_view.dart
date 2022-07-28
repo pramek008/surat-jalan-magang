@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:sliding_sheet/sliding_sheet.dart';
+import 'package:surat_jalan/shared/shared_value.dart';
 import 'package:surat_jalan/ui/pages/gallery_view_page.dart';
 
 import '../../cubit/location_cubit.dart';
@@ -359,8 +360,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                      image: NetworkImage(
-                          "http://103.100.27.29/sppd/public/storage/$image"),
+                      image: NetworkImage("$baseImageURL/$image"),
                       fit: BoxFit.cover,
                     ),
                   ),

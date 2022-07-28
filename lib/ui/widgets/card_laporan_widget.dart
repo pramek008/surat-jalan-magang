@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:surat_jalan/cubit/report_cubit.dart';
 import 'package:surat_jalan/models/report_model.dart';
 import 'package:surat_jalan/shared/shared_theme.dart';
+import 'package:surat_jalan/shared/shared_value.dart';
 import 'package:surat_jalan/ui/pages/laporan_kegiatan_view.dart';
 
 class CardLaporanWidget extends StatelessWidget {
@@ -49,8 +50,7 @@ class CardLaporanWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 // color: blackColor.withOpacity(0.3),
                 image: DecorationImage(
-                  image: NetworkImage(
-                      "http://103.100.27.29/sppd/public/storage/${report.foto.first}"),
+                  image: NetworkImage("$baseImageURL/${report.foto.first}"),
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
                     Colors.black.withOpacity(0.4),
