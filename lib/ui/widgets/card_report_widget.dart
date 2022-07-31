@@ -5,7 +5,7 @@ import 'package:surat_jalan/cubit/report_cubit.dart';
 import 'package:surat_jalan/models/report_model.dart';
 import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/shared/shared_value.dart';
-import 'package:surat_jalan/ui/pages/laporan_kegiatan_view.dart';
+import 'package:surat_jalan/ui/pages/activity_report_view.dart';
 
 class CardLaporanWidget extends StatelessWidget {
   final ReportModel report;

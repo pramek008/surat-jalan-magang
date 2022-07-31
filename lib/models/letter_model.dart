@@ -16,7 +16,7 @@ class LetterModel {
     required this.keterangan,
     required this.tglAwal,
     required this.tglAkhir,
-    this.status,
+    required this.diserahkan,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -31,7 +31,7 @@ class LetterModel {
   final String keterangan;
   final DateTime tglAwal;
   final DateTime tglAkhir;
-  final String? status;
+  final bool diserahkan;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -52,7 +52,7 @@ class LetterModel {
         keterangan: json["keterangan"],
         tglAwal: DateTime.parse(json["tgl_awal"]),
         tglAkhir: DateTime.parse(json["tgl_akhir"]),
-        status: json["status"],
+        diserahkan: json["diserahkan"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
       );
@@ -70,7 +70,7 @@ class LetterModel {
             "${tglAwal.year.toString().padLeft(4, '0')}-${tglAwal.month.toString().padLeft(2, '0')}-${tglAwal.day.toString().padLeft(2, '0')}",
         "tgl_akhir":
             "${tglAkhir.year.toString().padLeft(4, '0')}-${tglAkhir.month.toString().padLeft(2, '0')}-${tglAkhir.day.toString().padLeft(2, '0')}",
-        "status": status,
+        "diserahkan": diserahkan,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
       };

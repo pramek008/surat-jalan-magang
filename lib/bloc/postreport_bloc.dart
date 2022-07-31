@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:surat_jalan/services/report_service.dart';
 

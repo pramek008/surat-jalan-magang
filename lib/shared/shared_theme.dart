@@ -40,6 +40,8 @@ double defaultMargin = 20;
 
 // Color primaryColor = getColor();
 Color primaryColor = const Color(0xff006EE9);
+// Color primaryColor = const Color(0xff18DD63);
+
 // Color primaryLocalColor = Color(0xff006EE9);
 // Color primaryColor = const Color(0xffF9F9C5);
 Color whiteColor = const Color(0xffFFFFFF);
