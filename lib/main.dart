@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:surat_jalan/bloc/auth_bloc.dart';
+import 'package:surat_jalan/bloc/letter_bloc.dart';
 import 'package:surat_jalan/bloc/login_bloc.dart';
 import 'package:surat_jalan/bloc/postreport_bloc.dart';
 import 'package:surat_jalan/cubit/letter_cubit.dart';
@@ -61,6 +62,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ThemeCubit(),
+        ),
+        BlocProvider(
+          create: (context) => LetterBloc(),
         ),
       ],
       child: MaterialApp(

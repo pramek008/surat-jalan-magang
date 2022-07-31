@@ -82,7 +82,11 @@ class _LetterDoneListTabState extends State<LetterDoneListTab> {
                                               15)
                                   : EdgeInsets.only(bottom: defaultMargin),
                               child: CardLetterTileWidget(
-                                  color: (colors..shuffle()).first, surat: e),
+                                  // color: (colors..shuffle()).first, surat: e),
+                                  color: e.diserahkan == true
+                                      ? colors[1]
+                                      : colors[2],
+                                  surat: e),
                             ))
                         .toList(),
                   );

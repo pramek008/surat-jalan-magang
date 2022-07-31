@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:surat_jalan/cubit/letter_cubit.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/models/news_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
@@ -11,6 +10,7 @@ import 'package:surat_jalan/ui/widgets/card_letter_widget.dart';
 import 'package:surat_jalan/ui/widgets/card_news_widget.dart';
 
 import '../../bloc/auth_bloc.dart';
+import '../../cubit/letter_cubit.dart';
 import '../../cubit/news_cubit.dart';
 import '../../cubit/report_cubit.dart';
 
@@ -179,8 +179,6 @@ class _HomePageState extends State<HomePage> {
               ),
               scrollDirection: Axis.horizontal,
               children: letter
-                  // //! Dummy karena login masi error
-                  // .where((element) => element.userId.id == 2)
                   .where((element) => element.userId.id == user.id)
                   .map((e) => CardLetterWidget(
                         surat: e,

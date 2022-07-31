@@ -37,9 +37,7 @@ class SubmitButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              status
-                  ? Icons.library_add_check_outlined
-                  : Icons.file_upload_rounded,
+              status ? Icons.download_done_sharp : Icons.file_upload_rounded,
               size: 35,
               color: whiteColor,
             ),

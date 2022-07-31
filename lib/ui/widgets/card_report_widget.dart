@@ -15,6 +15,7 @@ class CardLaporanWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        FocusManager.instance.primaryFocus!.unfocus();
         Navigator.push(
             context,
             MaterialPageRoute(

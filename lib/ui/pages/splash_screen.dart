@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _remindUser() async {
-    context.read<ThemeCubit>().loadInformation();
+    // context.read<ThemeCubit>().loadInformation();
 
     final userStorage = await SecureStorageService.storage
         .read(key: SecureStorageService.tokenKey);
@@ -31,14 +31,14 @@ class _SplashScreenState extends State<SplashScreen> {
     final user = await SecureStorageService.storage
         .read(key: SecureStorageService.userKey);
 
-    final checkInfo = await SecureStorageService.storage
-        .read(key: SecureStorageService.informationKey);
+    // final checkInfo = await SecureStorageService.storage
+    //     .read(key: SecureStorageService.informationKey);
 
     //! Harus hilang BUAT CEK AJA
     // SecureStorageService.storage.deleteAll();
     print("TOken => $userStorage");
     print("User => $user");
-    print("Check Splash => $checkInfo");
+    // print("Check Splash => $checkInfo");
 
     // //!
     // Timer(const Duration(seconds: 3), () {

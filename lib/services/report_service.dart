@@ -62,21 +62,24 @@ class ReportService with ChangeNotifier {
                 filename: img.path.split("/").last))
       ]);
     }
+
+    for (var koor in lokasi) {
+      formData.fields.add(MapEntry("lokasi[]", koor));
+    }
+
     formData.fields.addAll([
       MapEntry("user_id", userId.toString()),
       MapEntry("perintah_jalan_id", perintahJalanId.toString()),
       MapEntry("nama_kegiatan", namaKegiatan),
-      MapEntry("lokasi[0]", lokasi[0]),
-      MapEntry("lokasi[1]", lokasi[1]),
       MapEntry("deskripsi", deskripsi)
     ]);
 
-    // print("=====FIELD: ${formData.fields}");
+    print("=====FIELD: ${formData.fields}");
     // print("=====FILES: ${formData.files}");
     try {
       Dio.Response response = await Dio.Dio().postUri(Uri.parse(_url),
           data: formData, onSendProgress: (int sent, int total) {
-        print("=====PROGRESS: $sent / $total");
+        // print("=====PROGRESS: $sent / $total");
       },
           options: Options(
             headers: {

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:surat_jalan/bloc/auth_bloc.dart';
+import 'package:surat_jalan/bloc/letter_bloc.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/add_activity_report_page.dart';
@@ -691,96 +692,142 @@ class _LetterPageState extends State<LetterPage> {
       }
 
       Widget serahkanLaporan() {
-        return SubmitButton(
-          status: widget.surat.diserahkan,
-          onPressed: () {
-            if (_isEmpty == true) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Tidak dapat menyerahkan laporan kosong'),
-                ),
-              );
-            } else if (widget.surat.diserahkan == false) {
-              showDialog(
-                barrierDismissible: true,
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text('Serahkan Laporan',
-                        style: txSemiBold.copyWith(fontSize: 22)),
-                    content: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text:
-                                'Apakah anda yakin untuk menyerahkan laporan ?',
-                            style: txRegular.copyWith(
-                              color: greyDeepColor,
-                              fontSize: 16,
-                            ),
-                          ),
-                          TextSpan(
-                            text:
-                                '\n\nSetelah diserahkan anda tidak dapat lagi mengubah laporan.',
-                            style: txMedium.copyWith(
-                              color: redStatusColor,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
+        return BlocListener<LetterBloc, LetterState>(
+          listener: (context, state) {
+            if (state is LetterSuccessState) {
+              if (state.response.status.toString() == "success") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Laporan berhasil diserahkan",
+                      style: txRegular.copyWith(
+                        color: whiteColor,
                       ),
                     ),
-                    actionsAlignment: MainAxisAlignment.center,
-                    actions: [
-                      TextButton(
-                        child: Container(
+                    backgroundColor: greenStatusColor,
+                  ),
+                );
+                Navigator.of(context).pop();
+              }
+            } else if (state is LetterLoadingState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "Loading...",
+                    style: txRegular.copyWith(
+                      color: whiteColor,
+                    ),
+                  ),
+                  backgroundColor: greenStatusColor,
+                ),
+              );
+            }
+          },
+          child: SubmitButton(
+            status: widget.surat.diserahkan,
+            onPressed: () {
+              if (_isEmpty == true) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Tidak dapat menyerahkan laporan kosong'),
+                  ),
+                );
+              } else if (widget.surat.diserahkan == false) {
+                showDialog(
+                  barrierDismissible: true,
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Serahkan Laporan',
+                          style: txSemiBold.copyWith(fontSize: 22)),
+                      content: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text:
+                                  'Apakah anda yakin untuk menyerahkan laporan ?',
+                              style: txRegular.copyWith(
+                                color: greyDeepColor,
+                                fontSize: 16,
+                              ),
+                            ),
+                            TextSpan(
+                              text:
+                                  '\n\nSetelah diserahkan anda tidak dapat lagi mengubah laporan.',
+                              style: txMedium.copyWith(
+                                color: redStatusColor,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      actionsAlignment: MainAxisAlignment.center,
+                      actions: [
+                        TextButton(
+                          child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: primaryColor,
+                              ),
+                              child: Text(
+                                'Yakin',
+                                style: txMedium.copyWith(color: whiteColor),
+                              )),
+                          onPressed: () {
+                            context.read<LetterBloc>().add(LetterPutEvent(
+                                  id: widget.surat.id,
+                                  userId: widget.surat.userId.id,
+                                  judul: widget.surat.judul,
+                                  nomorSurat: widget.surat.nomorSurat,
+                                  pemberiPerintah: widget.surat.pemberiPerintah,
+                                  anggotaMengikuti:
+                                      widget.surat.anggotaMengikuti,
+                                  lokasiTujuan: widget.surat.lokasiTujuan,
+                                  keterangan: widget.surat.keterangan,
+                                  tglAwal: widget.surat.tglAwal,
+                                  tglAkhir: widget.surat.tglAkhir,
+                                  diserahkan: true,
+                                ));
+                            Navigator.of(context).pop(true);
+                          },
+                        ),
+                        TextButton(
+                          child: Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 20,
                               vertical: 10,
                             ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              color: primaryColor,
+                              color: greyThinColor,
                             ),
                             child: Text(
-                              'Yakin',
-                              style: txMedium.copyWith(color: whiteColor),
-                            )),
-                        onPressed: () {
-                          Navigator.of(context).pop(true);
-                        },
-                      ),
-                      TextButton(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
+                              'Tidak',
+                              style: txMedium.copyWith(color: blackColor),
+                            ),
                           ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: greyThinColor,
-                          ),
-                          child: Text(
-                            'Tidak',
-                            style: txMedium.copyWith(color: blackColor),
-                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          },
                         ),
-                        onPressed: () {
-                          Navigator.of(context).pop(false);
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Laporan anda sudah diserahkan'),
-                ),
-              );
-            }
-          },
+                      ],
+                    );
+                  },
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Laporan anda sudah diserahkan'),
+                  ),
+                );
+              }
+            },
+          ),
         );
         // return InkWell(
         //   onTap: () {

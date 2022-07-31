@@ -29,9 +29,9 @@ class _LetterOnProgressListTabState extends State<LetterOnProgressListTab> {
   Widget build(BuildContext context) {
     var colors = [
       const Color(0xff006EE9),
-      const Color(0xff1BDC51),
-      const Color(0xffDA4505),
-      const Color(0xff9E20D9),
+      // const Color(0xff1BDC51),
+      // const Color(0xffDA4505),
+      // const Color(0xff9E20D9),
     ];
 
     return Scaffold(
