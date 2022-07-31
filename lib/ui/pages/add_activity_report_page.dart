@@ -394,6 +394,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
 
         //*Buttom Sheet builder
         Future showSheet() {
+          FocusManager.instance.primaryFocus!.unfocus();
           return showSlidingBottomSheet(
             context,
             builder: (context) => SlidingSheetDialog(
@@ -579,6 +580,7 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
                 ),
                 TextButton(
                   onPressed: () async {
+                    FocusManager.instance.primaryFocus!.unfocus();
                     _awaitReturnValueFrom(context);
                   },
                   style: TextButton.styleFrom(

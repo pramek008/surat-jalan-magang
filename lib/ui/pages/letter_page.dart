@@ -5,9 +5,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:surat_jalan/bloc/auth_bloc.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/shared/shared_theme.dart';
-import 'package:surat_jalan/ui/pages/add_laporan_kegiatan_page.dart';
-import 'package:surat_jalan/ui/widgets/card_laporan_widget.dart';
+import 'package:surat_jalan/ui/pages/add_activity_report_page.dart';
+import 'package:surat_jalan/ui/widgets/card_report_widget.dart';
 import 'package:surat_jalan/ui/widgets/letter_status_widget.dart';
+import 'package:surat_jalan/ui/widgets/submit_button.dart';
 
 import '../../cubit/report_cubit.dart';
 
@@ -71,6 +72,8 @@ class _LetterPageState extends State<LetterPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool _isEmpty = false;
+
     Widget heading() {
       return Padding(
         padding: EdgeInsets.only(
@@ -78,16 +81,19 @@ class _LetterPageState extends State<LetterPage> {
           bottom: 10,
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               flex: 9,
               child: AutoSizeText(
                 widget.surat.judul,
                 style: txBold.copyWith(
-                  color: primaryColor,
+                  color: blackColor,
                   fontSize: 28,
                 ),
                 maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             Expanded(
@@ -102,7 +108,7 @@ class _LetterPageState extends State<LetterPage> {
                   size: 40,
                 ),
               ),
-            )
+            ),
           ],
         ),
       );
@@ -443,9 +449,9 @@ class _LetterPageState extends State<LetterPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Laporan Perjalanan Dinas : ',
-              style: txMedium.copyWith(
-                fontSize: 16,
+              'Laporan Perjalanan Dinas :',
+              style: txSemiBold.copyWith(
+                fontSize: 20,
                 color: blackColor,
               ),
             ),
@@ -476,6 +482,25 @@ class _LetterPageState extends State<LetterPage> {
                           element.perintahJalanId.id == widget.surat.id)
                       .length
                       .toString());
+                  if (state.reports
+                      .where((element) =>
+                          element.perintahJalanId.id == widget.surat.id)
+                      .isEmpty) {
+                    _isEmpty = true;
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        child: Text(
+                          'Belum ada laporan yang anda buat',
+                          style: txMedium.copyWith(
+                            fontSize: 16,
+                            color: greyDeepColor,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+
                   return SizedBox(
                     height: 120 * length,
                     child: ListView.builder(
@@ -599,79 +624,42 @@ class _LetterPageState extends State<LetterPage> {
             ),
 
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                //*add report
-                // const Spacer(),
-                InkWell(
-                  onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => LaporanKegiatanAddPage(
-                    //       userId: widget.surat.userId.id,
-                    //       suratJalanId: widget.surat.id,
-                    //     ),
-                    //   ),
-                    // ).then((value) =>
-                    //     {context.read<ReportCubit>().getAllReport()});
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 15,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: primaryColor,
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.file_upload_rounded,
-                          size: 35,
-                          color: whiteColor,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          'Serahkan Laporan',
-                          style: txMedium.copyWith(
-                            color: whiteColor,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                //*end add report progress
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LaporanKegiatanAddPage(
-                          userId: widget.surat.userId.id,
-                          suratJalanId: widget.surat.id,
+            widget.surat.diserahkan == true
+                ? Container(
+                    margin: const EdgeInsets.only(bottom: 35),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // const Spacer(),
+
+                      const Spacer(),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LaporanKegiatanAddPage(
+                                userId: widget.surat.userId.id,
+                                suratJalanId: widget.surat.id,
+                              ),
+                            ),
+                          ).then((value) =>
+                              {context.read<ReportCubit>().getAllReport()});
+                        },
+                        child: Icon(
+                          Icons.add_box_rounded,
+                          size: 60,
+                          color: primaryColor,
                         ),
                       ),
-                    ).then((value) =>
-                        {context.read<ReportCubit>().getAllReport()});
-                  },
-                  child: Icon(
-                    Icons.add_box_rounded,
-                    size: 60,
-                    color: primaryColor,
+                    ],
                   ),
-                ),
-              ],
-            ),
           ],
         );
       }
 
+      //* on progress belum tau diapakai atau tidak
       Widget exportPdf() {
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -702,6 +690,193 @@ class _LetterPageState extends State<LetterPage> {
         );
       }
 
+      Widget serahkanLaporan() {
+        return SubmitButton(
+          status: widget.surat.diserahkan,
+          onPressed: () {
+            if (_isEmpty == true) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Tidak dapat menyerahkan laporan kosong'),
+                ),
+              );
+            } else if (widget.surat.diserahkan == false) {
+              showDialog(
+                barrierDismissible: true,
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('Serahkan Laporan',
+                        style: txSemiBold.copyWith(fontSize: 22)),
+                    content: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text:
+                                'Apakah anda yakin untuk menyerahkan laporan ?',
+                            style: txRegular.copyWith(
+                              color: greyDeepColor,
+                              fontSize: 16,
+                            ),
+                          ),
+                          TextSpan(
+                            text:
+                                '\n\nSetelah diserahkan anda tidak dapat lagi mengubah laporan.',
+                            style: txMedium.copyWith(
+                              color: redStatusColor,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    actionsAlignment: MainAxisAlignment.center,
+                    actions: [
+                      TextButton(
+                        child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: primaryColor,
+                            ),
+                            child: Text(
+                              'Yakin',
+                              style: txMedium.copyWith(color: whiteColor),
+                            )),
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                      ),
+                      TextButton(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: greyThinColor,
+                          ),
+                          child: Text(
+                            'Tidak',
+                            style: txMedium.copyWith(color: blackColor),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Laporan anda sudah diserahkan'),
+                ),
+              );
+            }
+          },
+        );
+        // return InkWell(
+        //   onTap: () {
+        //     showDialog(
+        //       barrierDismissible: true,
+        //       context: context,
+        //       builder: (context) {
+        //         return AlertDialog(
+        //           title: Text('Serahkan Laporan',
+        //               style: txSemiBold.copyWith(fontSize: 22)),
+        //           content: const Text(
+        //             'Apakah anda yakin laporan sudah selesai ?',
+        //           ),
+        //           actionsAlignment: MainAxisAlignment.center,
+        //           actions: [
+        //             TextButton(
+        //               child: Container(
+        //                   padding: const EdgeInsets.symmetric(
+        //                     horizontal: 20,
+        //                     vertical: 10,
+        //                   ),
+        //                   decoration: BoxDecoration(
+        //                     borderRadius: BorderRadius.circular(8),
+        //                     color: primaryColor,
+        //                   ),
+        //                   child: Text(
+        //                     'Yakin',
+        //                     style: txMedium.copyWith(color: whiteColor),
+        //                   )),
+        //               onPressed: () {
+        //                 Navigator.of(context).pop(true);
+        //               },
+        //             ),
+        //             TextButton(
+        //               child: Container(
+        //                 padding: const EdgeInsets.symmetric(
+        //                   horizontal: 20,
+        //                   vertical: 10,
+        //                 ),
+        //                 decoration: BoxDecoration(
+        //                   borderRadius: BorderRadius.circular(8),
+        //                   color: greyThinColor,
+        //                 ),
+        //                 child: Text(
+        //                   'Tidak',
+        //                   style: txMedium.copyWith(color: blackColor),
+        //                 ),
+        //               ),
+        //               onPressed: () {
+        //                 Navigator.of(context).pop(false);
+        //               },
+        //             ),
+        //           ],
+        //         );
+        //       },
+        //     );
+        //   },
+        //   child: Container(
+        //     padding: const EdgeInsets.symmetric(
+        //       horizontal: 15,
+        //       vertical: 5,
+        //     ),
+        //     decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.circular(8),
+        //       color: primaryColor,
+        //       boxShadow: [
+        //         BoxShadow(
+        //           color: Colors.grey.withOpacity(0.5),
+        //           spreadRadius: 1,
+        //           blurRadius: 7,
+        //           offset: const Offset(0, 3), // changes position of shadow
+        //         ),
+        //       ],
+        //     ),
+        //     child: Row(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         Icon(
+        //           Icons.file_upload_rounded,
+        //           size: 35,
+        //           color: whiteColor,
+        //         ),
+        //         const SizedBox(width: 10),
+        //         Text(
+        //           'Serahkan Laporan',
+        //           style: txMedium.copyWith(
+        //             color: whiteColor,
+        //             fontSize: 16,
+        //           ),
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // );
+      }
+
       //! MASTER Widget Content (untuk menampung semua widget component)
       return Wrap(
         runSpacing: 16,
@@ -716,6 +891,7 @@ class _LetterPageState extends State<LetterPage> {
           deskripsiPenugasan(),
           laporanPerjalananDinas(),
           // exportPdf(),
+          serahkanLaporan()
         ],
       );
     }
@@ -734,7 +910,7 @@ class _LetterPageState extends State<LetterPage> {
                 heading(),
                 content(),
                 const SizedBox(
-                  height: 50,
+                  height: 40,
                 )
               ],
             ),
