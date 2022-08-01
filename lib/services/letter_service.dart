@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/models/response_model.dart';
@@ -7,8 +6,6 @@ import 'package:surat_jalan/shared/shared_value.dart';
 
 class LetterService {
   Future<List<LetterModel>> getAllLetter() async {
-    // String _url = 'http://103.100.27.29/sppd/public/api/perintah-jalan';
-
     final String _url = "$baseApiURL/perintah-jalan";
 
     final response = await http.get(Uri.parse(_url));
@@ -54,35 +51,38 @@ class LetterService {
   }) async {
     String _url = '$baseApiURL/perintah-jalan/$id';
 
-    var formData = FormData();
-    formData.fields.addAll([
-      MapEntry('user_id', userId.toString()),
-      MapEntry('judul', judul),
-      MapEntry('nomor_surat', nomorSurat),
-      MapEntry('pemberi_perintah', pemberiPerintah),
-      MapEntry('anggota_mengikuti', anggotaMengikuti.toString()),
-      MapEntry('lokasi_tujuan', lokasiTujuan),
-      MapEntry('keterangan', keterangan),
-      MapEntry('tgl_awal', tglAwal.toString()),
-      MapEntry('tgl_akhir', tglAkhir.toString()),
-      MapEntry('diserahkan', diserahkan.toString()),
-    ]);
-
     try {
-      final response = await Dio().put(_url, data: formData);
+      var response = await http.put(
+        Uri.parse(_url),
+        headers: {
+          "content-type": "application/json",
+        },
+        body: jsonEncode({
+          "user_id": userId,
+          "judul": judul,
+          "nomor_surat": nomorSurat,
+          "pemberi_perintah": pemberiPerintah,
+          "anggota_mengikuti": anggotaMengikuti,
+          "lokasi_tujuan": lokasiTujuan,
+          "keterangan": keterangan,
+          "tgl_awal": tglAwal.toString(),
+          "tgl_akhir": tglAkhir.toString(),
+          "diserahkan": diserahkan,
+        }),
+      );
       print(response.statusCode);
-      print(response.data);
+      print(response.body);
 
-      final statusType = (response.statusCode! / 100).floor() * 100;
+      final statusType = (response.statusCode / 100).floor() * 100;
       switch (statusType) {
         case 200:
-          Map<String, dynamic> json = (response.data);
+          Map<String, dynamic> json = jsonDecode(response.body);
           return ResponseModel(
             status: json["status"] as String,
             message: json["message"] as String,
           );
         case 400:
-          Map<String, dynamic> json = (response.data);
+          Map<String, dynamic> json = jsonDecode(response.body);
           return ResponseModel(
             status: json["status"] as String,
             message: json["message"] as String,
@@ -90,7 +90,7 @@ class LetterService {
         case 300:
         case 500:
         default:
-          Map<String, dynamic> json = (response.data);
+          Map<String, dynamic> json = jsonDecode(response.body);
           return ResponseModel(
             status: json["status"] as String,
             message: json["message"] as String,

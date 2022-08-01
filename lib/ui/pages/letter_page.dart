@@ -721,6 +721,20 @@ class _LetterPageState extends State<LetterPage> {
                   backgroundColor: greenStatusColor,
                 ),
               );
+            } else if (state is LetterFailureState) {
+              if (state.response.status.toString() == "gagal") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Gagal diserahkan",
+                      style: txRegular.copyWith(
+                        color: whiteColor,
+                      ),
+                    ),
+                    backgroundColor: redStatusColor,
+                  ),
+                );
+              }
             }
           },
           child: SubmitButton(
@@ -779,6 +793,7 @@ class _LetterPageState extends State<LetterPage> {
                                 style: txMedium.copyWith(color: whiteColor),
                               )),
                           onPressed: () {
+                            Navigator.of(context).pop(true);
                             context.read<LetterBloc>().add(LetterPutEvent(
                                   id: widget.surat.id,
                                   userId: widget.surat.userId.id,
@@ -793,7 +808,6 @@ class _LetterPageState extends State<LetterPage> {
                                   tglAkhir: widget.surat.tglAkhir,
                                   diserahkan: true,
                                 ));
-                            Navigator.of(context).pop(true);
                           },
                         ),
                         TextButton(

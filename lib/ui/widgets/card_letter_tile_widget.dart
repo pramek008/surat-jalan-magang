@@ -6,6 +6,8 @@ import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/letter_page.dart';
 
+import '../../cubit/letter_cubit.dart';
+
 class CardLetterTileWidget extends StatelessWidget {
   final Color color;
   final LetterModel surat;
@@ -213,7 +215,11 @@ class CardLetterTileWidget extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => LetterPage(surat: surat),
           ),
-        ).then((value) => BlocProvider.of<ReportCubit>(context).getAllReport());
+        )
+            .then(
+                (value) => BlocProvider.of<LetterCubit>(context).getAllLetter())
+            .then((value) =>
+                BlocProvider.of<ReportCubit>(context).getAllReport());
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
