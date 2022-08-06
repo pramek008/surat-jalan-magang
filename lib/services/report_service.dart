@@ -12,8 +12,6 @@ import "package:surat_jalan/services/secure_storage_service.dart";
 import 'package:surat_jalan/shared/shared_value.dart';
 
 class ReportService with ChangeNotifier {
-  // final String _url = "http://103.100.27.29/sppd/public/api/laporan-jalan";
-
   final String _url = "$baseApiURL/laporan-jalan";
 
   //! GET Request
@@ -74,7 +72,7 @@ class ReportService with ChangeNotifier {
       MapEntry("deskripsi", deskripsi)
     ]);
 
-    print("=====FIELD: ${formData.fields}");
+    // print("=====FIELD: ${formData.fields}");
     // print("=====FILES: ${formData.files}");
     try {
       Dio.Response response = await Dio.Dio().postUri(Uri.parse(_url),

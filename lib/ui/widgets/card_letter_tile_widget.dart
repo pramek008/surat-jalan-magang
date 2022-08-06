@@ -217,9 +217,13 @@ class CardLetterTileWidget extends StatelessWidget {
           ),
         )
             .then(
-                (value) => BlocProvider.of<LetterCubit>(context).getAllLetter())
-            .then((value) =>
-                BlocProvider.of<ReportCubit>(context).getAllReport());
+                (value) => BlocProvider.of<ReportCubit>(context).getAllReport())
+            .whenComplete(
+                () => BlocProvider.of<LetterCubit>(context).getAllLetter());
+        // .then(
+        //     (value) => BlocProvider.of<LetterCubit>(context).getAllLetter())
+        // .then((value) =>
+        //     BlocProvider.of<ReportCubit>(context).getAllReport());
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
