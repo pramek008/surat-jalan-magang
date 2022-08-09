@@ -7,8 +7,10 @@ import 'package:surat_jalan/bloc/letter_bloc.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/add_activity_report_page.dart';
+import 'package:surat_jalan/ui/pages/pdf_preview_page.dart';
 import 'package:surat_jalan/ui/widgets/card_report_widget.dart';
 import 'package:surat_jalan/ui/widgets/letter_status_widget.dart';
+import 'package:surat_jalan/ui/widgets/loading_dialog_widget.dart';
 import 'package:surat_jalan/ui/widgets/submit_button.dart';
 
 import '../../cubit/report_cubit.dart';
@@ -602,7 +604,6 @@ class _LetterPageState extends State<LetterPage> {
                                   .elementAt(index)
                                   .id);
                               // Navigator.of(context).pop();
-
                               setState(() {
                                 item.removeAt(index);
                                 context.read<ReportCubit>().getAllReport();
@@ -632,8 +633,6 @@ class _LetterPageState extends State<LetterPage> {
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // const Spacer(),
-
                       const Spacer(),
                       InkWell(
                         onTap: () {
@@ -667,7 +666,9 @@ class _LetterPageState extends State<LetterPage> {
           children: [
             TextButton(
               onPressed: () async {
-                // final pdf = await
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        PdfPreviewPage(letter: widget.surat)));
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(
@@ -691,6 +692,7 @@ class _LetterPageState extends State<LetterPage> {
         );
       }
 
+      //* penyerahan laporan
       Widget serahkanLaporan() {
         return BlocListener<LetterBloc, LetterState>(
           listener: (context, state) {
@@ -708,19 +710,24 @@ class _LetterPageState extends State<LetterPage> {
                   ),
                 );
                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
               }
             } else if (state is LetterLoadingState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    "Loading...",
-                    style: txRegular.copyWith(
-                      color: whiteColor,
-                    ),
-                  ),
-                  backgroundColor: greenStatusColor,
-                ),
-              );
+              // ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(
+              //     content: Text(
+              //       "Loading...",
+              //       style: txRegular.copyWith(
+              //         color: whiteColor,
+              //       ),
+              //     ),
+              //     backgroundColor: greenStatusColor,
+              //   ),
+              // );
+              showDialog(
+                  context: context,
+                  builder: (context) =>
+                      const LoadingDialogWidget('Loading...'));
             } else if (state is LetterFailureState) {
               if (state.response.status.toString() == "gagal") {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -843,99 +850,6 @@ class _LetterPageState extends State<LetterPage> {
             },
           ),
         );
-        // return InkWell(
-        //   onTap: () {
-        //     showDialog(
-        //       barrierDismissible: true,
-        //       context: context,
-        //       builder: (context) {
-        //         return AlertDialog(
-        //           title: Text('Serahkan Laporan',
-        //               style: txSemiBold.copyWith(fontSize: 22)),
-        //           content: const Text(
-        //             'Apakah anda yakin laporan sudah selesai ?',
-        //           ),
-        //           actionsAlignment: MainAxisAlignment.center,
-        //           actions: [
-        //             TextButton(
-        //               child: Container(
-        //                   padding: const EdgeInsets.symmetric(
-        //                     horizontal: 20,
-        //                     vertical: 10,
-        //                   ),
-        //                   decoration: BoxDecoration(
-        //                     borderRadius: BorderRadius.circular(8),
-        //                     color: primaryColor,
-        //                   ),
-        //                   child: Text(
-        //                     'Yakin',
-        //                     style: txMedium.copyWith(color: whiteColor),
-        //                   )),
-        //               onPressed: () {
-        //                 Navigator.of(context).pop(true);
-        //               },
-        //             ),
-        //             TextButton(
-        //               child: Container(
-        //                 padding: const EdgeInsets.symmetric(
-        //                   horizontal: 20,
-        //                   vertical: 10,
-        //                 ),
-        //                 decoration: BoxDecoration(
-        //                   borderRadius: BorderRadius.circular(8),
-        //                   color: greyThinColor,
-        //                 ),
-        //                 child: Text(
-        //                   'Tidak',
-        //                   style: txMedium.copyWith(color: blackColor),
-        //                 ),
-        //               ),
-        //               onPressed: () {
-        //                 Navigator.of(context).pop(false);
-        //               },
-        //             ),
-        //           ],
-        //         );
-        //       },
-        //     );
-        //   },
-        //   child: Container(
-        //     padding: const EdgeInsets.symmetric(
-        //       horizontal: 15,
-        //       vertical: 5,
-        //     ),
-        //     decoration: BoxDecoration(
-        //       borderRadius: BorderRadius.circular(8),
-        //       color: primaryColor,
-        //       boxShadow: [
-        //         BoxShadow(
-        //           color: Colors.grey.withOpacity(0.5),
-        //           spreadRadius: 1,
-        //           blurRadius: 7,
-        //           offset: const Offset(0, 3), // changes position of shadow
-        //         ),
-        //       ],
-        //     ),
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         Icon(
-        //           Icons.file_upload_rounded,
-        //           size: 35,
-        //           color: whiteColor,
-        //         ),
-        //         const SizedBox(width: 10),
-        //         Text(
-        //           'Serahkan Laporan',
-        //           style: txMedium.copyWith(
-        //             color: whiteColor,
-        //             fontSize: 16,
-        //           ),
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        // );
       }
 
       //! MASTER Widget Content (untuk menampung semua widget component)
@@ -951,8 +865,8 @@ class _LetterPageState extends State<LetterPage> {
           dayCountdown(),
           deskripsiPenugasan(),
           laporanPerjalananDinas(),
-          // exportPdf(),
-          serahkanLaporan()
+          exportPdf(),
+          serahkanLaporan(),
         ],
       );
     }

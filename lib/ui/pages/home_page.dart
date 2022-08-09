@@ -112,7 +112,9 @@ class _HomePageState extends State<HomePage> {
 
     Widget suratPerjalanan(List<LetterModel> letter, UserModel user) {
       var lastday = DateTime.now().subtract(const Duration(days: 1));
-
+      var letterByUser =
+          letter.where((element) => element.userId.id == user.id).toList();
+      letterByUser.sort((a, b) => b.tglAkhir.compareTo(a.tglAkhir));
       var colors = [
         const Color(0xff006EE9),
         const Color(0xff18DC4F),
@@ -120,7 +122,7 @@ class _HomePageState extends State<HomePage> {
         const Color(0xffDA4505),
         const Color(0xff9E20D9),
       ];
-      if (letter.where((element) => element.userId.id == user.id).isEmpty) {
+      if (letterByUser.isEmpty) {
         return Container(
           margin: EdgeInsets.symmetric(
             horizontal: defaultMargin,
@@ -178,8 +180,7 @@ class _HomePageState extends State<HomePage> {
                 left: defaultMargin,
               ),
               scrollDirection: Axis.horizontal,
-              children: letter
-                  .where((element) => element.userId.id == user.id)
+              children: letterByUser
                   .map((e) => CardLetterWidget(
                         surat: e,
                         color:
@@ -232,7 +233,10 @@ class _HomePageState extends State<HomePage> {
               Wrap(
                 runSpacing: 10,
                 children: [
+                  //* Time Heading
                   timeHeading(),
+
+                  //* Greeting Text
                   BlocBuilder<AuthBloc, AuthState>(
                     builder: (context, state) {
                       if (state is AuthAuthenticatedState) {
@@ -241,6 +245,8 @@ class _HomePageState extends State<HomePage> {
                       return const SizedBox();
                     },
                   ),
+
+                  //* Surat Perjalanan Dinas
                   BlocBuilder<LetterCubit, LetterState>(
                     builder: (context, state) {
                       if (state is LetterInitial) {
@@ -286,6 +292,8 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                   ),
+
+                  //* Berita
                   BlocBuilder<NewsCubit, NewsState>(
                     builder: (context, state) {
                       if (state is NewsInitial) {

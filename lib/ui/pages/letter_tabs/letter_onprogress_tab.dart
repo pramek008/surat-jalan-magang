@@ -47,38 +47,30 @@ class _LetterOnProgressListTabState extends State<LetterOnProgressListTab> {
         },
         builder: (context, state) {
           if (state is LetterLoaded) {
-            var lastday = DateTime.now().subtract(const Duration(days: 1));
+            var thisday = DateTime.now().subtract(const Duration(days: 1));
+
             return SingleChildScrollView(
               child: BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, authState) {
                   UserModel? user = authState is AuthAuthenticatedState
                       ? authState.user
                       : null;
+                  var letterByUser = state.letters
+                      .where((element) => element.userId.id == user?.id)
+                      .where((element) => element.tglAkhir.isAfter(thisday))
+                      .toList();
+                  letterByUser.sort((a, b) => a.tglAkhir.compareTo(b.tglAkhir));
                   return Column(
                     //* logic penugasan yang SEDANG dilakukan
-                    children: state.letters
-                        .where((element) => element.userId.id == user?.id)
-                        .where((element) => element.tglAkhir.isAfter(lastday))
+                    children: letterByUser
                         .map((e) => Container(
-                              padding: e ==
-                                      state.letters
-                                          .where((element) =>
-                                              element.userId.id == user?.id)
-                                          .where((element) =>
-                                              element.tglAkhir.isAfter(lastday))
-                                          .first
+                              padding: e == letterByUser.first
                                   ? EdgeInsets.only(
                                       top: defaultMargin,
                                       bottom: defaultMargin,
                                     )
                                   : EdgeInsets.only(bottom: defaultMargin),
-                              margin: e ==
-                                      state.letters
-                                          .where((element) =>
-                                              element.userId.id == user?.id)
-                                          .where((element) =>
-                                              element.tglAkhir.isAfter(lastday))
-                                          .last
+                              margin: e == letterByUser.last
                                   ? EdgeInsets.only(
                                       bottom:
                                           MediaQuery.of(context).size.height *
