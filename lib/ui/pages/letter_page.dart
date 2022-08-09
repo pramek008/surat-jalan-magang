@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:surat_jalan/bloc/auth_bloc.dart';
 import 'package:surat_jalan/bloc/letter_bloc.dart';
 import 'package:surat_jalan/models/letter_model.dart';
+import 'package:surat_jalan/models/user_model.dart';
 import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/add_activity_report_page.dart';
 import 'package:surat_jalan/ui/pages/pdf_preview_page.dart';
@@ -504,6 +505,7 @@ class _LetterPageState extends State<LetterPage> {
                     );
                   }
 
+                  // TODO: Jika sudah diserahkan tidak dapat di hapus [FEATURE Needed]
                   return SizedBox(
                     height: 120 * length,
                     child: ListView.builder(
@@ -549,26 +551,6 @@ class _LetterPageState extends State<LetterPage> {
                                   actions: [
                                     TextButton(
                                       child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                            vertical: 10,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            color: greyThinColor,
-                                          ),
-                                          child: Text(
-                                            'Tidak',
-                                            style: txMedium.copyWith(
-                                                color: blackColor),
-                                          )),
-                                      onPressed: () {
-                                        Navigator.of(context).pop(false);
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 20,
                                           vertical: 10,
@@ -589,6 +571,26 @@ class _LetterPageState extends State<LetterPage> {
                                         Navigator.of(context).pop(true);
                                       },
                                     ),
+                                    TextButton(
+                                      child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 10,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: greyThinColor,
+                                          ),
+                                          child: Text(
+                                            'Tidak',
+                                            style: txMedium.copyWith(
+                                                color: blackColor),
+                                          )),
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                      },
+                                    ),
                                   ],
                                 );
                               },
@@ -603,12 +605,12 @@ class _LetterPageState extends State<LetterPage> {
                                       widget.surat.id)
                                   .elementAt(index)
                                   .id);
-                              // Navigator.of(context).pop();
                               setState(() {
                                 item.removeAt(index);
                                 context.read<ReportCubit>().getAllReport();
                                 // length = double.parse(item.length.toString());
                               });
+                              Navigator.of(context).pop();
                             }
                           },
                           child: CardLaporanWidget(report: item[index]),
@@ -644,8 +646,10 @@ class _LetterPageState extends State<LetterPage> {
                                 suratJalanId: widget.surat.id,
                               ),
                             ),
-                          ).then((value) =>
-                              {context.read<ReportCubit>().getAllReport()});
+                          )
+                              .then((value) =>
+                                  {context.read<ReportCubit>().getAllReport()})
+                              .whenComplete(() => _isEmpty = false);
                         },
                         child: Icon(
                           Icons.add_box_rounded,
@@ -664,30 +668,70 @@ class _LetterPageState extends State<LetterPage> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        PdfPreviewPage(letter: widget.surat)));
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: primaryColor,
-                ),
-                child: Text(
-                  'Export PDF',
-                  style: txSemiBold.copyWith(
-                    color: whiteColor,
-                    fontSize: 20,
+            widget.surat.diserahkan == false
+                ? Container()
+                : TextButton(
+                    onPressed: () async {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              BlocBuilder<AuthBloc, AuthState>(
+                                builder: (context, state) {
+                                  if (state is AuthAuthenticatedState) {
+                                    UserModel user = state.user;
+                                    return PdfPreviewPage(
+                                      letter: widget.surat,
+                                      user: user,
+                                    );
+                                  }
+                                  return Container();
+                                  // return PdfPreviewPage(
+                                  //   letter: widget.surat,
+                                  // );
+                                },
+                              )));
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: primaryColor,
+                      ),
+                      child: Text(
+                        'Export PDF',
+                        style: txSemiBold.copyWith(
+                          color: whiteColor,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
+            // TextButton(
+            //   onPressed: () async {
+            //     Navigator.of(context).push(MaterialPageRoute(
+            //         builder: (context) =>
+            //             PdfPreviewPage(letter: widget.surat)));
+            //   },
+            //   child: Container(
+            //     padding: const EdgeInsets.symmetric(
+            //       horizontal: 20,
+            //       vertical: 10,
+            //     ),
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(8),
+            //       color: primaryColor,
+            //     ),
+            //     child: Text(
+            //       'Export PDF',
+            //       style: txSemiBold.copyWith(
+            //         color: whiteColor,
+            //         fontSize: 20,
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         );
       }
