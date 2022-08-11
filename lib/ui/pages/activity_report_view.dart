@@ -1,10 +1,7 @@
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:sliding_sheet/sliding_sheet.dart';
 import 'package:surat_jalan/shared/shared_value.dart';
 import 'package:surat_jalan/ui/pages/gallery_view_page.dart';
 
@@ -157,6 +154,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
             ),
             TextField(
               controller: namaKegiatanController,
+              readOnly: true,
               decoration: InputDecoration(
                 hintText: 'Masukkan nama kegiatan',
                 hintStyle: txRegular.copyWith(
@@ -352,7 +350,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
             children: [
               InkWell(
                 onTap: () {
-                  _openGalery(index!);
+                  _openGaleryMode(index!);
                 },
                 child: Container(
                   width: 100,
@@ -480,6 +478,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
             ),
             TextField(
               controller: notulenController,
+              readOnly: true,
               maxLines: 5,
               decoration: InputDecoration(
                 hintText: 'Masukkan nama kegiatan',
@@ -687,7 +686,7 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
     );
   }
 
-  void _openGalery(int index) {
+  void _openGaleryMode(int index) {
     Navigator.push(
       context,
       MaterialPageRoute(

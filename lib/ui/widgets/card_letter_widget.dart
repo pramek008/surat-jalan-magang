@@ -18,8 +18,8 @@ class CardLetterWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //*--------------------------------------------------------------------
-
+    //? Some logic to proccess the data =================================
+    //* to proccess many day left
     int daysLengt(DateTime from, DateTime to) {
       from =
           DateTime(surat.tglAwal.year, surat.tglAwal.month, surat.tglAwal.day);
@@ -27,6 +27,17 @@ class CardLetterWidget extends StatelessWidget {
           surat.tglAkhir.year, surat.tglAkhir.month, surat.tglAkhir.day);
       return to.difference(from).inDays + 1;
     }
+
+    //* to check if the date is on range of assignment date
+    DateTime isStarted() {
+      var today = DateTime.now();
+      if (surat.tglAwal.isAfter(today)) {
+        return surat.tglAwal;
+      } else {
+        return surat.tglAkhir;
+      }
+    }
+    //? end of logic =====================================================
 
     //* Background card with rounded corners decoration
     Widget backgroudCard(Color color) {
@@ -114,6 +125,7 @@ class CardLetterWidget extends StatelessWidget {
       );
     }
 
+    //* Content will display in the card
     Widget content() {
       return Padding(
         padding: const EdgeInsets.all(10),
@@ -158,7 +170,7 @@ class CardLetterWidget extends StatelessWidget {
               children: [
                 const Spacer(),
                 Text(
-                  DateFormat('dd MMM yyyy', 'id_ID').format(surat.tglAwal),
+                  DateFormat('dd MMM yyyy', 'id_ID').format(isStarted()),
                   style: txRegular.copyWith(
                     fontSize: 14,
                     color: whiteColor,

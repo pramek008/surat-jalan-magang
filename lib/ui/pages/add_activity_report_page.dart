@@ -127,7 +127,65 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
           children: [
             InkWell(
               onTap: () {
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: Text(
+                      'Keluar Halaman ?',
+                      style: txSemiBold.copyWith(
+                        color: primaryColor.withOpacity(0.8),
+                        fontSize: 22,
+                      ),
+                    ),
+                    content: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text:
+                                'Apakah anda yakin ingin keluar dari halaman ini ?',
+                            style: txRegular.copyWith(
+                              color: greyDeepColor,
+                              fontSize: 16,
+                            ),
+                          ),
+                          TextSpan(
+                            text:
+                                '\n\nSemua data yang belum disimpan akan hilang',
+                            style: txMedium.copyWith(
+                              color: redStatusColor,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    actionsAlignment: MainAxisAlignment.center,
+                    actionsPadding: const EdgeInsets.symmetric(horizontal: 20),
+                    actions: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: primaryColor,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text(
+                          'Tidak',
+                          style: txMedium,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Keluar',
+                            style: txMedium.copyWith(color: primaryColor)),
+                      )
+                    ],
+                  ),
+                );
               },
               child: Container(
                 padding: const EdgeInsets.all(8),

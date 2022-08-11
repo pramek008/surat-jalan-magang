@@ -5,10 +5,14 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:surat_jalan/models/letter_model.dart';
+import 'package:surat_jalan/models/report_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
 
 Future<Uint8List> generatePdf(
-    LetterModel letterModel, UserModel userModel) async {
+  LetterModel letterModel,
+  UserModel userModel,
+  List<ReportModel> reportModel,
+) async {
   final pdf = pw.Document();
   final imageLogo =
       (await rootBundle.load('assets/logo_daerah.png')).buffer.asUint8List();
@@ -21,6 +25,100 @@ Future<Uint8List> generatePdf(
     return to.difference(from).inDays + 1;
   }
 
+  //* Template data report
+  pw.Widget itemData(String title, String value) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.symmetric(vertical: 6),
+      child: pw.Row(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Expanded(
+            flex: 2,
+            child: pw.Text(
+              title,
+              style: pw.TextStyle(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.normal,
+              ),
+            ),
+          ),
+          pw.Padding(
+            padding: const pw.EdgeInsets.symmetric(horizontal: 12),
+            child: pw.Text(
+              ":",
+              style: pw.TextStyle(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.normal,
+              ),
+            ),
+          ),
+          pw.Expanded(
+            flex: 4,
+            child: pw.Text(
+              value,
+              style: pw.TextStyle(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.normal,
+                lineSpacing: 4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  pw.Widget itemListData(String title, List<String> member) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.symmetric(vertical: 6),
+      child: pw.Row(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Expanded(
+            flex: 2,
+            child: pw.Text(
+              title,
+              style: pw.TextStyle(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.normal,
+              ),
+            ),
+          ),
+          pw.Padding(
+            padding: const pw.EdgeInsets.symmetric(horizontal: 12),
+            child: pw.Text(
+              ":",
+              style: pw.TextStyle(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.normal,
+              ),
+            ),
+          ),
+          pw.Expanded(
+            flex: 4,
+            child: pw.Text(
+              member.join("\n"),
+              style: pw.TextStyle(
+                fontSize: 14,
+                fontWeight: pw.FontWeight.normal,
+                lineSpacing: 4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // String getLocation(String lokasi0, String? lokasi1) {
+  //   double? lat = double.tryParse(lokasi0);
+  //   double? lng = double.tryParse(lokasi0);
+  //   String address = LocationService().getAddressFromDb(lat!, lng!).toString();
+  //   return address;
+  // }
+  //* End template data report
+
+  //** SPPD Export ===========================================================
   pw.Widget header() {
     return pw.Column(
       children: [
@@ -62,101 +160,24 @@ Future<Uint8List> generatePdf(
             pw.Spacer(),
           ],
         ),
-        pw.SizedBox(height: 8),
+        pw.SizedBox(height: 4),
         pw.Divider(
           color: PdfColor.fromHex('#000000'),
-          thickness: 2,
+          thickness: 3,
           borderStyle: pw.BorderStyle.solid,
-        )
+        ),
+        // pw.Divider(
+        //   color: PdfColor.fromHex('#000000'),
+        //   height: 2,
+        //   endIndent: 5,
+        //   indent: 0.5,
+        //   borderStyle: pw.BorderStyle.solid,
+        // ),
       ],
     );
   }
 
-  pw.Widget body() {
-    pw.Widget itemData(String title, String value) {
-      return pw.Padding(
-        padding: const pw.EdgeInsets.symmetric(vertical: 6),
-        child: pw.Row(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Expanded(
-              flex: 2,
-              child: pw.Text(
-                title,
-                style: pw.TextStyle(
-                  fontSize: 14,
-                  fontWeight: pw.FontWeight.normal,
-                ),
-              ),
-            ),
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 12),
-              child: pw.Text(
-                ":",
-                style: pw.TextStyle(
-                  fontSize: 14,
-                  fontWeight: pw.FontWeight.normal,
-                ),
-              ),
-            ),
-            pw.Expanded(
-              flex: 4,
-              child: pw.Text(
-                value,
-                style: pw.TextStyle(
-                  fontSize: 14,
-                  fontWeight: pw.FontWeight.normal,
-                  lineSpacing: 4,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    pw.Widget itemListData(String title, List<String> member) {
-      return pw.Padding(
-        padding: const pw.EdgeInsets.symmetric(vertical: 6),
-        child: pw.Row(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Expanded(
-              flex: 2,
-              child: pw.Text(
-                title,
-                style: pw.TextStyle(
-                  fontSize: 14,
-                  fontWeight: pw.FontWeight.normal,
-                ),
-              ),
-            ),
-            pw.Padding(
-              padding: const pw.EdgeInsets.symmetric(horizontal: 12),
-              child: pw.Text(
-                ":",
-                style: pw.TextStyle(
-                  fontSize: 14,
-                  fontWeight: pw.FontWeight.normal,
-                ),
-              ),
-            ),
-            pw.Expanded(
-              flex: 4,
-              child: pw.Text(
-                member.join("\n"),
-                style: pw.TextStyle(
-                  fontSize: 14,
-                  fontWeight: pw.FontWeight.normal,
-                  lineSpacing: 4,
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
+  pw.Widget bodyLetter() {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -311,7 +332,7 @@ Future<Uint8List> generatePdf(
           children: [
             header(),
             pw.SizedBox(height: 8),
-            body(),
+            bodyLetter(),
             pw.Spacer(),
             footer(),
           ],
@@ -319,5 +340,68 @@ Future<Uint8List> generatePdf(
       },
     ),
   );
+
+  //* Kegiatan Perjalanan Dinas ================================================
+  pw.Widget bodyActivity() {
+    return pw.Container(
+      width: double.infinity,
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Container(
+            width: double.infinity,
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Center(
+                  child: pw.Text(
+                    "Laporan Kegiatan Perjalanan Dinas",
+                    style: pw.TextStyle(
+                      fontSize: 16,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                  ),
+                ),
+                pw.SizedBox(height: 16),
+                itemData("Nama Kegiatan", reportModel.first.namaKegiatan),
+                itemData(
+                  "Waktu",
+                  DateFormat('dd MMMM yyyy - hh:mm', 'id_ID')
+                      .format(reportModel.first.createdAt),
+                ),
+                itemData("Notulen Kegiatan", reportModel.first.deskripsi),
+                itemData("Tempat", reportModel.first.lokasi.toString()),
+                itemData("Lampiran", ''),
+                pw.ListView.builder(
+                  itemCount: reportModel.first.foto.length,
+                  itemBuilder: (context, index) {
+                    return pw.Container(
+                      width: double.infinity,
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  pdf.addPage(
+    pw.MultiPage(
+      pageFormat: PdfPageFormat.a4,
+      margin: const pw.EdgeInsets.symmetric(horizontal: 45, vertical: 45),
+      orientation: pw.PageOrientation.portrait,
+      build: (context) {
+        return [
+          header(),
+          pw.SizedBox(height: 8),
+          bodyActivity(),
+        ];
+      },
+    ),
+  );
+
   return pdf.save();
 }

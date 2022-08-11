@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:surat_jalan/models/letter_model.dart';
+import 'package:surat_jalan/models/report_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
 import 'package:surat_jalan/services/pdf_service.dart';
 
 class PdfPreviewPage extends StatelessWidget {
   final LetterModel letter;
   final UserModel user;
-  const PdfPreviewPage({Key? key, required this.letter, required this.user})
+  final List<ReportModel> report;
+  const PdfPreviewPage(
+      {Key? key,
+      required this.letter,
+      required this.user,
+      required this.report})
       : super(key: key);
 
   @override
@@ -18,7 +24,7 @@ class PdfPreviewPage extends StatelessWidget {
         title: const Text('PDF Preview'),
       ),
       body: PdfPreview(
-        build: (context) => generatePdf(letter, user),
+        build: (context) => generatePdf(letter, user, report),
         initialPageFormat: PdfPageFormat.a4,
         pdfFileName: 'Laporan_SPPD_${letter.userId.name}.pdf',
       ),

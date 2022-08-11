@@ -5,9 +5,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:surat_jalan/bloc/auth_bloc.dart';
 import 'package:surat_jalan/bloc/letter_bloc.dart';
 import 'package:surat_jalan/models/letter_model.dart';
+import 'package:surat_jalan/models/report_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
 import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/add_activity_report_page.dart';
+import 'package:surat_jalan/ui/pages/letter_list_page.dart';
 import 'package:surat_jalan/ui/pages/pdf_preview_page.dart';
 import 'package:surat_jalan/ui/widgets/card_report_widget.dart';
 import 'package:surat_jalan/ui/widgets/letter_status_widget.dart';
@@ -37,6 +39,7 @@ class _LetterPageState extends State<LetterPage> {
     context.read<AuthBloc>().add(AuthLoadUserEvent());
   }
 
+  //? logic to proccess parameter =====================================
   //* Untuk memeriksa status surat apakah masih berjalan atau sudah selesai
   bool isExpired(DateTime tglAkhir) {
     var lastday = DateTime.now().subtract(const Duration(days: 1));
@@ -73,6 +76,7 @@ class _LetterPageState extends State<LetterPage> {
     int hourLastDay = manyHour % 24;
     return hourLastDay;
   }
+  //? end of logic =====================================================
 
   @override
   Widget build(BuildContext context) {
@@ -672,23 +676,37 @@ class _LetterPageState extends State<LetterPage> {
                 ? Container()
                 : TextButton(
                     onPressed: () async {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
                           builder: (context) =>
                               BlocBuilder<AuthBloc, AuthState>(
-                                builder: (context, state) {
-                                  if (state is AuthAuthenticatedState) {
-                                    UserModel user = state.user;
-                                    return PdfPreviewPage(
-                                      letter: widget.surat,
-                                      user: user,
-                                    );
-                                  }
-                                  return Container();
-                                  // return PdfPreviewPage(
-                                  //   letter: widget.surat,
-                                  // );
-                                },
-                              )));
+                            builder: (context, state) {
+                              if (state is AuthAuthenticatedState) {
+                                UserModel user = state.user;
+                                return BlocBuilder<ReportCubit, ReportState>(
+                                  builder: (context, state) {
+                                    if (state is ReportLoaded) {
+                                      List<ReportModel> report = state.reports;
+                                      List<ReportModel> reportByUser = report
+                                          .where((element) =>
+                                              element.userId.id == user.id)
+                                          .toList();
+                                      return PdfPreviewPage(
+                                        letter: widget.surat,
+                                        user: user,
+                                        report: reportByUser,
+                                      );
+                                    }
+                                    return Container();
+                                  },
+                                );
+                              }
+                              return Container();
+                              // return Container();
+                            },
+                          ),
+                        ),
+                      );
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -708,30 +726,6 @@ class _LetterPageState extends State<LetterPage> {
                       ),
                     ),
                   ),
-            // TextButton(
-            //   onPressed: () async {
-            //     Navigator.of(context).push(MaterialPageRoute(
-            //         builder: (context) =>
-            //             PdfPreviewPage(letter: widget.surat)));
-            //   },
-            //   child: Container(
-            //     padding: const EdgeInsets.symmetric(
-            //       horizontal: 20,
-            //       vertical: 10,
-            //     ),
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(8),
-            //       color: primaryColor,
-            //     ),
-            //     child: Text(
-            //       'Export PDF',
-            //       style: txSemiBold.copyWith(
-            //         color: whiteColor,
-            //         fontSize: 20,
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         );
       }
@@ -754,7 +748,10 @@ class _LetterPageState extends State<LetterPage> {
                   ),
                 );
                 Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => const LetterListPage()),
+                    (route) => false);
               }
             } else if (state is LetterLoadingState) {
               // ScaffoldMessenger.of(context).showSnackBar(
