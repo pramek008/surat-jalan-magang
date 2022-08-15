@@ -144,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
           return Column(
             children: [
               Text(
-                'Login to Your Account',
+                'Login ke Akun Anda',
                 style: txMedium.copyWith(
                   color: greySubHeaderColor,
                   fontSize: 14,

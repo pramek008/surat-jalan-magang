@@ -6,6 +6,7 @@ import 'package:surat_jalan/bloc/auth_bloc.dart';
 import 'package:surat_jalan/bloc/letter_bloc.dart';
 import 'package:surat_jalan/bloc/login_bloc.dart';
 import 'package:surat_jalan/bloc/postreport_bloc.dart';
+import 'package:surat_jalan/cubit/connectivity_cubit.dart';
 import 'package:surat_jalan/cubit/letter_cubit.dart';
 import 'package:surat_jalan/cubit/location_cubit.dart';
 import 'package:surat_jalan/cubit/news_cubit.dart';
@@ -65,6 +66,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => LetterBloc(),
+        ),
+        BlocProvider(
+          create: (context) => ConnectivityCubit(),
         ),
       ],
       child: MaterialApp(

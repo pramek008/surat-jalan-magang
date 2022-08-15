@@ -5,7 +5,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:surat_jalan/bloc/auth_bloc.dart';
 import 'package:surat_jalan/bloc/letter_bloc.dart';
 import 'package:surat_jalan/models/letter_model.dart';
-import 'package:surat_jalan/models/report_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
 import 'package:surat_jalan/shared/shared_theme.dart';
 import 'package:surat_jalan/ui/pages/add_activity_report_page.dart';
@@ -683,22 +682,9 @@ class _LetterPageState extends State<LetterPage> {
                             builder: (context, state) {
                               if (state is AuthAuthenticatedState) {
                                 UserModel user = state.user;
-                                return BlocBuilder<ReportCubit, ReportState>(
-                                  builder: (context, state) {
-                                    if (state is ReportLoaded) {
-                                      List<ReportModel> report = state.reports;
-                                      List<ReportModel> reportByUser = report
-                                          .where((element) =>
-                                              element.userId.id == user.id)
-                                          .toList();
-                                      return PdfPreviewPage(
-                                        letter: widget.surat,
-                                        user: user,
-                                        report: reportByUser,
-                                      );
-                                    }
-                                    return Container();
-                                  },
+                                return PdfPreviewPage(
+                                  letter: widget.surat,
+                                  user: user,
                                 );
                               }
                               return Container();
