@@ -7,6 +7,7 @@ import 'package:surat_jalan/cubit/location_cubit.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/models/report_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
+import 'package:surat_jalan/services/location_service.dart';
 import 'package:surat_jalan/services/pdf_service.dart';
 
 import '../../cubit/report_cubit.dart';
@@ -34,13 +35,6 @@ class PdfPreviewPage extends StatelessWidget {
                 .where((element) => element.userId.id == user.id)
                 .where((element) => element.perintahJalanId.id == letter.id)
                 .toList();
-            // print(reportByLetter.length);
-            // List<Placemark> address = [];
-            // for (var i = 0; i < reportByLetter.length; i++) {
-            //   BlocProvider.of<LocationCubit>(context).getLocationFromDb(
-            //       double.parse(reportByLetter[i].lokasi[0]),
-            //       double.parse(reportByLetter[i].lokasi[1]));
-            // }
             return PdfPreview(
               build: (context) =>
                   PDFService().generatePdf(letter, user, reportByLetter),

@@ -247,104 +247,6 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
         int coutList = widget.report.foto.length;
         int manyRow = (coutList / 3).ceil();
 
-        // Widget buildSheet(context, state) => Material(
-        //       child: Container(
-        //         decoration: BoxDecoration(
-        //           color: whiteColor,
-        //         ),
-        //         child: Column(
-        //           crossAxisAlignment: CrossAxisAlignment.center,
-        //           children: [
-        //             Container(
-        //               height: 8,
-        //               width: 50,
-        //               margin: const EdgeInsets.all(10),
-        //               decoration: BoxDecoration(
-        //                 color: greySubHeaderColor,
-        //                 borderRadius: BorderRadius.circular(16),
-        //               ),
-        //             ),
-        //             const SizedBox(
-        //               height: 10,
-        //             ),
-        //             InkWell(
-        //               onTap: () {
-        //                 // fromCamera();
-        //               },
-        //               child: Row(
-        //                 children: [
-        //                   Icon(
-        //                     Icons.camera_alt,
-        //                     size: 40,
-        //                     color: greyDeepColor,
-        //                   ),
-        //                   const SizedBox(
-        //                     width: 10,
-        //                   ),
-        //                   Text(
-        //                     'From Camera',
-        //                     style: txMedium.copyWith(
-        //                       fontSize: 18,
-        //                       color: blackColor,
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //             ),
-        //             const SizedBox(
-        //               height: 15,
-        //             ),
-        //             InkWell(
-        //               onTap: () {
-        //                 // fromGallery();
-        //               },
-        //               child: Row(
-        //                 children: [
-        //                   Icon(
-        //                     Icons.photo_library_outlined,
-        //                     size: 40,
-        //                     color: greyDeepColor,
-        //                   ),
-        //                   const SizedBox(
-        //                     width: 10,
-        //                   ),
-        //                   Text(
-        //                     'From Galery',
-        //                     style: txMedium.copyWith(
-        //                       fontSize: 18,
-        //                       color: blackColor,
-        //                     ),
-        //                   ),
-        //                 ],
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //     );
-
-        // //*Buttom Sheet builder
-        // Future showSheet() {
-        //   return showSlidingBottomSheet(
-        //     context,
-        //     builder: (context) => SlidingSheetDialog(
-        //       snapSpec: const SnapSpec(
-        //         snappings: [0.7, 0.7],
-        //       ),
-        //       builder: buildSheet,
-        //       padding: const EdgeInsets.only(
-        //         // top: 24,
-        //         left: 20,
-        //         right: 20,
-        //         bottom: 28,
-        //       ),
-        //       elevation: 12,
-        //       cornerRadius: 16,
-        //       dismissOnBackdropTap: true,
-        //     ),
-        //   );
-        // }
-
         Widget imageData(String image, int? index) {
           return Stack(
             children: [
@@ -364,67 +266,9 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
                   ),
                 ),
               ),
-              // Positioned(
-              //     top: 0,
-              //     right: 17,
-              //     child: InkWell(
-              //       onTap: () {
-              //         // setState(() {
-              //         //   _imagesList.removeAt(index);
-              //         // });
-              //       },
-              //       child: Container(
-              //         decoration: BoxDecoration(
-              //           color: greyDeepColor,
-              //           borderRadius: BorderRadius.circular(5),
-              //         ),
-              //         child: Icon(
-              //           Icons.close_rounded,
-              //           color: whiteColor,
-              //           size: 25,
-              //         ),
-              //       ),
-              //     )),
             ],
           );
         }
-
-        // Widget addImage() {
-        //   return InkWell(
-        //     onTap: showSheet,
-        //     child: DottedBorder(
-        //       color: greyIconColor,
-        //       radius: const Radius.circular(20),
-        //       dashPattern: const [10, 10],
-        //       borderType: BorderType.RRect,
-        //       strokeWidth: 3,
-        //       child: Padding(
-        //         padding: const EdgeInsets.all(8.0),
-        //         child: Center(
-        //           child: Column(
-        //             mainAxisAlignment: MainAxisAlignment.center,
-        //             children: [
-        //               Image.asset(
-        //                 'assets/icon_addPicture.png',
-        //                 width: 30,
-        //                 height: 30,
-        //                 color: greyIconColor,
-        //               ),
-        //               Text(
-        //                 'Tambah Foto',
-        //                 style: txRegular.copyWith(
-        //                   color: greyIconColor,
-        //                   fontSize: 14,
-        //                 ),
-        //                 textAlign: TextAlign.center,
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   );
-        // }
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -531,22 +375,6 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
                         fontSize: 18,
                       ),
                     ),
-                    // TextButton(
-                    //   onPressed: () {
-                    //     context.read<LocationCubit>().getCurrentLocation();
-                    //   },
-                    //   style: TextButton.styleFrom(
-                    //     shadowColor: primaryColor.withOpacity(0.8),
-                    //     backgroundColor: primaryColor,
-                    //   ),
-                    //   child: Text(
-                    //     'Set Lokasi',
-                    //     style: txMedium.copyWith(
-                    //       color: whiteColor,
-                    //       fontSize: 14,
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
                 const SizedBox(
@@ -671,8 +499,6 @@ class _LaporanKegiatanViewState extends State<LaporanKegiatanView> {
           child: Padding(
             padding: EdgeInsets.only(
               top: defaultMargin,
-              // right: defaultMargin,
-              // left: defaultMargin,
             ),
             child: Column(
               children: [

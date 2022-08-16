@@ -38,7 +38,7 @@ class _LetterPageState extends State<LetterPage> {
     context.read<AuthBloc>().add(AuthLoadUserEvent());
   }
 
-  //? logic to proccess parameter =====================================
+  ////? logic to proccess parameter =====================================
   //* Untuk memeriksa status surat apakah masih berjalan atau sudah selesai
   bool isExpired(DateTime tglAkhir) {
     var lastday = DateTime.now().subtract(const Duration(days: 1));
@@ -75,7 +75,7 @@ class _LetterPageState extends State<LetterPage> {
     int hourLastDay = manyHour % 24;
     return hourLastDay;
   }
-  //? end of logic =====================================================
+  ////? end of logic =====================================================
 
   @override
   Widget build(BuildContext context) {
@@ -508,7 +508,7 @@ class _LetterPageState extends State<LetterPage> {
                     );
                   }
 
-                  // TODO: Jika sudah diserahkan tidak dapat di hapus [FEATURE Needed]
+                  //* Jika sudah diserahkan tidak dapat di hapus
                   return SizedBox(
                     height: 120 * length,
                     child: widget.surat.diserahkan == false
