@@ -1,13 +1,14 @@
 import 'dart:typed_data';
 import 'package:flutter/services.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:http/http.dart' as http;
-import 'package:printing/printing.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/models/report_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
+import 'package:surat_jalan/services/location_service.dart';
 import 'package:surat_jalan/shared/shared_value.dart';
 
 class PDFService {
@@ -20,42 +21,32 @@ class PDFService {
     final imageLogo =
         (await rootBundle.load('assets/logo_daerah.png')).buffer.asUint8List();
 
-    var netImage = await networkImage(
-      '$baseImageURL/post-foto/rjvjw6FV2s8wid8VBQzg8DpsoKpmpZ7iFu4fjm7g.jpg',
-    );
-
-    List dummyImages = [
-      netImage,
-      netImage,
-      netImage,
-    ];
-
+    //? build data image to byte
     List imageGroup = [];
-    List imageData = [];
     for (var i = 0; i < reportModel.length; i++) {
-      imageGroup.add(reportModel[i].foto);
-      List byReport = [];
+      List imageDataByGroup = [];
       for (var j = 0; j < reportModel[i].foto.length; j++) {
-        byReport.add(reportModel[i].foto[j]);
         final response = await http
             .get(Uri.parse('$baseImageURL/${reportModel[i].foto[j]}'));
-        imageData.add(response.bodyBytes);
+        imageDataByGroup.add(response.bodyBytes);
       }
+      imageGroup.add(imageDataByGroup);
+      print('imageDataByGroup: ${imageDataByGroup.length}');
     }
-    print(imageData);
+    print('imageGroup: ${imageGroup.length}');
 
-    // final netImage = await networkImage(
-    //   'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
-    // );
+    //? build data address to string
+    List address = [];
+    for (var i = 0; i < reportModel.length; i++) {
+      double lat = double.parse(reportModel[i].lokasi[0].toString());
+      double long = double.parse(reportModel[i].lokasi[1].toString());
+      final response = await LocationService().getAddressFromDb(lat, long);
+      Placemark place = response;
+      String addressString =
+          '${place.street}, ${place.subLocality}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea}, ${place.country}';
 
-    // List<dynamic> imageProviders = [];
-
-    // List<dynamic> loadImage(List<String> images) {
-    //   for (var i = 0; i < images.length; i++) {
-    //     imageProviders.add(networkImage('$baseImageURL/${images[i]}'));
-    //   }
-    //   return imageProviders;
-    // }
+      address.add(addressString);
+    }
 
     int daysLengt(DateTime from, DateTime to) {
       from = DateTime(letterModel.tglAwal.year, letterModel.tglAwal.month,
@@ -192,12 +183,6 @@ class PDFService {
       );
     }
 
-    // String getLocation(String lokasi0, String? lokasi1) {
-    //   double? lat = double.tryParse(lokasi0);
-    //   double? lng = double.tryParse(lokasi0);
-    //   String address = LocationService().getAddressFromDb(lat!, lng!).toString();
-    //   return address;
-    // }
     //* End template data report
 
     //** SPPD Page ===========================================================
@@ -426,7 +411,7 @@ class PDFService {
     );
 
     //* Kegiatan Perjalanan Dinas Page ========================================
-    pw.Widget bodyActivity(ReportModel reportModel) {
+    pw.Widget bodyActivity(ReportModel reportModel, String address) {
       return pw.Container(
         width: double.infinity,
         child: pw.Column(
@@ -454,28 +439,9 @@ class PDFService {
                         .format(reportModel.createdAt),
                   ),
                   itemData("Notulen Kegiatan", reportModel.deskripsi),
-                  itemData("Tempat", reportModel.lokasi.toString()),
-                  // itemData("Lampiran", ''),
-                  pw.SizedBox(height: 24),
-                  // pw.Wrap(
-                  //     direction: pw.Axis.horizontal,
-                  //     runSpacing: 8,
-                  //     spacing: 8,
-                  //     children: imageData
-                  //         .map((e) => pw.Image(
-                  //               pw.MemoryImage(e),
-                  //               height: 130,
-                  //               width: 130,
-                  //               fit: pw.BoxFit.cover,
-                  //             ))
-                  //         .toList()),
-
-                  // pw.Image(
-                  //   netImage,
-                  //   height: 200,
-                  //   width: 200,
-                  //   fit: pw.BoxFit.cover,
-                  // ),
+                  itemData("Lokasi Kegiatan", address),
+                  itemData("Lampiran Dokumentasi", ''),
+                  pw.SizedBox(height: 8),
                 ],
               ),
             ),
@@ -484,27 +450,7 @@ class PDFService {
       );
     }
 
-    for (var i = 0; i < reportModel.length; i++) {
-      pdf.addPage(
-        pw.MultiPage(
-          pageFormat: PdfPageFormat.a4,
-          margin: const pw.EdgeInsets.symmetric(horizontal: 45, vertical: 45),
-          orientation: pw.PageOrientation.portrait,
-          build: (context) {
-            return [
-              header(),
-              pw.SizedBox(height: 8),
-              bodyActivity(
-                reportModel[i],
-              ),
-            ];
-          },
-        ),
-      );
-    }
-
-    //* Halaman Lampiran Foto
-    pw.Widget attachment(List attachment) {
+    pw.Widget attachment(String kegiatan) {
       return pw.Container(
         width: double.infinity,
         child: pw.Column(
@@ -517,27 +463,24 @@ class PDFService {
                 children: [
                   pw.Center(
                     child: pw.Text(
-                      "Lampiran Foto",
+                      "Lampiran Foto Kegiatan",
                       style: pw.TextStyle(
                         fontSize: 16,
                         fontWeight: pw.FontWeight.bold,
                       ),
                     ),
                   ),
+                  pw.SizedBox(height: 4),
+                  pw.Center(
+                    child: pw.Text(
+                      kegiatan,
+                      style: pw.TextStyle(
+                        fontSize: 14,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+                  ),
                   pw.SizedBox(height: 16),
-                  pw.Wrap(
-                      direction: pw.Axis.horizontal,
-                      runSpacing: 16,
-                      spacing: 8,
-                      alignment: pw.WrapAlignment.center,
-                      children: imageData
-                          .map((e) => pw.Image(
-                                pw.MemoryImage(e),
-                                height: 150,
-                                width: 150,
-                                fit: pw.BoxFit.cover,
-                              ))
-                          .toList()),
                 ],
               ),
             ),
@@ -546,16 +489,66 @@ class PDFService {
       );
     }
 
-    pdf.addPage(pw.MultiPage(
-      pageFormat: PdfPageFormat.a4,
-      margin: const pw.EdgeInsets.symmetric(horizontal: 45, vertical: 45),
-      orientation: pw.PageOrientation.portrait,
-      build: (context) {
-        return [
-          attachment(imageData),
-        ];
-      },
-    ));
+    pw.Widget photoAttach(List attachment) {
+      return pw.Container(
+        width: double.infinity,
+        child: pw.Wrap(
+            direction: pw.Axis.horizontal,
+            runSpacing: 16,
+            spacing: 12,
+            alignment: pw.WrapAlignment.start,
+            children: attachment
+                .map((e) => pw.Image(
+                      pw.MemoryImage(e),
+                      height: 160,
+                      width: 170,
+                      fit: pw.BoxFit.fitWidth,
+                    ))
+                .toList()),
+      );
+    }
+
+    for (var i = 0; i < reportModel.length; i++) {
+      pdf.addPage(
+        pw.MultiPage(
+          pageFormat: PdfPageFormat.a4,
+          margin: const pw.EdgeInsets.symmetric(horizontal: 25, vertical: 45),
+          orientation: pw.PageOrientation.portrait,
+          build: (context) {
+            return [
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 20),
+                child: header(),
+              ),
+              pw.SizedBox(height: 8),
+              pw.Padding(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 20),
+                child: bodyActivity(reportModel[i], address[i]),
+              ),
+              // attachment(),
+              photoAttach(imageGroup[i]),
+            ];
+          },
+        ),
+      );
+      // pdf.addPage(
+      //   pw.MultiPage(
+      //     pageFormat: PdfPageFormat.a4,
+      //     margin: const pw.EdgeInsets.symmetric(horizontal: 25, vertical: 40),
+      //     orientation: pw.PageOrientation.portrait,
+      //     build: (context) {
+      //       return [
+      //         // pw.Padding(
+      //         //   padding: const pw.EdgeInsets.symmetric(horizontal: 20),
+      //         //   child: header(),
+      //         // ),
+      //         attachment(reportModel[i].namaKegiatan),
+      //         photoAttach(imageGroup[i]),
+      //       ];
+      //     },
+      //   ),
+      // );
+    }
 
     return pdf.save();
   }

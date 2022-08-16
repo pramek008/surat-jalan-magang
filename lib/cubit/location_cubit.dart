@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:meta/meta.dart';
 import 'package:surat_jalan/services/location_service.dart';
 
@@ -31,6 +30,4 @@ class LocationCubit extends Cubit<LocationState> {
       emit(LocationError(message: e.toString()));
     }
   }
-
-  void setCurrentPosition(LatLng currentPosition) {}
 }
