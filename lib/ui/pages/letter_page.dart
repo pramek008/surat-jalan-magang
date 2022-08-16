@@ -511,115 +511,9 @@ class _LetterPageState extends State<LetterPage> {
                   // TODO: Jika sudah diserahkan tidak dapat di hapus [FEATURE Needed]
                   return SizedBox(
                     height: 120 * length,
-                    child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics(),
-                      ),
-                      itemCount: state.reports
-                          .where((element) =>
-                              element.perintahJalanId.id == widget.surat.id)
-                          .length,
-                      itemBuilder: (context, index) {
-                        List item = state.reports
-                            .where((element) =>
-                                element.perintahJalanId.id == widget.surat.id)
-                            .toList();
-                        final report = item[index];
-                        return Dismissible(
-                          key: Key(report.id.toString()),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: redStatusColor),
-                            child: Icon(
-                              Icons.delete,
-                              color: whiteColor,
-                              size: 30,
-                            ),
-                          ),
-                          confirmDismiss: (direction) {
-                            return showDialog(
-                              barrierDismissible: true,
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('Hapus Laporan',
-                                      style: txSemiBold.copyWith(fontSize: 22)),
-                                  content: const Text(
-                                    'Apakah anda yakin ingin menghapus laporan ini?',
-                                  ),
-                                  actionsAlignment: MainAxisAlignment.center,
-                                  actions: [
-                                    TextButton(
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 20,
-                                          vertical: 10,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: redStatusColor,
-                                        ),
-                                        child: Text(
-                                          'Ya',
-                                          style: txMedium.copyWith(
-                                            color: whiteColor,
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop(true);
-                                      },
-                                    ),
-                                    TextButton(
-                                      child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                            vertical: 10,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            color: greyThinColor,
-                                          ),
-                                          child: Text(
-                                            'Tidak',
-                                            style: txMedium.copyWith(
-                                                color: blackColor),
-                                          )),
-                                      onPressed: () {
-                                        Navigator.of(context).pop(false);
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                          onDismissed: (direction) {
-                            if (direction == DismissDirection.endToStart) {
-                              context.read<ReportCubit>().deleteReport(state
-                                  .reports
-                                  .where((element) =>
-                                      element.perintahJalanId.id ==
-                                      widget.surat.id)
-                                  .elementAt(index)
-                                  .id);
-                              setState(() {
-                                item.removeAt(index);
-                                context.read<ReportCubit>().getAllReport();
-                                // length = double.parse(item.length.toString());
-                              });
-                              Navigator.of(context).pop();
-                            }
-                          },
-                          child: CardLaporanWidget(report: item[index]),
-                        );
-                      },
-                    ),
+                    child: widget.surat.diserahkan == false
+                        ? dismissibleOn(state)
+                        : dismissibleOff(state),
                   );
                 }
                 return Center(
@@ -919,6 +813,128 @@ class _LetterPageState extends State<LetterPage> {
           ),
         ),
       ),
+    );
+  }
+
+  ListView dismissibleOn(ReportLoaded state) {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
+      itemCount: state.reports
+          .where((element) => element.perintahJalanId.id == widget.surat.id)
+          .length,
+      itemBuilder: (context, index) {
+        List item = state.reports
+            .where((element) => element.perintahJalanId.id == widget.surat.id)
+            .toList();
+        final report = item[index];
+        return Dismissible(
+          key: Key(report.id.toString()),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20), color: redStatusColor),
+            child: Icon(
+              Icons.delete,
+              color: whiteColor,
+              size: 30,
+            ),
+          ),
+          confirmDismiss: (direction) {
+            return showDialog(
+              barrierDismissible: true,
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text('Hapus Laporan',
+                      style: txSemiBold.copyWith(fontSize: 22)),
+                  content: const Text(
+                    'Apakah anda yakin ingin menghapus laporan ini?',
+                  ),
+                  actionsAlignment: MainAxisAlignment.center,
+                  actions: [
+                    TextButton(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: redStatusColor,
+                        ),
+                        child: Text(
+                          'Ya',
+                          style: txMedium.copyWith(
+                            color: whiteColor,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
+                    TextButton(
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: greyThinColor,
+                          ),
+                          child: Text(
+                            'Tidak',
+                            style: txMedium.copyWith(color: blackColor),
+                          )),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          onDismissed: (direction) {
+            if (direction == DismissDirection.endToStart) {
+              context.read<ReportCubit>().deleteReport(state.reports
+                  .where((element) =>
+                      element.perintahJalanId.id == widget.surat.id)
+                  .elementAt(index)
+                  .id);
+              setState(() {
+                item.removeAt(index);
+                context.read<ReportCubit>().getAllReport();
+                // length = double.parse(item.length.toString());
+              });
+              Navigator.of(context).pop();
+            }
+          },
+          child: CardLaporanWidget(report: item[index]),
+        );
+      },
+    );
+  }
+
+  ListView dismissibleOff(ReportLoaded state) {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
+      itemCount: state.reports
+          .where((element) => element.perintahJalanId.id == widget.surat.id)
+          .length,
+      itemBuilder: (context, index) {
+        List item = state.reports
+            .where((element) => element.perintahJalanId.id == widget.surat.id)
+            .toList();
+        // final report = item[index];
+        return CardLaporanWidget(report: item[index]);
+      },
     );
   }
 }
