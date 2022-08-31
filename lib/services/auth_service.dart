@@ -9,12 +9,7 @@ import 'package:surat_jalan/services/secure_storage_service.dart';
 import 'package:surat_jalan/shared/shared_value.dart';
 
 class AuthService {
-  // static const String _url = 'http://103.100.27.29/sppd/public/api/login';
-  // static const String _urlUser = 'http://103.100.27.29/sppd/public/api/user';
-  // static const String _urlLogout =
-  //     'http://103.100.27.29/sppd/public/api/logout';
-
-  static final String _url = "$baseApiURL/login";
+  static final String _urlLogin = "$baseApiURL/login";
   static final String _urlUser = "$baseApiURL/user";
   static final String _urlLogout = "$baseApiURL/logout";
 
@@ -68,7 +63,7 @@ class AuthService {
   Future<ResponseModel> login(
       {required String email, required String password}) async {
     final response = await http.post(
-      Uri.parse(_url),
+      Uri.parse(_urlLogin),
       body: {
         "email": email,
         "password": password,
@@ -86,10 +81,6 @@ class AuthService {
         catchUser(responseData.data!.user!.id).then((user) {
           saveUser(user);
         });
-
-        //* delete token sesuai dengan masa berlaku token berakhir
-        deleteToken();
-
         return responseData;
       case 400:
         final json = jsonDecode(response.body);
@@ -117,8 +108,6 @@ class AuthService {
       headers: HelperService.buildHeaders(accessToken: token),
     );
     SecureStorageService.storage.deleteAll();
-
-    // print("response logout = > ${response.body}");
 
     final statusType = (response.statusCode / 100).floor() * 100;
     switch (statusType) {

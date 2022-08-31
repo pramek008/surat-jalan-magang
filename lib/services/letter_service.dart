@@ -9,8 +9,6 @@ class LetterService {
     final String _url = "$baseApiURL/perintah-jalan";
 
     final response = await http.get(Uri.parse(_url));
-    // print(response.statusCode);
-    // print(jsonDecode(response.body));
 
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -22,9 +20,6 @@ class LetterService {
           for (var i = 0; i < value.length; i++) {
             allLeter.add(LetterModel.fromJson(value[i]));
           }
-
-          // allLeter.add(LetterModel.fromJson(value[0]));
-          // print(allLeter);
         });
 
         return allLeter;

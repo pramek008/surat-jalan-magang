@@ -6,8 +6,6 @@ import 'package:surat_jalan/services/secure_storage_service.dart';
 import 'package:surat_jalan/shared/shared_value.dart';
 
 class InformationService {
-  // final String _url = 'http://103.100.27.29/sppd/public/api/information';
-
   static final String _url = "$baseApiURL/information";
 
   static void saveInformation(InformationModel information) async {

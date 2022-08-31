@@ -37,6 +37,14 @@ class CardLetterWidget extends StatelessWidget {
         return surat.tglAkhir;
       }
     }
+
+    Color isSubmitted() {
+      if (surat.diserahkan == true) {
+        return const Color(0xff18DC4F);
+      } else {
+        return color;
+      }
+    }
     //? end of logic =====================================================
 
     //* Background card with rounded corners decoration
@@ -211,7 +219,7 @@ class CardLetterWidget extends StatelessWidget {
           right: 16,
         ),
         decoration: BoxDecoration(
-          color: color,
+          color: isSubmitted(),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
@@ -228,7 +236,9 @@ class CardLetterWidget extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            backgroudCard(color),
+            backgroudCard(
+              isSubmitted(),
+            ),
             content(),
           ],
         ),

@@ -30,10 +30,8 @@ class PDFService {
             .get(Uri.parse('$baseImageURL/${reportModel[i].foto[j]}'));
         imageDataByGroup.add(response.bodyBytes);
       }
-      imageGroup.add(imageDataByGroup);
-      print('imageDataByGroup: ${imageDataByGroup.length}');
-    }
-    print('imageGroup: ${imageGroup.length}');
+      imageGroup.add(imageDataByGroup);      
+    }    
 
     //? build data address to string
     List address = [];

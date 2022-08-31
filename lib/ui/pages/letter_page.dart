@@ -96,7 +96,7 @@ class _LetterPageState extends State<LetterPage> {
               child: AutoSizeText(
                 widget.surat.judul,
                 style: txBold.copyWith(
-                  color: blackColor,
+                  color: primaryColor,
                   fontSize: 28,
                 ),
                 maxLines: 3,
