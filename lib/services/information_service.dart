@@ -23,6 +23,14 @@ class InformationService {
     // // print(checkInfo);
   }
 
+  static void credentialAllert() async {
+    await SecureStorageService.storage
+        .delete(key: SecureStorageService.allertCredential);
+
+    await SecureStorageService.storage
+        .write(key: SecureStorageService.allertCredential, value: 'True');
+  }
+
   // Future<void> deleteInformation() async {
   //   await SecureStorageService.storage
   //       .delete(key: SecureStorageService.informationKey);

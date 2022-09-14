@@ -17,6 +17,7 @@ import '../../bloc/auth_bloc.dart';
 import '../../cubit/letter_cubit.dart';
 import '../../cubit/news_cubit.dart';
 import '../../cubit/report_cubit.dart';
+import '../../services/secure_storage_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -40,6 +41,9 @@ class _HomePageState extends State<HomePage> {
     InformationModel informationData =
         await InformationService().getInformationFromStorage();
 
+    final allertKredential = await SecureStorageService.storage
+        .read(key: SecureStorageService.allertCredential);
+
     // print(baseImageURL + '/' + informationData.logoMain!);
 
     String urlImage = (baseImageURL + '/' + informationData.logoMain!);
@@ -47,13 +51,20 @@ class _HomePageState extends State<HomePage> {
     bool showAlert(DateTime start, DateTime end) {
       var thisday = DateTime.now();
       if (thisday.isAfter(start) && thisday.isBefore(end)) {
-        return true;
+        if (allertKredential != null) {
+          return false;
+        } else {
+          InformationService.credentialAllert();
+          return true;
+        }
       } else {
         return false;
       }
     }
 
-    print(showAlert(informationData.startedAt!, informationData.expiredAt!));
+    print(
+        "berlaku ${showAlert(informationData.startedAt!, informationData.expiredAt!)}");
+    print('status kredential $allertKredential');
 
     showAlert(informationData.startedAt!, informationData.expiredAt!)
         ? Alert(

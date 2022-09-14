@@ -34,6 +34,9 @@ class _SplashScreenState extends State<SplashScreen> {
     final checkInfo = await SecureStorageService.storage
         .read(key: SecureStorageService.informationKey);
 
+    await SecureStorageService.storage
+        .delete(key: SecureStorageService.allertCredential);
+
     //! Harus hilang BUAT CEK AJA
     // SecureStorageService.storage.deleteAll();
     // print("TOken => $userStorage");
