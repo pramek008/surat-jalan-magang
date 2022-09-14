@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:surat_jalan/models/information_model.dart';
 import 'package:surat_jalan/models/letter_model.dart';
 import 'package:surat_jalan/models/news_model.dart';
 import 'package:surat_jalan/models/user_model.dart';
+import 'package:surat_jalan/services/information_service.dart';
 import 'package:surat_jalan/shared/shared_theme.dart';
+import 'package:surat_jalan/shared/shared_value.dart';
 import 'package:surat_jalan/ui/pages/account_page.dart';
 import 'package:surat_jalan/ui/widgets/card_letter_widget.dart';
 import 'package:surat_jalan/ui/widgets/card_news_widget.dart';
@@ -28,7 +32,45 @@ class _HomePageState extends State<HomePage> {
     context.read<ReportCubit>().getAllReport();
     context.read<AuthBloc>().add(AuthLoadUserEvent());
     context.read<NewsCubit>().getAllNews();
+    _onAllertShow(context);
     super.initState();
+  }
+
+  _onAllertShow(context) async {
+    InformationModel informationData =
+        await InformationService().getInformationFromStorage();
+
+    // print(baseImageURL + '/' + informationData.logoMain!);
+
+    String urlImage = (baseImageURL + '/' + informationData.logoMain!);
+
+    bool showAlert(DateTime start, DateTime end) {
+      var thisday = DateTime.now();
+      if (thisday.isAfter(start) && thisday.isBefore(end)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    print(showAlert(informationData.startedAt!, informationData.expiredAt!));
+
+    showAlert(informationData.startedAt!, informationData.expiredAt!)
+        ? Alert(
+            context: context,
+            title: "\n${informationData.appInfo}",
+            image: Image.network(
+              urlImage,
+              height: 300,
+              fit: BoxFit.cover,
+            ),
+            style: AlertStyle(
+              titleStyle: txMedium.copyWith(fontSize: 16),
+              isButtonVisible: false,
+              alertElevation: 5,
+            ),
+          ).show()
+        : null;
   }
 
   @override

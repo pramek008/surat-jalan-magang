@@ -17,10 +17,10 @@ class InformationService {
       value: json.encode(information.toJson()),
     );
 
-    final checkInfo = await SecureStorageService.storage
-        .read(key: SecureStorageService.informationKey);
+    // final checkInfo = await SecureStorageService.storage
+    //     .read(key: SecureStorageService.informationKey);
 
-    print(checkInfo);
+    // // print(checkInfo);
   }
 
   // Future<void> deleteInformation() async {

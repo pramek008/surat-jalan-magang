@@ -288,82 +288,82 @@ class _LaporanKegiatanAddPageState extends State<LaporanKegiatanAddPage> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Tanggal Mulai',
-                  style: txMedium.copyWith(
-                    color: primaryColor,
-                    fontSize: 18,
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Tanggal Mulai',
+                    style: txMedium.copyWith(
+                      color: primaryColor,
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  DateFormat(
-                    'EEEE, dd MMMM yyyy ',
-                    "id_ID",
-                  ).format(
-                    DateTime.now(),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  style: txRegular.copyWith(
-                    color: greyDeepColor,
+                  Text(
+                    DateFormat(
+                      'EEEE, dd MMMM yyyy ',
+                      "id_ID",
+                    ).format(DateTime.now()),
+                    style: txRegular.copyWith(
+                      color: greyDeepColor,
+                    ),
                   ),
-                ),
-                Text(
-                  DateFormat(
-                    'kk:mm ',
-                    "id_ID",
-                  ).format(
-                    DateTime.now(),
+                  Text(
+                    DateFormat(
+                      'kk:mm ',
+                      "id_ID",
+                    ).format(
+                      DateTime.now(),
+                    ),
+                    style: txRegular.copyWith(
+                      color: greyDeepColor,
+                    ),
                   ),
-                  style: txRegular.copyWith(
-                    color: greyDeepColor,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(
               width: 12,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  'Tanggal Selesai',
-                  style: txMedium.copyWith(
-                    color: primaryColor,
-                    fontSize: 18,
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    'Tanggal Selesai',
+                    style: txMedium.copyWith(
+                      color: primaryColor,
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  DateFormat(
-                    'EEEE, dd MMMM yyyy',
-                    "id_ID",
-                  ).format(
-                    DateTime.now(),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  style: txRegular.copyWith(
-                    color: greyDeepColor,
+                  Text(
+                    DateFormat(
+                      'EEEE, dd MMMM yyyy',
+                      "id_ID",
+                    ).format(DateTime.now()),
+                    style: txRegular.copyWith(
+                      color: greyDeepColor,
+                    ),
                   ),
-                ),
-                Text(
-                  DateFormat(
-                    'kk:mm ',
-                    "id_ID",
-                  ).format(
-                    DateTime.now(),
+                  Text(
+                    DateFormat(
+                      'kk:mm ',
+                      "id_ID",
+                    ).format(
+                      DateTime.now(),
+                    ),
+                    style: txRegular.copyWith(
+                      color: greyDeepColor,
+                    ),
                   ),
-                  style: txRegular.copyWith(
-                    color: greyDeepColor,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         );

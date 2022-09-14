@@ -23,7 +23,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final InformationService informationService = InformationService();
-  // await informationService.getInformation();
+  await informationService.getInformation();
 
   await initializeDateFormatting('id_ID', null)
       .then((_) => runApp(MyApp(informationService: informationService)));

@@ -3,7 +3,10 @@ import 'package:surat_jalan/models/report_model.dart';
 final dummyReport = [
   ReportModel(
     id: 1,
-    userId: UserId(id: 1, name: "Rizki"),
+    userId: UserId(
+      id: 1,
+      name: "Rizki",
+    ),
     perintahJalanId: PerintahJalanId(
       id: 1,
       judul: "Perintah Jalan 1",
